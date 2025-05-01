@@ -1,0 +1,17 @@
+# ninja log v6
+57	488	7678089992226757	build.ninja	be309a9389243e4
+200	5856	7669342222467841	CMakeFiles/fpsProjectServer.dir/ServerStat.cpp.obj	7cd62c2ed45dc155
+7	9029	7677609444585985	CMakeFiles/fpsProjectServer.dir/main.cpp.obj	e7b488e86b7499d1
+111	657	7676763937968775	CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj	5d80c4d4beff95ef
+117	5910	7677604239192780	CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj	2ee49349f84ff900
+9033	10149	7677609534839333	fpsProjectServer.exe	4001cf72b82d76b
+317	43087	7677210695273294	CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj	d2d7a44e80829fa
+31	3780	7663835048653416	CMakeFiles/fpsProjectServer.dir/util.cpp.obj	3b03b5e9bc2055b
+98	7132	7669936692819002	CMakeFiles/fpsProjectServer.dir/cppRestSdk.cpp.obj	e2133c9ce935bd2a
+13	1506	7677158075019289	CMakeFiles/fpsProjectServer.dir/util/util.cpp.obj	a9982ba1e544e39
+493	43021	7677210697039429	CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.obj	7772e8203074e5eb
+379	52016	7677210695893617	CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.obj	49bf804597360556
+352	56819	7677210695624570	CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.obj	c57a8bb54217dc9e
+32	14056	7677248465133304	CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.obj	9d405a48b2880336
+40	8926	7678090481709563	CMakeFiles/fpsProjectServer.dir/main.cpp.obj	e7b488e86b7499d1
+8933	10879	7678090570637155	fpsProjectServer.exe	4001cf72b82d76b
