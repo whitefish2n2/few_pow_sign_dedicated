@@ -46,30 +46,7 @@ void statusUpdater() {
 
 //서버 생성 request 처리
 int session_counter = 0;
-void main_loop() {
-    while (true) {
-        std::unique_lock<std::mutex> lock(HttpRestClient::getInstance()->queueMutex);
 
-        HttpRestClient::getInstance()->queueCV.wait(lock, [] {
-            return !HttpRestClient::getInstance()->requestQueue.empty();
-        });
-
-        auto request = HttpRestClient::getInstance()->requestQueue.front();
-        HttpRestClient::getInstance()->requestQueue.pop();
-
-        lock.unlock();
-
-        // 세션 생성
-
-        auto newSession = std::make_shared<GameSession>();
-        session_counter++;
-        newSession->Start();
-        SessionManager::getInstance().sessions.push_back(newSession);
-
-        // 작업 완료됐다고 알림
-        request->promise.set_value(newSession->sessionId);
-    }
-}
 void inputServerInfo(std::pmr::wstring &key,std::pmr::string &url) {
 
 }
@@ -92,20 +69,29 @@ int main() {
         std::cerr << "Environment variable SPRING_CONNECT_KEY not set!" << std::endl;
         return 1;
     }
+    std::cout << "key"<<key<< std::endl;
     std::cout << "enter base url(like this: 123.123.123.123:1421)";
     std::cin>>url;
     std::string val= GenerateUuid();
     serverUuid.assign(val.begin(),val.end());
+
+
     DedicatedServerNotifier::getInstance().init(url);
+    std::vector<std::shared_ptr<GameSession>> sessions;
+    for (const auto& [k, v] : SessionManager::getInstance().sessions) {
+        sessions.push_back(v);
+    }
     DedicatedServerNotifier::getInstance().notifyDedicatedServerUp(
         key,
         ip,
         "http://localhost:8888",//서버별 url url을 url해요
-        SessionManager::getInstance().sessions);
+        sessions
+    );
     isRunning = true;
     std::thread consoleThread(inputListener);
     std::thread statusThread(statusUpdater);
-    std::thread httpClientThread(&HttpRestClient::start_http_server,HttpRestClient::getInstance());
+    std::thread httpClientThread(&HttpRestClient::start_http_server, HttpRestClient::getInstance());
+    std::cout << "1"<< std::endl;
     for (auto& t : threads) {
         t.join();
     }

@@ -1,0 +1,4 @@
+C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=C:\Users\white\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -G "NMake Makefiles" -S C:\Users\white\Desktop\github\few_pow_sign_dedicated -B C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-release
+-- Configuring done (0.1s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release

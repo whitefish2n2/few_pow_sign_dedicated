@@ -1,3 +1,3 @@
-C:/Users/user/CLionProjects/fpsProjectServer/cmake-build-debug/CMakeFiles/fpsProjectServer.dir
-C:/Users/user/CLionProjects/fpsProjectServer/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/user/CLionProjects/fpsProjectServer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-debug/CMakeFiles/fpsProjectServer.dir
+C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-debug/CMakeFiles/rebuild_cache.dir

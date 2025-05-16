@@ -9,5 +9,6 @@
 struct NewPlayerDto {
     std::string id;
     std::string name;
+    std::string key;
 };
 #endif //NEWPLAYERDTO_H

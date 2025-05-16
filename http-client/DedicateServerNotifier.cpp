@@ -14,11 +14,13 @@ DedicatedServerNotifier& DedicatedServerNotifier::getInstance() {
 }
 
 void DedicatedServerNotifier::init(const std::string& clientBaseUrl) {
+    std::cout<<"Initializing DedicatedServerNotifier with base url:"<<clientBaseUrl<<std::endl;
     if (clientBase != nullptr) {
         delete clientBase;
     }
     auto baseUrl = U("http://") + utility::conversions::to_string_t(clientBaseUrl);
     clientBase = new http_client(baseUrl);
+    std::cout<<"Init Notifier successfully!"<<std::endl;
 }
 
 void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, const std::string& ip,const std::string& url, const std::vector<std::shared_ptr<GameSession>>& sessions) {
@@ -27,26 +29,40 @@ void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, co
         return;
     }
 
+    std::cout << "notifier server setup started!"<< std::endl;
+
     nlohmann::json body;
     body["key"] = key;
     body["ip"] = ip;
     body["url"] = url;
-    body["sessions"] = "";
+    body["sessions"] = nlohmann::json::array();
 
-    auto sessionArray = nlohmann::json::array();
     for (const auto& s : sessions) {
+        if (s == nullptr) continue;
         auto session = getGameSessionDto(*s);
         nlohmann::json j;
         to_json(j, session);
-        sessionArray.push_back(j);
+        body["sessions"].push_back(j);
     }
-    body["sessions"] = sessionArray;
-    std::string requestBody = body.dump();
 
     try {
+        std::string jsonText = body.dump();
+        std::cout << "Dump succeeded: " << jsonText << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "DUMP FAILED: " << e.what() << std::endl;
+    }
+
+    std::string requestBody = body.dump();
+    std::cout << "Request body: " << requestBody << std::endl;
+
+    try {
+
         http_request request(methods::POST);
+
         request.set_request_uri(U("/dedicated/creatededicated"));
+
         request.headers().set_content_type(U("application/json"));
+
         request.set_body(utility::conversions::to_string_t(requestBody));
 
         clientBase->request(request)
@@ -86,7 +102,6 @@ void DedicatedServerNotifier::updateServerStatus(const std::string& ip, const st
 
     nlohmann::json body;
     body["ip"] = ip;
-    // sessions를 추가하고 싶으면 여기에 추가하면 됨
 
     try {
         http_request request(methods::POST);

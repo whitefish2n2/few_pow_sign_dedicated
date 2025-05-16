@@ -6,13 +6,13 @@
 #define PLAYERNETWORKDTOS_H
 #include <string>
 
-#include "../Player.h"
-#include "../SessionStatus.h"
+#include "../Game/Player.h"
+#include "../Dto/SessionStatus.h"
 #include "../FhishiX/Vector3.h"
 #include <nlohmann/json.hpp>
 
 #include "newPlayerDto.h"
-#include "../GameMode.h"
+#include "../Dto/GameMode.h"
 
 class GameSession;
 NLOHMANN_JSON_SERIALIZE_ENUM(SESSIONSTATUS, {
@@ -31,7 +31,7 @@ struct player_dto {
     int kill = 0;
     int death = 0;
 };
-player_dto playerToPlayerDto(const player& p);
+player_dto playerToPlayerDto(const Player& p);
 
 
 struct GameSessionDto {
@@ -49,6 +49,7 @@ struct GameSetupBoddari {
     std::vector<NewPlayerDto> players;
     GameMode gameMode;
     std::string map;
+    std::uint16_t sessionKey;
 };
 void from_json(const nlohmann::json &j, GameSetupBoddari &g);
 #endif //PLAYERNETWORKDTOS_H

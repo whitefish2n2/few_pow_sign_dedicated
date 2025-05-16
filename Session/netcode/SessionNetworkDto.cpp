@@ -20,7 +20,7 @@ void to_json(nlohmann::json& j, const GameSessionDto& p) {
         {"players",p.players}
     };
 }
-player_dto playerToPlayerDto(const player& p) {
+player_dto playerToPlayerDto(const Player& p) {
     return player_dto{
         .id = p.id,
         .name = p.name,
@@ -31,8 +31,8 @@ player_dto playerToPlayerDto(const player& p) {
 }
 GameSessionDto getGameSessionDto(GameSession& p) {
     std::vector<player_dto> newPlayers;
-    for (player e: *(p.players)) {
-        newPlayers.push_back(playerToPlayerDto(e));
+    for (const auto& e: *(p.players)) {
+        newPlayers.push_back(playerToPlayerDto(e.second));
     }
     return GameSessionDto{p.sessionId , p.status, newPlayers};
 }
@@ -47,6 +47,7 @@ GameMode parseGameMode(const std::string& mode) {
 void from_json(const nlohmann::json& j, NewPlayerDto& p) {
     p.id = j["id"];
     p.name = j["name"];
+    p.key = j["key"];
 }
 
 void from_json(const nlohmann::json& j, GameSetupBoddari& g) {

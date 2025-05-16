@@ -17,22 +17,40 @@ add_executable(fpsProjectServer
         server-status/ServerStat.h
         http-listener/httpRestClient.cpp
         http-listener/httpRestClient.h
-        Session/Session.h
-        Session/Player.h
-        Session/PlayerStatus.h
-        Session/Weapons.h
-        Session/NetworkStatus.h
+        Session/Game/Player.h
+        Session/Game/PlayerStatus.h
+        Session/Dto/Weapons.h
+        Session/Dto/NetworkStatus.h
         Session/FhishiX/Vector3.h
-        Session/SessionStatus.h
+        Session/Dto/SessionStatus.h
         Session/netcode/SessionNetworkDto.h
         Session/netcode/SessionNetworkDto.cpp
         Session/sessionPool/SessionManager.cpp
         Session/sessionPool/SessionManager.h
         Session/netcode/CreateSessionNetworkDto.cpp
         Session/netcode/CreateSessionNetworkDto.h
-        Session/GameMode.h
+        Session/Dto/GameMode.h
         Session/netcode/newPlayerDto.h
         Constants.h
+        Socket/EnetClient.cpp
+        Socket/EnetClient.h
+        Socket/dto/SocketEventType.h
+        Socket/dto/AssignDto.h
+        Socket/dto/AssignDto.cpp
+        Socket/dto/MoveDto.cpp
+        Socket/dto/MoveDto.h
+        Session/FhishiX/Vector2.h
+        Socket/dto/DefaultDto.cpp
+        Socket/dto/DefaultDto.h
+        Session/FhishiX/Vertex.h
+        Session/Dto/MapEnum.h
+        Session/Game/Player.cpp
+        Session/Game/SimulationMap.cpp
+        Session/Game/SimulationMap.h
+        Session/Game/Map.h
+        Session/Game/MapManager.cpp
+        Session/Game/MapManager.h
+        Session/Game/Map.cpp
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

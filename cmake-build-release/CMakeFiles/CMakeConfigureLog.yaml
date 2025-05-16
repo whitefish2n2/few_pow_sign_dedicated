@@ -1,0 +1,254 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      The system is: Windows - 10.0.26100 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      Microsoft (R) C/C++ 최적화 컴파일러 버전 19.43.34810(x64)
+      Copyright (c) Microsoft Corporation. All rights reserved.
+      
+      CMakeCCompilerId.c
+      Microsoft (R) Incremental Linker Version 14.43.34810.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+      
+      /out:CMakeCCompilerId.exe 
+      CMakeCCompilerId.obj 
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.exe"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
+      
+      The C compiler identification is MSVC, found in:
+        C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/3.31.6/CompilerIdC/CMakeCCompilerId.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1288 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        main.c
+        참고: 포함 파일: C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\ShowIncludes\\foo.h
+        
+      Found prefix "참고: 포함 파일: "
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      Microsoft (R) C/C++ 최적화 컴파일러 버전 19.43.34810(x64)
+      Copyright (c) Microsoft Corporation. All rights reserved.
+      
+      CMakeCXXCompilerId.cpp
+      Microsoft (R) Incremental Linker Version 14.43.34810.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+      
+      /out:CMakeCXXCompilerId.exe 
+      CMakeCXXCompilerId.obj 
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
+      
+      The CXX compiler identification is MSVC, found in:
+        C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/3.31.6/CompilerIdCXX/CMakeCXXCompilerId.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1288 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Detecting CXX compiler /showIncludes prefix:
+        main.c
+        참고: 포함 파일: C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\ShowIncludes\\foo.h
+        
+      Found prefix "참고: 포함 파일: "
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-aplyvs"
+      binary: "C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-aplyvs"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
+      CMAKE_C_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      VCPKG_INSTALLED_DIR: "C:/Users/white/.vcpkg-clion/vcpkg/installed"
+      VCPKG_PREFER_SYSTEM_LIBS: "OFF"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Users/white/.vcpkg-clion/vcpkg"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-aplyvs'
+        
+        Run Build Command(s): C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cmake.exe -E env VERBOSE=1 nmake -f Makefile /nologo cmTC_c20f8\\fast
+        	"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\nmake.exe"  -f CMakeFiles\\cmTC_c20f8.dir\\build.make /nologo -L                  CMakeFiles\\cmTC_c20f8.dir\\build
+        Building C object CMakeFiles/cmTC_c20f8.dir/CMakeCCompilerABI.c.obj
+        	C:\\Users\\white\\AppData\\Local\\Programs\\CLion\\bin\\cmake\\win\\x64\\bin\\cmake.exe -E cmake_cl_compile_depends --dep-file=CMakeFiles\\cmTC_c20f8.dir\\CMakeCCompilerABI.c.obj.d --working-dir=C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-aplyvs --filter-prefix="참고: 포함 파일: " -- C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\cl.exe @C:\\Users\\white\\AppData\\Local\\Temp\\nm981C.tmp
+        CMakeCCompilerABI.c
+        Linking C executable cmTC_c20f8.exe
+        	C:\\Users\\white\\AppData\\Local\\Programs\\CLion\\bin\\cmake\\win\\x64\\bin\\cmake.exe -E vs_link_exe --msvc-ver=1943 --intdir=CMakeFiles\\cmTC_c20f8.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests -- C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_c20f8.dir\\objects1.rsp @C:\\Users\\white\\AppData\\Local\\Temp\\nm9975.tmp
+        Visual Studio Incremental Link with embedded manifests
+        Create CMakeFiles\\cmTC_c20f8.dir/manifest.rc
+        Create empty: CMakeFiles\\cmTC_c20f8.dir/embed.manifest
+        RC Pass 1:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe /fo CMakeFiles\\cmTC_c20f8.dir/manifest.res CMakeFiles\\cmTC_c20f8.dir/manifest.rc
+        LINK Pass 1:
+        C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_c20f8.dir\\objects1.rsp /out:cmTC_c20f8.exe /implib:cmTC_c20f8.lib /pdb:C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-aplyvs\\cmTC_c20f8.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_c20f8.dir/intermediate.manifest CMakeFiles\\cmTC_c20f8.dir/manifest.res
+        MT:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe /nologo /manifest CMakeFiles\\cmTC_c20f8.dir/intermediate.manifest /out:CMakeFiles\\cmTC_c20f8.dir/embed.manifest /notify_update
+        RC Pass 2:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe /fo CMakeFiles\\cmTC_c20f8.dir/manifest.res CMakeFiles\\cmTC_c20f8.dir/manifest.rc
+        FINAL LINK:
+        C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_c20f8.dir\\objects1.rsp /out:cmTC_c20f8.exe /implib:cmTC_c20f8.lib /pdb:C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-aplyvs\\cmTC_c20f8.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_c20f8.dir/intermediate.manifest CMakeFiles\\cmTC_c20f8.dir/manifest.res
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': C:/PROGRA~1/MICROS~1/2022/COMMUN~1/VC/Tools/MSVC/1443~1.348/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the C compiler's linker: "C:/PROGRA~1/MICROS~1/2022/COMMUN~1/VC/Tools/MSVC/1443~1.348/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.43.34810.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tbzaf1"
+      binary: "C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tbzaf1"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /GR /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      VCPKG_INSTALLED_DIR: "C:/Users/white/.vcpkg-clion/vcpkg/installed"
+      VCPKG_PREFER_SYSTEM_LIBS: "OFF"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Users/white/.vcpkg-clion/vcpkg"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tbzaf1'
+        
+        Run Build Command(s): C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cmake.exe -E env VERBOSE=1 nmake -f Makefile /nologo cmTC_df36e\\fast
+        	"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\nmake.exe"  -f CMakeFiles\\cmTC_df36e.dir\\build.make /nologo -L                  CMakeFiles\\cmTC_df36e.dir\\build
+        Building CXX object CMakeFiles/cmTC_df36e.dir/CMakeCXXCompilerABI.cpp.obj
+        	C:\\Users\\white\\AppData\\Local\\Programs\\CLion\\bin\\cmake\\win\\x64\\bin\\cmake.exe -E cmake_cl_compile_depends --dep-file=CMakeFiles\\cmTC_df36e.dir\\CMakeCXXCompilerABI.cpp.obj.d --working-dir=C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-tbzaf1 --filter-prefix="참고: 포함 파일: " -- C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\cl.exe @C:\\Users\\white\\AppData\\Local\\Temp\\nm9B68.tmp
+        CMakeCXXCompilerABI.cpp
+        Linking CXX executable cmTC_df36e.exe
+        	C:\\Users\\white\\AppData\\Local\\Programs\\CLion\\bin\\cmake\\win\\x64\\bin\\cmake.exe -E vs_link_exe --msvc-ver=1943 --intdir=CMakeFiles\\cmTC_df36e.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests -- C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_df36e.dir\\objects1.rsp @C:\\Users\\white\\AppData\\Local\\Temp\\nm9BB7.tmp
+        Visual Studio Incremental Link with embedded manifests
+        Create CMakeFiles\\cmTC_df36e.dir/manifest.rc
+        Create empty: CMakeFiles\\cmTC_df36e.dir/embed.manifest
+        RC Pass 1:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe /fo CMakeFiles\\cmTC_df36e.dir/manifest.res CMakeFiles\\cmTC_df36e.dir/manifest.rc
+        LINK Pass 1:
+        C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_df36e.dir\\objects1.rsp /out:cmTC_df36e.exe /implib:cmTC_df36e.lib /pdb:C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-tbzaf1\\cmTC_df36e.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_df36e.dir/intermediate.manifest CMakeFiles\\cmTC_df36e.dir/manifest.res
+        MT:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe /nologo /manifest CMakeFiles\\cmTC_df36e.dir/intermediate.manifest /out:CMakeFiles\\cmTC_df36e.dir/embed.manifest /notify_update
+        RC Pass 2:
+        C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe /fo CMakeFiles\\cmTC_df36e.dir/manifest.res CMakeFiles\\cmTC_df36e.dir/manifest.rc
+        FINAL LINK:
+        C:\\PROGRA~1\\MICROS~1\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1443~1.348\\bin\\Hostx64\\x64\\link.exe /nologo @CMakeFiles\\cmTC_df36e.dir\\objects1.rsp /out:cmTC_df36e.exe /implib:cmTC_df36e.lib /pdb:C:\\Users\\white\\Desktop\\github\\few_pow_sign_dedicated\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-tbzaf1\\cmTC_df36e.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_df36e.dir/intermediate.manifest CMakeFiles\\cmTC_df36e.dir/manifest.res
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'CXX': C:/PROGRA~1/MICROS~1/2022/COMMUN~1/VC/Tools/MSVC/1443~1.348/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/PROGRA~1/MICROS~1/2022/COMMUN~1/VC/Tools/MSVC/1443~1.348/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.43.34810.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+...

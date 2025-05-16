@@ -1,97 +1,87 @@
 #include "GameSession.h"
 
-#include <enet/enet.h>
 #include <iostream>
+#include <enet/enet.h>
 #include <thread>
-#include <vector>
-#include <atomic>
 #include <random>
 #include <string>
 
-#include "Session.h"
 #include "../Constants.h"
+#include "../Socket/dto/SocketEventType.h"
 #include "../util/util.h"
-bool running = true;
 
 GameSession::~GameSession() {
-    enet_host_destroy(server);
     Log("server destroyed");
 }
 
+//스레드로 실행
 void GameSession::RunAsync() {
     running = true;
     std::thread([this]() {
-        this->Start(); // Start는 blocking하니까 thread로 실행
-    }).detach(); // 분리해서 백그라운드로 실행
+        this->Start();
+    }).detach();
 }
+
 void GameSession::Start() {
-    if (server != nullptr) {
-        Log("server is alady started but try to start it session id:" + sessionId);
-        throw std::exception("server is already started but server trying to start server");
-    }
     ENetAddress address;
     address.host = ENET_HOST_ANY;
     address.port = Consts::port;
-
-    server = enet_host_create(&address, 12, 2, 0, 0);
-    if (!server) {
-        Log("Failed to create ENet server on");
-        return;
-    }
     Log("server is running on port " + std::to_string(Consts::port));
     // Run server loop
     int8_t inputX,inputY;
-    uint8_t messageType;
-    uint8_t newPersonalId;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> distrib(0, 255);
     ENetEvent event;
-    float rotX, rotY, rotZ;
     while (running) {
-        while (enet_host_service(server, &event, 10) > 0) {
-            std::cout<<event.type<< std::endl;
-            switch (event.type) {
-                case ENET_EVENT_TYPE_CONNECT:{
-                    newPersonalId = static_cast<uint8_t>(distrib(gen));
-                    const char* msg = "{d}";
-                    ENetPacket* packet = enet_packet_create(msg, strlen(msg) + 1, ENET_PACKET_FLAG_RELIABLE);
-                    enet_peer_send(event.peer, 0, packet);
-                    enet_host_flush(server);
-                    Log("Client connected on " + initInfo.gameId);
+        std::shared_ptr<GameEvent> e;
+        {
+            std::unique_lock<std::mutex> lock(queueMutex);
+            queueCV.wait(lock, [&]{ return !eventQueue.empty() || !running; });
+
+            if (!running) break;
+
+            e = eventQueue.front();
+            eventQueue.pop();
+        }
+        try
+        {
+            switch (e->type)
+            {
+            case Assign:
+                break;
+            case Input:
+                break;
+            case Move:
+                {
+                    auto dto = (std::get_if<std::shared_ptr<MoveDto>>(&e->payload));
+                    auto secretKey = (*dto)->UserSecretKey;
+                    auto inputVector = (*dto)->InputVector;
+                    players->at(secretKey).Move(inputVector);
                     break;
                 }
-                case ENET_EVENT_TYPE_RECEIVE:{
-                    std::cout << "Packet received from client.\n";
-                    std::cout << "Data length: " << event.packet->dataLength << "\n";
-                    std::cout << "Raw bytes: ";
-                    for (size_t i = 0; i < event.packet->dataLength; ++i) {
-                        printf("%02X ", event.packet->data[i]);
-                    }
-                    messageType = event.packet->data[0];
-                    std::cout << "messageType: " << static_cast<int>(messageType) << std::endl;
-
-                    //input Vector
-                    inputX = static_cast<int8_t>(event.packet->data[1]);
-                    inputY = static_cast<int8_t>(event.packet->data[2]);
-                    std::cout << "inputVector: (" << static_cast<int>(inputX) << ", " << static_cast<int>(inputY) << ")" << std::endl;
-
-                    //input Rotation
-                    std::memcpy(&rotX, &event.packet->data[3], sizeof(float));
-                    std::memcpy(&rotY, &event.packet->data[7], sizeof(float));
-                    std::memcpy(&rotZ, &event.packet->data[11], sizeof(float));
-                    std::cout << "rotEular: (" << rotX << ", " << rotY << ", " << rotZ << ")" << std::endl;
-                    enet_packet_destroy(event.packet);
-                    break;
-                }
-                case ENET_EVENT_TYPE_DISCONNECT:
-                    Log("Client Disconnected on " + initInfo.gameId);
-                status = idle;
+            case Setup:
+                break;
+            case Update:
+                break;
+            case Hit:
+                break;
+            case Swap:
+                break;
+            case Generate:
+                break;
+            case Default:
                 break;
             }
+        }catch (const std::exception e)
+        {
+            std::cout << e.what()<<std::endl;
         }
     }
-    enet_host_destroy(server);
+        /*while (enet_host_service(server, &event, 10) > 0) {
+            std::cout<<event.type<< std::endl;
+            서버마다 enet host를 달자-폐기
+        }*/
 }
 void GameSession::Stop() {
     Log("session stopped at " + initInfo.gameId);
@@ -101,8 +91,32 @@ void GameSession::Stop() {
 void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
     this->sessionId = sessionId;
     this->initInfo = initInfo;
-    delete this->server;
-    this->server = nullptr;
+    uint16_t privateKey;
+    uint8_t publicKey;
+    initInfo.map;
+    //생성위치를 담은 map 클래스를 만들자
+    for (auto p : initInfo.players)
+    {
+
+        // TODO 이 마더퍼커좀 처리해봐
+        static std::mt19937 rng(std::random_device{}());
+        std::uniform_int_distribution<uint16_t> dist(1, 65535);
+
+        do {
+            privateKey = dist(rng);
+        } while (players->contains(privateKey));
+        publicKey = 412;
+        player_status newStatus = player_status(
+            0,
+            0,
+            0,
+            Vector3(0,0,0),
+            Vector3(0,0,0),
+            Vector3(0,0,0)
+        );
+        Player newPlayer = Player(p.id, p.name,p.key, privateKey, publicKey, newStatus);
+        (*players)[privateKey] = newPlayer;
+    }
 }
 
 bool GameSession::reset() {
@@ -111,7 +125,29 @@ bool GameSession::reset() {
 
 void GameSession::cleanUp() {
     Stop();
-    enet_host_destroy(server);
-    delete this;
+}
+
+Player* GameSession::RegistUser(const std::string& userKey, ENetPeer* peer)
+{
+    if (!running) return nullptr;
+    Player* p = nullptr;
+    for(auto& v : *this->players)
+    {
+        if (v.second.assignKey == userKey)
+        {
+            p = &v.second;
+            break;
+        }
+    }
+    if (p == nullptr) return nullptr;
+    p->peer = peer;
+    return p;
+}
+
+void GameSession::ProcessEvent(const std::shared_ptr<GameEvent>& event)
+{
+    std::lock_guard<std::mutex> lock(queueMutex);
+    eventQueue.push(event);
+    queueCV.notify_one();
 }
 
