@@ -46,10 +46,10 @@ RM = C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\white\Desktop\github\few_pow_sign_dedicated
+CMAKE_SOURCE_DIR = C:\Users\white\Desktop\Github\few_pow_sign_dedicated
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -76,9 +76,9 @@ rebuild_cache\fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,6 +117,54 @@ fpsProjectServer: cmake_check_build_system
 fpsProjectServer\fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\build
 .PHONY : fpsProjectServer\fast
+
+Session\Game\BspTree.obj: Session\Game\BspTree.cpp.obj
+.PHONY : Session\Game\BspTree.obj
+
+# target to build an object file
+Session\Game\BspTree.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj
+.PHONY : Session\Game\BspTree.cpp.obj
+
+Session\Game\BspTree.i: Session\Game\BspTree.cpp.i
+.PHONY : Session\Game\BspTree.i
+
+# target to preprocess a source file
+Session\Game\BspTree.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.i
+.PHONY : Session\Game\BspTree.cpp.i
+
+Session\Game\BspTree.s: Session\Game\BspTree.cpp.s
+.PHONY : Session\Game\BspTree.s
+
+# target to generate assembly for a file
+Session\Game\BspTree.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.s
+.PHONY : Session\Game\BspTree.cpp.s
+
+Session\Game\Collider.obj: Session\Game\Collider.cpp.obj
+.PHONY : Session\Game\Collider.obj
+
+# target to build an object file
+Session\Game\Collider.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj
+.PHONY : Session\Game\Collider.cpp.obj
+
+Session\Game\Collider.i: Session\Game\Collider.cpp.i
+.PHONY : Session\Game\Collider.i
+
+# target to preprocess a source file
+Session\Game\Collider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.i
+.PHONY : Session\Game\Collider.cpp.i
+
+Session\Game\Collider.s: Session\Game\Collider.cpp.s
+.PHONY : Session\Game\Collider.s
+
+# target to generate assembly for a file
+Session\Game\Collider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.s
+.PHONY : Session\Game\Collider.cpp.s
 
 Session\Game\Map.obj: Session\Game\Map.cpp.obj
 .PHONY : Session\Game\Map.obj
@@ -189,6 +237,30 @@ Session\Game\Player.s: Session\Game\Player.cpp.s
 Session\Game\Player.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.s
 .PHONY : Session\Game\Player.cpp.s
+
+Session\Game\Property.obj: Session\Game\Property.cpp.obj
+.PHONY : Session\Game\Property.obj
+
+# target to build an object file
+Session\Game\Property.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj
+.PHONY : Session\Game\Property.cpp.obj
+
+Session\Game\Property.i: Session\Game\Property.cpp.i
+.PHONY : Session\Game\Property.i
+
+# target to preprocess a source file
+Session\Game\Property.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.i
+.PHONY : Session\Game\Property.cpp.i
+
+Session\Game\Property.s: Session\Game\Property.cpp.s
+.PHONY : Session\Game\Property.s
+
+# target to generate assembly for a file
+Session\Game\Property.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.s
+.PHONY : Session\Game\Property.cpp.s
 
 Session\Game\SimulationMap.obj: Session\Game\SimulationMap.cpp.obj
 .PHONY : Session\Game\SimulationMap.obj
@@ -309,6 +381,30 @@ Session\sessionPool\SessionManager.s: Session\sessionPool\SessionManager.cpp.s
 Session\sessionPool\SessionManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.s
 .PHONY : Session\sessionPool\SessionManager.cpp.s
+
+Socket\BroadcastMoveDto.obj: Socket\BroadcastMoveDto.cpp.obj
+.PHONY : Socket\BroadcastMoveDto.obj
+
+# target to build an object file
+Socket\BroadcastMoveDto.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj
+.PHONY : Socket\BroadcastMoveDto.cpp.obj
+
+Socket\BroadcastMoveDto.i: Socket\BroadcastMoveDto.cpp.i
+.PHONY : Socket\BroadcastMoveDto.i
+
+# target to preprocess a source file
+Socket\BroadcastMoveDto.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.i
+.PHONY : Socket\BroadcastMoveDto.cpp.i
+
+Socket\BroadcastMoveDto.s: Socket\BroadcastMoveDto.cpp.s
+.PHONY : Socket\BroadcastMoveDto.s
+
+# target to generate assembly for a file
+Socket\BroadcastMoveDto.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.s
+.PHONY : Socket\BroadcastMoveDto.cpp.s
 
 Socket\EnetClient.obj: Socket\EnetClient.cpp.obj
 .PHONY : Socket\EnetClient.obj
@@ -535,6 +631,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... fpsProjectServer
+	@echo ... Session/Game/BspTree.obj
+	@echo ... Session/Game/BspTree.i
+	@echo ... Session/Game/BspTree.s
+	@echo ... Session/Game/Collider.obj
+	@echo ... Session/Game/Collider.i
+	@echo ... Session/Game/Collider.s
 	@echo ... Session/Game/Map.obj
 	@echo ... Session/Game/Map.i
 	@echo ... Session/Game/Map.s
@@ -544,6 +646,9 @@ help:
 	@echo ... Session/Game/Player.obj
 	@echo ... Session/Game/Player.i
 	@echo ... Session/Game/Player.s
+	@echo ... Session/Game/Property.obj
+	@echo ... Session/Game/Property.i
+	@echo ... Session/Game/Property.s
 	@echo ... Session/Game/SimulationMap.obj
 	@echo ... Session/Game/SimulationMap.i
 	@echo ... Session/Game/SimulationMap.s
@@ -559,6 +664,9 @@ help:
 	@echo ... Session/sessionPool/SessionManager.obj
 	@echo ... Session/sessionPool/SessionManager.i
 	@echo ... Session/sessionPool/SessionManager.s
+	@echo ... Socket/BroadcastMoveDto.obj
+	@echo ... Socket/BroadcastMoveDto.i
+	@echo ... Socket/BroadcastMoveDto.s
 	@echo ... Socket/EnetClient.obj
 	@echo ... Socket/EnetClient.i
 	@echo ... Socket/EnetClient.s

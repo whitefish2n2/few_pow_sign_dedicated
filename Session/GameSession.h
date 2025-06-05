@@ -12,6 +12,7 @@
 #include <variant>
 #include <enet/enet.h>
 
+#include "../Socket/dto/AssignDto.h"
 #include "FhishiX/Vector2.h"
 #include "FhishiX/Vector3.h"
 #include "../Socket/dto/DefaultDto.h"
@@ -21,10 +22,12 @@
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
 #include "FhishiX/Vertex.h"
+#include "Game/Map.h"
 #include "netcode/SessionNetworkDto.h"
 
 using EventPayloadVariant = std::variant<
     std::nullptr_t,
+    std::shared_ptr<AssignRequestDto>,
     std::shared_ptr<DefaultDto>,
     std::shared_ptr<MoveDto>
     // std::shared_ptr<MoveDto> //type-Move
@@ -69,18 +72,24 @@ class GameSession {
     std::uint16_t sessionConnectKey;// 플레이어->세션 연결에 사용하는 ID
     GameSetupBoddari initInfo;
     SESSIONSTATUS status = idle; // 세션 상태
-    std::shared_ptr<std::map<uint16_t, Player>> players; // 플레이어 리스트
+    std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
 
-    MapEnum map;
-    std::vector<Vertex> mapVertices;// 맵 버텍스-버텍스 자료 파일을 만들어서 읽어오는식으로 해야할듯
+    MapEnum mapType;
+    Map map;
 
     std::queue<std::shared_ptr<GameEvent>> eventQueue;
     std::mutex queueMutex;
     std::condition_variable queueCV;
 
+    long long int tick;
+
     void RunAsync();
 
-    Player* RegistUser(const std::string& userKey, ENetPeer* peer);
+    void ProcessEventQueue();
+
+    void Tick();
+
+    std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer);
 
     void ProcessEvent(const std::shared_ptr<GameEvent>& event);
 

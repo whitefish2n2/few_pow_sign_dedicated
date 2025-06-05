@@ -7,8 +7,9 @@
 #include <memory>
 #include <queue>
 
-#include "../Dto/MapEnum.h"
+
 #include "Map.h"
+#include "../Dto/MapEnum.h"
 class MapManager
 {
 
@@ -18,8 +19,9 @@ class MapManager
         static MapManager instance;
         return &instance;
     }
+    void Init();
 
-    std::shared_ptr<Map> GetMap(MapEnum type);
+    Map GetMap(MapEnum type);
 
 
     MapManager(const MapManager&) = delete;
@@ -27,7 +29,10 @@ class MapManager
     MapManager(MapManager&&) = delete;
     MapManager& operator=(MapManager&&) = delete;
 private:
-    std::map<MapEnum, std::queue<std::shared_ptr<Map>>> maps;
+    std::map<MapEnum, std::unique_ptr<Map>> mapTemplates;
+
+    std::unique_ptr<Map> LoadMap(MapEnum type);
+
     MapManager() = default;
     ~MapManager() = default;
 };

@@ -22,8 +22,8 @@ void to_json(nlohmann::json& j, const GameSessionDto& p) {
 }
 player_dto playerToPlayerDto(const Player& p) {
     return player_dto{
-        .id = p.id,
-        .name = p.name,
+        .id = p.userId,
+        .name = p.userName,
         .team = p.status.team,
         .kill = p.status.kill,
         .death = p.status.death,

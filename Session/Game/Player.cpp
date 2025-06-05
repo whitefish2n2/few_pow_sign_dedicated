@@ -9,18 +9,19 @@ void Player::Move(const Vector2<int> inputVector)
 }
 void Player::Rotate(const Vector3 r)
 {
-    this->status.rotation += r;
+    this->status.rotation = r;
 }
 void Player::Jump()
 {
+
 }
 
-Player::Player(std::string id, std::string name, std::string assignKey, uint16_t privateKey, uint8_t publicKey, player_status status )
-{
-    this->id = id;
-    this->name = name;
+Player::Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey,
+    player_status status) {
+    this->userId = id;
+    this->userName = name;
     this->assignKey = assignKey;
     this->privateKey = privateKey;
     this->publicKey = publicKey;
     this->status = status;
-};
+}

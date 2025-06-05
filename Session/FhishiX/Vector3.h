@@ -18,6 +18,8 @@ struct Vector3 {
     {
         return sqrt(pow (x-other.x,2)+pow(y-other.y,2)+pow (z-other.z,2));
     }
+    //오퍼레이터들
+    #pragma region Vector3 operators
     Vector3 operator+(const Vector3& p) const
     {
         return { x + p.x, y + p.y, z + p.z };
@@ -91,6 +93,38 @@ struct Vector3 {
         return *this;
     }
 
+#pragma endregion
+    //방향 벡터들
+    #pragma region directionVector
+    static Vector3 Zero() {
+        static Vector3 v = { 0, 0, 0 };
+        return v;
+    }
+    static Vector3 Up() {
+        static Vector3 v = { 0, 1, 0 };
+        return v;
+    }
+    static Vector3 Down() {
+        static Vector3 v = { 0, -1, 0 };
+        return v;
+    }
+    static Vector3 Forward() {
+        static Vector3 v = { 0, 0, 1 };
+        return v;
+    }
+    static Vector3 Back() {
+        static Vector3 v = { 0, 0, -1 };
+        return v;
+    }
+    static Vector3 Left() {
+        static Vector3 v = { -1, 0, 0 };
+        return v;
+    }
+    static Vector3 Right() {
+        static Vector3 v = { 1, 0, 0 };
+        return v;
+    }
+    #pragma endregion
 
 };
 static Vector3 zeroVector = Vector3(0, 0, 0);

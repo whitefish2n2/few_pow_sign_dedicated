@@ -1,4 +1,4 @@
-//
+    //
 // Created by user on 25. 4. 24.
 //
 #pragma once
@@ -9,10 +9,10 @@
 #include "PlayerStatus.h"
 class Player {
     public:
-    std::string id;
-    std::string name;
+    std::string userId;
+    std::string userName;
     std::string assignKey;
-    uint16_t privateKey;
+    uint64_t privateKey;
     uint8_t publicKey;
     player_status status;
 
@@ -22,5 +22,5 @@ class Player {
     void Rotate(Vector3 r);
     void Jump();
     Player() = default;
-    Player(std::string id, std::string name, std::string assignKey, uint16_t privateKey, uint8_t publicKey, player_status status );
+    Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey, player_status status );
 };

@@ -21,6 +21,8 @@ enum SocketEventType:unsigned char
 
 
 
+    Ping=252,
+    Pong=253,
     //fuck that
     Default = 254
 };

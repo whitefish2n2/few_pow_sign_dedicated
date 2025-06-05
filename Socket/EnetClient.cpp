@@ -22,15 +22,26 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
     auto session = SessionManager::getInstance().sessions[sessionKey];
     if (session == nullptr) return;
 
-    auto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
+    try {
+        auto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
+        auto event = std::make_shared<GameEvent>();
+        event->timestamp = *timeStamp;
+        event->type = type;
+        event->payload = dto;
+        event->peer = peer;
 
-    auto event = std::make_shared<GameEvent>();
-    event->timestamp = *timeStamp;
-    event->type = type;
-    event->payload = dto;
-    event->peer = peer;
+        session->ProcessEvent(event);
+    }
+    catch (const std::exception& e) {
+        std::cout << "[Packet Error] Type: " << type << ", Parse failed: " << e.what() << std::endl;
+        const char* errorMsg = "404";
+        ENetPacket* packet = enet_packet_create(errorMsg, strlen(errorMsg), ENET_PACKET_FLAG_RELIABLE);
+        enet_peer_send(peer,0,packet);
+        enet_packet_destroy(packet);
+    }
 
-    session->ProcessEvent(event);
+
+
 }
 
 void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
@@ -108,7 +119,7 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
             }
 
             default: {
-                RegisterPacket<DefaultDto>(Default, sessionKey, peer, payload, payloadLength,&timestamp);
+                RegisterPacket<DefaultDto>(SocketEventType::Default, sessionKey, peer, payload, payloadLength,&timestamp);
                 break;
             }
         }
@@ -136,6 +147,12 @@ void EnetClient::HandleClientEvent(ENetEvent& event) {
         default:
             break;
     }
+}
+
+void EnetClient::SendPacket(const uint8_t *payload, const size_t length, ENetPeer *peer, const bool isReliable = true) {
+    ENetPacket* packet = enet_packet_create(payload, length, 0);
+    enet_peer_send(peer,isReliable ? 1 : 0, packet);
+    enet_packet_destroy(packet);
 }
 
 void EnetClient::RunClient(int port) {

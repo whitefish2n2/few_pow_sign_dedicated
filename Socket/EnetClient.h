@@ -27,6 +27,9 @@ class EnetClient {
     EnetClient& operator=(const EnetClient&) = delete;
     void HandlePacket(ENetPeer* peer, uint8_t* data, size_t length);
     void HandleClientEvent(ENetEvent& event);
+
+    void SendPacket(const byte *payload, size_t length, ENetPeer *peer, bool isReliable);
+
     void RunClient(int port);
 };
 

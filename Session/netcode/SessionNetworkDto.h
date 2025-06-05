@@ -49,7 +49,7 @@ struct GameSetupBoddari {
     std::vector<NewPlayerDto> players;
     GameMode gameMode;
     std::string map;
-    std::uint16_t sessionKey;
+    std::string playerConnectKey;
 };
 void from_json(const nlohmann::json &j, GameSetupBoddari &g);
 #endif //PLAYERNETWORKDTOS_H

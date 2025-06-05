@@ -9,12 +9,13 @@ enum MapEnum
     test,
     haven,
 };
+
 static std::string GetMapInfoPath(MapEnum v)
 {
     switch (v)
     {
         case test:
-            return "test";
+            return "test.mapVerticesInfo";
             break;
         case haven:
             return "haven";

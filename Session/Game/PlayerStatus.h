@@ -18,7 +18,7 @@ struct player_status {
     int kill;
     int death;
 
-    Vector3 position;
+    Vector3 position = Vector3::Zero();
     Vector3 velocity;
 
     Vector3 rotation;

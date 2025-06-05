@@ -2,7 +2,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <enet/enet.h>
+
 #include <thread>
 
 #include "Constants.h"
@@ -12,6 +12,7 @@
 #include "./Session/GameSession.h"
 #include "./Session/sessionPool/SessionManager.h"
 #include "http-listener/httpRestClient.h"
+#include <enet/enet.h>
 using std::thread;
 
 #include <iostream>
@@ -44,12 +45,7 @@ void statusUpdater() {
     }
 }
 
-//서버 생성 request 처리
-int session_counter = 0;
 
-void inputServerInfo(std::pmr::wstring &key,std::pmr::string &url) {
-
-}
 int main() {
     isRunning = false;
     if (enet_initialize() != 0) {

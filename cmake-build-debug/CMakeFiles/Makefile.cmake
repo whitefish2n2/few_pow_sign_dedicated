@@ -51,7 +51,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/Platform/Windows.cmake"
   "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/Platform/WindowsPaths.cmake"
   "C:/Users/white/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.31/Modules/SelectLibraryConfigurations.cmake"
-  "C:/Users/white/Desktop/github/few_pow_sign_dedicated/CMakeLists.txt"
+  "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/CMakeLists.txt"
   "CMakeFiles/3.31.6/CMakeCCompiler.cmake"
   "CMakeFiles/3.31.6/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.31.6/CMakeRCCompiler.cmake"

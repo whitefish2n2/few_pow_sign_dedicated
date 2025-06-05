@@ -42,10 +42,10 @@ RM = C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\white\Desktop\github\few_pow_sign_dedicated
+CMAKE_SOURCE_DIR = C:\Users\white\Desktop\Github\few_pow_sign_dedicated
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles\fpsProjectServer.dir\depend.make
@@ -62,343 +62,423 @@ CMakeFiles\fpsProjectServer.dir\codegen:
 .PHONY : CMakeFiles\fpsProjectServer.dir\codegen
 
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\main.cpp
+CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\main.cpp
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/fpsProjectServer.dir/main.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\main.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\main.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/fpsProjectServer.dir/main.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\main.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\main.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\main.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/main.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\main.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\main.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\main.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\main.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/main.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\main.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\main.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\main.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\main.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\GameSession.cpp
+CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\GameSession.cpp
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\GameSession.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\GameSession.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\GameSession.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\GameSession.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\GameSession.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\GameSession.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\util\util.cpp
+CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.cpp
 CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/fpsProjectServer.dir/util/util.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\util\util.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\util\util.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/fpsProjectServer.dir/util/util.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\util\util.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\util\util.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\util\util.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/util/util.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\util\util.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\util\util.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\util\util.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\util\util.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/util/util.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\util\util.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\util\util.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\util\util.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
+CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\server-status\ServerStat.cpp
+CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\server-status\ServerStat.cpp
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\server-status\ServerStat.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\server-status\ServerStat.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\server-status\ServerStat.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\server-status\ServerStat.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\server-status\ServerStat.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\server-status\ServerStat.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
+CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\httpRestClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
+CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\sessionPool\SessionManager.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
+CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
 CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\netcode\CreateSessionNetworkDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\CreateSessionNetworkDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\EnetClient.cpp
+CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\EnetClient.cpp
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\EnetClient.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\EnetClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\EnetClient.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\EnetClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\EnetClient.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\EnetClient.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
+CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
 CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/AssignDto.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/AssignDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Socket/dto/AssignDto.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Socket/dto/AssignDto.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\AssignDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\AssignDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
+CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
 CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/MoveDto.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/MoveDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Socket/dto/MoveDto.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Socket/dto/MoveDto.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\MoveDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
+CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
 CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/DefaultDto.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/dto/DefaultDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Socket/dto/DefaultDto.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Socket/dto/DefaultDto.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\dto\DefaultDto.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Player.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Player.cpp
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Player.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Player.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Player.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Player.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/Player.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Player.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Player.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/Player.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Player.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Player.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
 CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
-<<
-
-CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
-CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
-<<
-
-CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
-<<
-
-CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj: C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Map.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.cpp
 CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj.d --working-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Map.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Map.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.s"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.s /c C:\Users\white\Desktop\github\few_pow_sign_dedicated\Session\Game\Map.cpp
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/MapManager.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\MapManager.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\BroadcastMoveDto.cpp
+CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/fpsProjectServer.dir/Socket/BroadcastMoveDto.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\BroadcastMoveDto.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Socket/BroadcastMoveDto.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\BroadcastMoveDto.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Socket/BroadcastMoveDto.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\BroadcastMoveDto.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Collider.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Collider.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Collider.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/Collider.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Collider.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/Collider.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Collider.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Property.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Property.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Property.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Property.cpp
 <<
 
 # Object files for target fpsProjectServer
@@ -418,8 +498,12 @@ fpsProjectServer_OBJECTS = \
 "CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj" \
-"CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj"
+"CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj"
 
 # External object files for target fpsProjectServer
 fpsProjectServer_EXTERNAL_OBJECTS =
@@ -439,8 +523,12 @@ fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Socket\dto\MoveDto.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Socket\dto\DefaultDto.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\SimulationMap.cpp.obj
-fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\Map.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\MapManager.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Socket\BroadcastMoveDto.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\Collider.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\build.make
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib
@@ -449,11 +537,11 @@ fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\de
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable fpsProjectServer.exe"
-	C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E vs_link_exe --msvc-ver=1943 --intdir=CMakeFiles\fpsProjectServer.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100226~1.0\x64\mt.exe --manifests -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\fpsProjectServer.dir\objects1.rsp @<<
- /out:fpsProjectServer.exe /implib:fpsProjectServer.lib /pdb:C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\fpsProjectServer.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib ws2_32.lib winmm.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib Rpcrt4.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\zlibd.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlienc.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX executable fpsProjectServer.exe"
+	C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\fpsProjectServer.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\fpsProjectServer.dir\objects1.rsp @<<
+ /out:fpsProjectServer.exe /implib:fpsProjectServer.lib /pdb:C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\fpsProjectServer.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib ws2_32.lib winmm.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib Rpcrt4.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\zlibd.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlienc.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/github/few_pow_sign_dedicated/cmake-build-debug/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/debug/bin -OutVariable out
+	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/debug/bin -OutVariable out
 
 # Rule to build all files generated by this target.
 CMakeFiles\fpsProjectServer.dir\build: fpsProjectServer.exe
@@ -464,6 +552,6 @@ CMakeFiles\fpsProjectServer.dir\clean:
 .PHONY : CMakeFiles\fpsProjectServer.dir\clean
 
 CMakeFiles\fpsProjectServer.dir\depend:
-	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Users\white\Desktop\github\few_pow_sign_dedicated C:\Users\white\Desktop\github\few_pow_sign_dedicated C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug C:\Users\white\Desktop\github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles\fpsProjectServer.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Users\white\Desktop\Github\few_pow_sign_dedicated C:\Users\white\Desktop\Github\few_pow_sign_dedicated C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles\fpsProjectServer.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles\fpsProjectServer.dir\depend
 
