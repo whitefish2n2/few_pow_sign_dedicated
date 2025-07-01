@@ -29,6 +29,7 @@ public:
     void Insert(GameObject* obj);
 
     static void DeleteNode(BSPNode *node);
+    ~BSPTree();
 
 private:
     void InsertRecursive(BSPNode*& node, GameObject* obj, int depth);
@@ -38,8 +39,7 @@ private:
     static bool ShouldGoMultipleInsert(GameObject *obj, BSPNode *node, int depth);
 
     static bool IsInFront(GameObject *obj, BSPNode *node, int depth);
-    BSPTree::~BSPTree() {
-        DeleteNode(root);
-    }
+
+
 };
 #endif //BSPTREE_H

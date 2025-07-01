@@ -3,7 +3,7 @@
 //
 
 #pragma once
-enum Layers {
+enum class Layers {
     Default,
     Ground,
     Gun,
@@ -13,34 +13,34 @@ class Layer {
     public:
     static bool isCollisionable(Layers l1, Layers l2) {
         switch (l1) {
-            case Default:
+            case Layers::Default:
                 switch (l2) {
-                    case Default:
+                    case Layers::Default:
                         return true;
-                    case Ground:
+                    case Layers::Ground:
                         return true;
-                    case Gun:
+                    case Layers::Gun:
                         return false;
                 }
-            case Ground:
+            case Layers::Ground:
                 switch (l2) {
-                    case Default:
+                    case Layers::Default:
                         return true;
-                    case Ground:
+                    case Layers::Ground:
                         return true;
-                    case Gun:
+                    case Layers::Gun:
                         return true;
                 }
-            case Gun:
+            case Layers::Gun:
                 switch (l2) {
-                    case Default:
+                    case Layers::Default:
                         return false;
-                    case Ground:
+                    case Layers::Ground:
                         return true;
-                    case Gun:
+                    case Layers::Gun:
                         return false;
                 }
         }
         return false;
     }
-}
+};

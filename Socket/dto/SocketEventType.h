@@ -5,7 +5,7 @@
 #ifndef SOCKETEVENTTYPE_H
 #define SOCKETEVENTTYPE_H
 
-enum SocketEventType:unsigned char
+enum class SocketEventType:unsigned char
 {
     //player->server
     Assign=0,//_R_

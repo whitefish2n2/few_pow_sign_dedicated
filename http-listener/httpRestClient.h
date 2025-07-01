@@ -8,7 +8,7 @@
 #include <queue>
 #include <stack>
 #include <future>
-#include "../Session/netcode/newPlayerDto.h"
+#include "../Session/netcode/DedicatedNewPlayerDto.h"
 #include "../third-party/httplib.h"
 #include "../Session/netcode/SessionNetworkDto.h"
 class HttpRestClient {

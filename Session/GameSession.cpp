@@ -34,14 +34,20 @@ void GameSession::ProcessEventQueue() {
         {
             switch (e->type)
             {
-                case Assign: {
-                    auto dto = std::get_if<std::shared_ptr<AssignRequestDto>>(&e->payload);
+                case SocketEventType::Assign: {
+                    auto dto = *(std::get_if<std::shared_ptr<AssignRequestDto>>(&e->payload));
+                    for (const auto& val: *players | std::views::values) {
+                        if (val.assignKey == dto->Key){
+                            //todo
+                        }
+                    }
+                    //todo
                     break;
                 }
 
-                case Input:
+                case SocketEventType::Input:
                     break;
-                case Move:
+                case SocketEventType::Move:
                 {
                     auto dto = (std::get_if<std::shared_ptr<MoveDto>>(&e->payload));
                     if (dto==nullptr) continue;
@@ -50,18 +56,19 @@ void GameSession::ProcessEventQueue() {
                     players->at(secretKey).Move(inputVector);
                     break;
                 }
-                case Setup:
+                case SocketEventType::Setup:
                     break;
-                case Update:
+                case SocketEventType::Update:
                     break;
-                case Hit:
+                case SocketEventType::Hit:
                     break;
-                case Swap:
+                case SocketEventType::Swap:
                     break;
-                case Generate:
+                case SocketEventType::Generate:
                     break;
                 case SocketEventType::Default:
                     break;
+                default: ;
             }
         }catch (const std::exception& ex)
         {
@@ -103,16 +110,19 @@ void GameSession::Stop() {
 }
 
 void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
+    this->players = std::make_shared<std::map<uint64_t, Player>>();
     this->sessionId = sessionId;
     this->initInfo = initInfo;
     uint64_t privateKey;
     uint8_t publicKey=129;
     initInfo.map;
-    //생성위치를 담은 map 클래스를 만들자
+    //todo: 생성위치를 담은 map 클래스를 만들자
+    std::cout<<"New Session Enqueue Players:"<< std::endl;
     for (auto p : initInfo.players)
     {
+        std::cout<<p.id<<std::endl;
 
-        // TODO 이 마더퍼커좀 처리해봐
+        // TODO 이좀 처리해봐
         static std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<uint64_t> dist(1, 18446744073709551615);
 
@@ -129,6 +139,7 @@ void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
         );
         Player newPlayer = Player(p.id, p.name,p.key, privateKey, publicKey++, newStatus);
         (*players)[privateKey] = newPlayer;
+        std::cout<<"Enqueue Succeced"<<std::endl;
     }
 }
 

@@ -5,6 +5,7 @@
 #ifndef AABB_H
 #define AABB_H
 #include "Vector3.h"
+#include <limits>
 
 struct AABB {
     Vector3 min, max;
@@ -21,9 +22,12 @@ struct AABB {
     };
 
     static AABB Empty() {
+        const float float_max = (std::numeric_limits<float>::max)();
+        const float float_lowest = (std::numeric_limits<float>::lowest)();
+
         return AABB{
-            Vector3{ std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() },
-            Vector3{ std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest() }
+            Vector3{ float_max, float_max, float_max },
+            Vector3{ float_lowest, float_lowest, float_lowest }
         };
     }
 };

@@ -11,7 +11,7 @@
 #include "../FhishiX/Vector3.h"
 #include <nlohmann/json.hpp>
 
-#include "newPlayerDto.h"
+#include "DedicatedNewPlayerDto.h"
 #include "../Dto/GameMode.h"
 
 class GameSession;
@@ -33,12 +33,12 @@ struct player_dto {
 };
 player_dto playerToPlayerDto(const Player& p);
 
-
 struct GameSessionDto {
     std::string sessionId;
     SESSIONSTATUS status;
     std::vector<player_dto> players;
 };
+
 GameSessionDto getGameSessionDto(GameSession& p);
 
 void to_json(nlohmann::json& j, const GameSessionDto& p);
@@ -46,7 +46,7 @@ void to_json(nlohmann::json& j, const player_dto& p);
 
 struct GameSetupBoddari {
     std::string gameId;
-    std::vector<NewPlayerDto> players;
+    std::vector<DedicatedNewPlayerDto> players;
     GameMode gameMode;
     std::string map;
     std::string playerConnectKey;

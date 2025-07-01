@@ -43,14 +43,14 @@ using BroadCastPayloadVariant = std::variant<
 ///</summary>
 struct GameEvent {
     uint64_t timestamp = 0;
-    SocketEventType type = Update;
+    SocketEventType type = SocketEventType::Update;
     EventPayloadVariant payload = nullptr;
     ENetPeer* peer = nullptr;
 };
 
 struct BroadCastEvent
 {
-    SocketEventType type = Update;
+    SocketEventType type = SocketEventType::Update;
     BroadCastPayloadVariant payload = nullptr;
     std::vector<ENetPeer*> target;
 
@@ -83,6 +83,8 @@ class GameSession {
 
     long long int tick;
 
+    ~GameSession();
+
     void RunAsync();
 
     void ProcessEventQueue();
@@ -99,7 +101,6 @@ class GameSession {
     void Init(std::string sessionId, GameSetupBoddari initInfo);
     bool reset();
     void cleanUp();
-    ~GameSession();
     bool running = true;
 };
 

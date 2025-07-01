@@ -17,13 +17,14 @@ void ReturnError(ENetPeer* peer) {
     enet_peer_send(peer, 1, packet);
 }
 
+///T대로 파싱해서 레지스터링
 template<typename TDto>
 void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, uint8_t* payload, size_t payloadLength, const uint64_t* timeStamp) {
     auto session = SessionManager::getInstance().sessions[sessionKey];
     if (session == nullptr) return;
 
     try {
-        auto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
+        TDto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
         auto event = std::make_shared<GameEvent>();
         event->timestamp = *timeStamp;
         event->type = type;
@@ -33,7 +34,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
         session->ProcessEvent(event);
     }
     catch (const std::exception& e) {
-        std::cout << "[Packet Error] Type: " << type << ", Parse failed: " << e.what() << std::endl;
+        std::cout << "[Packet Error] Type: " << static_cast<int>(type) << ", Parse failed: " << e.what() << std::endl;
         const char* errorMsg = "404";
         ENetPacket* packet = enet_packet_create(errorMsg, strlen(errorMsg), ENET_PACKET_FLAG_RELIABLE);
         enet_peer_send(peer,0,packet);
@@ -63,7 +64,10 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
 
     try {
         switch (messageType) {
-            case Assign: {
+            case static_cast<int>(SocketEventType::Assign): {
+                RegisterPacket<AssignRequestDto>(SocketEventType::Assign, sessionKey, peer, payload, payloadLength,&timestamp);
+
+                /*
                 std::string v(reinterpret_cast<char*>(payload), payloadLength);
                 nlohmann::json j = nlohmann::json::parse(v);
 
@@ -110,11 +114,11 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
 
                 ENetPacket* packet = enet_packet_create(raw.c_str(), raw.size(), ENET_PACKET_FLAG_RELIABLE);
                 enet_peer_send(peer, 1, packet);
-                break;
+                break;*/
             }
 
-            case Move: {
-                RegisterPacket<MoveDto>(Move, sessionKey, peer, payload, payloadLength,&timestamp);
+            case static_cast<int>(SocketEventType::Move): {
+                RegisterPacket<MoveDto>(SocketEventType::Move, sessionKey, peer, payload, payloadLength,&timestamp);
                 break;
             }
 

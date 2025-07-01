@@ -32,9 +32,9 @@ void HttpRestClient::start_http_server(){
             json body = json::parse(rawBody);
             GameSetupBoddari initInfo;
             nlohmann::from_json(body, initInfo);
+            std::cout << "initInfo Parse Succeced" << std::endl;
             auto sessionKey = SessionManager::getInstance().makeNewSession(initInfo);
             res.body =std::to_string(sessionKey);
-            res.status = 201;
             //비동기 처리?
             /*auto request = std::make_shared<SessionRequest>();
             std::string rawBody = req.body;

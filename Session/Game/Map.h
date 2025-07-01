@@ -3,14 +3,10 @@
 //
 
 #pragma once
-#include <memory>
-#include <vector>
-#include <fstream>
 #include <unordered_map>
 
 #include "BspTree.h"
 #include "../Dto/MapEnum.h"
-#include "../FhishiX/Vector3.h"
 #include "../FhishiX/GameObject.h"
 //loadmap으로 맵 버텍스,트라이앵글 정보를 불러와요
 //init으로 맵의 진행상황, 트리거같은걸 초기화해요
@@ -27,6 +23,7 @@ class Map
     BSPTree staticObjectsBSP;
 
     void Init();
+    Map() : type(MapEnum::test) {}
     Map(MapEnum type);
     ~Map();
     Map(const Map &);

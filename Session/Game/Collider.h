@@ -7,7 +7,7 @@
 
 struct Collision {
 
-}
+};
 
 class Collider {
     public:

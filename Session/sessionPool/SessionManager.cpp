@@ -8,13 +8,22 @@
 #include <random>
 #include <utility>
 
+std::shared_ptr<GameSession> SessionManager::acquireSessionById(const std::string &sessionId) {
+    for (auto val: sessions | std::views::values) {
+        if (val->sessionId == sessionId) {
+            return val;
+        }
+    }
+    return nullptr;
+}
+
 ///
 /// @param initInfo Session에 전달되어 session 내부에서 처리됨요
 /// @return 새롭게 생성한 세션의 식별 id를 반환합니다
 uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
     auto newSession = std::make_shared<GameSession>();
 
-    uint16_t sessionKey = sessionKeyRoundRobin | std::random_device{}();;
+    uint16_t sessionKey = sessionKeyRoundRobin | std::random_device{}();
     while (sessions.contains(sessionKey))
     {
         sessionKeyRoundRobin++;

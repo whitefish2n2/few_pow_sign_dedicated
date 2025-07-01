@@ -1,5 +1,6 @@
 #include "MapManager.h"
 
+#include <fstream>
 #include <memory>
 #include <memory>
 #include <sstream>

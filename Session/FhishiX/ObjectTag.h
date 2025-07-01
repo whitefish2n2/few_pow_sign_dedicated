@@ -13,12 +13,10 @@ class ObjectTag {
         Player,
         Untagged
     };
-    static TagEnum GetObjectTagFromString(std::string v) {
-        switch (v) {
-            case "Ground": return Ground;
-            case "Player": return Player;
-            default: return Untagged;
-        }
+    static TagEnum GetObjectTagFromString(const std::string &v) {
+        if (v=="Ground") return TagEnum::Ground;
+        if (v=="Player") return TagEnum::Player;
+        else return TagEnum::Untagged;
     }
 };
 

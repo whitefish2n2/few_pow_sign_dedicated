@@ -14,7 +14,7 @@ class SessionManager {
 public:
     std::queue<std::shared_ptr<GameSession>> EventQueue;
     std::unordered_map<std::uint16_t, std::shared_ptr<GameSession>> sessions;
-    std::shared_ptr<GameSession> acquireSession();
+    std::shared_ptr<GameSession> acquireSessionById(const std::string &sessionId);
     SessionManager(const SessionManager&) = delete;
     SessionManager& operator=(const SessionManager&) = delete;
     static SessionManager& getInstance() {

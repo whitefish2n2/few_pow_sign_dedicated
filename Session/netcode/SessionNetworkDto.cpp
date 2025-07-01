@@ -1,7 +1,7 @@
 #include "SessionNetworkDto.h"
 
 #include "../GameSession.h"
-#include "newPlayerDto.h"
+#include "DedicatedNewPlayerDto.h"
 #include "../../util/util.h"
 
 void to_json(nlohmann::json& j, const player_dto& p) {
@@ -44,7 +44,7 @@ GameMode parseGameMode(const std::string& mode) {
     if (mode == "Solo")       return GameMode::Solo;
     throw std::invalid_argument("Unknown game mode: " + mode);
 }
-void from_json(const nlohmann::json& j, NewPlayerDto& p) {
+void from_json(const nlohmann::json& j, DedicatedNewPlayerDto& p) {
     p.id = j["id"];
     p.name = j["name"];
     p.key = j["key"];
@@ -52,7 +52,7 @@ void from_json(const nlohmann::json& j, NewPlayerDto& p) {
 
 void from_json(const nlohmann::json& j, GameSetupBoddari& g) {
     g.gameId = j.at("gameId").get<std::string>();
-    g.players = j.at("players").get<std::vector<NewPlayerDto>>();
+    g.players = j.at("players").get<std::vector<DedicatedNewPlayerDto>>();
     g.gameMode = parseGameMode(j.at("gameMode").get<std::string>());
     g.map = j.at("map").get<std::string>();
 }

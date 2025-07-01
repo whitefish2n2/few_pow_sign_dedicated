@@ -134,3 +134,8 @@ bool BSPTree::IsInFront(GameObject* obj, BSPNode* node, int depth) {
     }
 }
 
+BSPTree::~BSPTree() {
+    DeleteNode(root);
+}
+
+
