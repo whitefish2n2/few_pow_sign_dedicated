@@ -67,7 +67,7 @@ int main() {
     }
     std::cout << "key"<<key<< std::endl;
     std::cout << "enter base url(like this: 123.123.123.123:1421)";
-    std::cin>>url;
+    url = "localhost:8080";
     std::string val= GenerateUuid();
     serverUuid.assign(val.begin(),val.end());
 

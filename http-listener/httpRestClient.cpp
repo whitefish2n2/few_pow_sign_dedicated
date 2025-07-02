@@ -34,24 +34,10 @@ void HttpRestClient::start_http_server(){
             nlohmann::from_json(body, initInfo);
             std::cout << "initInfo Parse Succeced" << std::endl;
             auto sessionKey = SessionManager::getInstance().makeNewSession(initInfo);
-            res.body =std::to_string(sessionKey);
-            //비동기 처리?
-            /*auto request = std::make_shared<SessionRequest>();
-            std::string rawBody = req.body;
-            json body = json::parse(rawBody);
-            GameSetupBoddari initInfo = GameSetupBoddari();
-            nlohmann::from_json(body, initInfo);
-            request->initInfo = initInfo;
-            auto future = request->promise.get_future(); // promise pattern
-            {
-                std::lock_guard<std::mutex> lock(queueMutex);
-                requestQueue.push(request);
-            }
-            queueCV.notify_one(); // 메인 스레드에 알림
-            */
+            res.body =std::to_string((int)sessionKey);
             res.status = 201;
-            res.set_content("Session created. ID: " + initInfo.gameId, "application/json");
-            std::cout << "Session created. ID: " << initInfo.gameId << std::endl;
+            res.set_content(std::to_string(sessionKey), "application/json");
+            std::cout << "Session created. ID: " << initInfo.gameId <<", session key:" << std::to_string((int)sessionKey)<< std::endl;
             return true;
         }
         catch (std::exception& e) {

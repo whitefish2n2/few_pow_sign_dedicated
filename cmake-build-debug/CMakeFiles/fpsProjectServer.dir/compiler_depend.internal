@@ -90,7 +90,6 @@ CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/exception
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/vcruntime_exception.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/eh.h
- C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_terminate.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/xatomic.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/tuple
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/xpolymorphic_allocator.h
@@ -100,6 +99,7 @@ CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/__msvc_bit_utils.hpp
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Vector3.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/cmath
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Vector2.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/triangle.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/ObjectTag.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
@@ -721,6 +721,7 @@ CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.obj
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wstdio.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_stdio_config.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/cstring
+ C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/string.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_memory.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_memcpy_s.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/errno.h
@@ -1159,7 +1160,6 @@ CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/intrin0.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/intrin0.inl.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/xatomic_wait.h
- C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/cstdlib
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/math.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_math.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/stdlib.h
@@ -1602,7 +1602,7 @@ CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/iostream
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/random
@@ -2065,7 +2065,7 @@ CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/any
  C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/include/nlohmann/detail/macro_unscope.hpp
  C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/include/nlohmann/thirdparty/hedley/hedley_undef.hpp
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../GameSession.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/condition_variable
@@ -2572,7 +2572,7 @@ CMakeFiles/fpsProjectServer.dir/Session/sessionPool/SessionManager.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/random
 
@@ -2913,10 +2913,10 @@ CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.obj
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/poppack.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/poppack.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/commdlg.h
- C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/prsht.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/stralign.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/winsvc.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/mcx.h
+ C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/imm.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/ime_cmodes.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/ws2def.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/inaddr.h
@@ -3064,10 +3064,9 @@ CMakeFiles/fpsProjectServer.dir/Socket/EnetClient.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/../FhishiX/GameObject.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/triangle.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/ObjectTag.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
 
 CMakeFiles/fpsProjectServer.dir/Socket/dto/AssignDto.cpp.obj
@@ -3572,7 +3571,6 @@ CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/cwchar
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/wchar.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wconio.h
- C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wctype.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wdirect.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wio.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/corecrt_wprocess.h
@@ -4025,7 +4023,7 @@ CMakeFiles/fpsProjectServer.dir/http-client/DedicateServerNotifier.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/http-client/../server-status/ServerStat.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/http-client/../util/util.h
@@ -4169,7 +4167,7 @@ CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/queue
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/deque
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/stack
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/http-listener/../Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/http-listener/../Session/netcode/DedicatedNewPlayerDto.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/string
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/cctype
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt/ctype.h
@@ -4478,6 +4476,7 @@ CMakeFiles/fpsProjectServer.dir/http-listener/httpRestClient.cpp.obj
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/__msvc_formatter.hpp
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/__msvc_print.hpp
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/__msvc_ranges_tuple_formatter.hpp
+ C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/bit
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/charconv
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/xcharconv.h
  C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/xcharconv_ryu.h
@@ -4879,7 +4878,6 @@ CMakeFiles/fpsProjectServer.dir/main.cpp.obj
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/enclaveapi.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/threadpoollegacyapiset.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/threadpoolapiset.h
- C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/jobapi.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/jobapi2.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/wow64apiset.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/libloaderapi.h
@@ -5057,7 +5055,7 @@ CMakeFiles/fpsProjectServer.dir/main.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/server-status/ServerStat.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/util/util.h
@@ -5532,7 +5530,6 @@ CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.obj
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/poppack.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/pshpack1.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/poppack.h
- C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/pshpack1.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/poppack.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared/winsmcrd.h
  C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um/winspool.h
@@ -5600,7 +5597,7 @@ CMakeFiles/fpsProjectServer.dir/server-status/ServerStat.cpp.obj
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/AABB.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/Layer.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.h
- C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/newPlayerDto.h
+ C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/DedicatedNewPlayerDto.h
  C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/../Dto/GameMode.h
 
 CMakeFiles/fpsProjectServer.dir/util/util.cpp.obj

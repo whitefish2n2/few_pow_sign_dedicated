@@ -24,7 +24,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
     if (session == nullptr) return;
 
     try {
-        TDto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
+        auto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
         auto event = std::make_shared<GameEvent>();
         event->timestamp = *timeStamp;
         event->type = type;

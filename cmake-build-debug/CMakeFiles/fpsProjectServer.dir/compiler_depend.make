@@ -89,7 +89,6 @@ CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\exception"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vcruntime_exception.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\eh.h"
-CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_terminate.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xatomic.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\tuple"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xpolymorphic_allocator.h"
@@ -99,6 +98,7 @@ CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_bit_utils.hpp"
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Vector3.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cmath"
+CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Vector2.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\triangle.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\ObjectTag.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\BspTree.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
@@ -720,6 +720,7 @@ CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wstdio.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_stdio_config.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cstring"
+CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\string.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memory.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_memcpy_s.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Property.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\errno.h"
@@ -1158,7 +1159,6 @@ CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\M
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\intrin0.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\intrin0.inl.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xatomic_wait.h"
-CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cstdlib"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\math.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_math.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h"
@@ -1601,7 +1601,7 @@ CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desk
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\iostream"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\random"
@@ -2064,7 +2064,7 @@ CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Us
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\any"
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\macro_unscope.hpp
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\thirdparty\hedley\hedley_undef.hpp
-CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\GameSession.h
 CMakeFiles\fpsProjectServer.dir\Session\netcode\SessionNetworkDto.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\condition_variable"
@@ -2571,7 +2571,7 @@ CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\U
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 CMakeFiles\fpsProjectServer.dir\Session\sessionPool\SessionManager.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\random"
 
@@ -2912,10 +2912,10 @@ CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x8
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\commdlg.h"
-CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\prsht.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\stralign.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\winsvc.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\mcx.h"
+CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\imm.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\ime_cmodes.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\ws2def.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\inaddr.h"
@@ -3063,10 +3063,9 @@ CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Deskto
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\..\FhishiX\GameObject.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\triangle.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\ObjectTag.h
-CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 
 
@@ -3571,7 +3570,6 @@ CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cwchar"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\wchar.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wconio.h"
-CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wctype.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wdirect.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wio.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wprocess.h"
@@ -4024,7 +4022,7 @@ CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\U
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\..\server-status\ServerStat.h
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\..\util\util.h
@@ -4168,7 +4166,7 @@ CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\w
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\queue"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\deque"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\stack"
-CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\..\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\..\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\string"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cctype"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\ctype.h"
@@ -4477,6 +4475,7 @@ CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Progra
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_formatter.hpp"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_print.hpp"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_ranges_tuple_formatter.hpp"
+CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\bit"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\charconv"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xcharconv.h"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xcharconv_ryu.h"
@@ -4878,7 +4877,6 @@ CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Ki
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\enclaveapi.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\threadpoollegacyapiset.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\threadpoolapiset.h"
-CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\jobapi.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\jobapi2.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\wow64apiset.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\libloaderapi.h"
@@ -5056,7 +5054,7 @@ CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\server-status\ServerStat.h
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.h
@@ -5531,7 +5529,6 @@ CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Fi
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack1.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
-CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack1.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\winsmcrd.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\winspool.h"
@@ -5599,7 +5596,7 @@ CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
-CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h
+CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h
 
 
@@ -6161,8 +6158,6 @@ C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\cpprest\details\
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\pmmintrin.h":
 
-C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\..\Session\netcode\newPlayerDto.h:
-
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vcruntime_startup.h":
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\emmintrin.h":
@@ -6263,10 +6258,6 @@ C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\..\Socket\dto\Assig
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\eh.h":
 
-C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\.\DedicateServerNotifier.h:
-
-"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_terminate.h":
-
 "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_io.h":
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xatomic.h":
@@ -6301,6 +6292,10 @@ C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Collider.cpp:
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cmath":
 
+"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\wincrypt.h":
+
+C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Vector2.h:
+
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\triangle.h:
 
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\ObjectTag.h:
@@ -6331,6 +6326,10 @@ C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.h:
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\list":
 
+C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\.\DedicateServerNotifier.h:
+
+"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_terminate.h":
+
 "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\io.h":
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xbit_ops.h":
@@ -6342,10 +6341,6 @@ C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_heap_algorithms.hpp":
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xnode_handle.h":
-
-"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\wincrypt.h":
-
-C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Vector2.h:
 
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-client\DedicateServerNotifier.h:
 
@@ -6364,6 +6359,8 @@ C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\cpprest\containe
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\util\util.cpp:
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory":
+
+C:\Users\white\Desktop\Github\few_pow_sign_dedicated\http-listener\..\Session\netcode\DedicatedNewPlayerDto.h:
 
 "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\any":
 
@@ -6787,8 +6784,6 @@ C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\..\Socket\dto\Defau
 
 C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\protocol.h:
 
-C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\newPlayerDto.h:
-
 C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\callbacks.h:
 
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Property.cpp:
@@ -6908,6 +6903,8 @@ C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Dto\SessionStatus.h
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Vertex.h:
 
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h:
+
+C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h:
 
 C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\..\Dto\GameMode.h:
 
