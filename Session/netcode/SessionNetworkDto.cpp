@@ -56,3 +56,13 @@ void from_json(const nlohmann::json& j, GameSetupBoddari& g) {
     g.gameMode = parseGameMode(j.at("gameMode").get<std::string>());
     g.map = j.at("map").get<std::string>();
 }
+
+void from_json(const nlohmann::json &j, CharacterSetDto &c) {
+    c.sessionId = j["sessionId"];
+    c.elements = j["elements"];
+}
+void from_json(const nlohmann::json &j, PickElementDto &g) {
+    g.characterId = j["characterId"];
+    g.userId = j["userId"];
+}
+

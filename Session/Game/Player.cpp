@@ -2,6 +2,11 @@
 // Created by white on 25. 5. 14.
 //
 #include "Player.h"
+
+void Player::SetCharacter(const std::string characterId) {
+    //레전드 캐릭터 id 기반 캐릭터 스탯이고 뭐고 설정
+}
+
 void Player::Move(const Vector2<int> inputVector)
 {
     status.position += inputVector;

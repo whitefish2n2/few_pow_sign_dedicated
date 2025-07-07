@@ -81,6 +81,16 @@ void GameSession::Tick() {
     tick++;
     ProcessEventQueue();
 }
+void GameSession::SetCharacter(CharacterSetDto& dto) {
+    for (auto v : dto.elements) {
+        for (auto p : *players) {
+            if (p.second.userId == v.userId) {
+                p.second.SetCharacter(v.characterId);
+                break;
+            }
+        }
+    }
+}
 constexpr int tickRateMs = 33;
 void GameSession::Start() {
     Log("server is running on port " + std::to_string(Consts::port));

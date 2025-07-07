@@ -34,10 +34,30 @@ void HttpRestClient::start_http_server(){
             nlohmann::from_json(body, initInfo);
             std::cout << "initInfo Parse Succeced" << std::endl;
             auto sessionKey = SessionManager::getInstance().makeNewSession(initInfo);
-            res.body =std::to_string((int)sessionKey);
             res.status = 201;
             res.set_content(std::to_string(sessionKey), "application/json");
             std::cout << "Session created. ID: " << initInfo.gameId <<", session key:" << std::to_string((int)sessionKey)<< std::endl;
+            return true;
+        }
+        catch (std::exception& e) {
+            res.status = 500;
+            res.set_content(e.what(), "text/plain");
+            return false;
+        }
+
+    });
+    svr.Post("/setcharacters", [this](const httplib::Request& req, httplib::Response& res)->bool {
+        try {
+            std::cout << "characters set request detected" << std::endl;
+            std::cout << req.body << std::endl;
+
+            auto rawBody = req.body;
+            json body = json::parse(rawBody);
+            CharacterSetDto setInfo;
+            nlohmann::from_json(body, setInfo);
+            SessionManager::getInstance().getSessionById(setInfo.sessionId)->SetCharacter(setInfo);
+            std::cout << "set character info Parse Succeed" << std::endl;
+            res.status = 201;
             return true;
         }
         catch (std::exception& e) {

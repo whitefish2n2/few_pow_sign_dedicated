@@ -35,6 +35,15 @@ uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
     return sessionKey;
 }
 
+std::shared_ptr<GameSession> SessionManager::getSessionById(const std::string &sessionId) {
+    for (auto val: sessions | std::views::values) {
+        if (val->sessionId == sessionId) {
+            return val;
+        }
+    }
+    return nullptr;
+}
+
 
 void SessionManager::cleanupSessions() {
     std::lock_guard<std::mutex> lock(mutex_);

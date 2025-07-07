@@ -18,6 +18,8 @@ class Player {
 
     ENetPeer* peer=nullptr;
 
+    void SetCharacter(std::string characterId);
+
     void Move(Vector2<int> inputVector);
     void Rotate(Vector3 r);
     void Jump();

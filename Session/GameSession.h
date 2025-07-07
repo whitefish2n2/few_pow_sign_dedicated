@@ -91,6 +91,8 @@ class GameSession {
 
     void Tick();
 
+    void SetCharacter(CharacterSetDto &dto);
+
     std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer);
 
     void ProcessEvent(const std::shared_ptr<GameEvent>& event);

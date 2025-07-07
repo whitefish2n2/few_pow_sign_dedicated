@@ -24,6 +24,8 @@ public:
 
     uint16_t makeNewSession(GameSetupBoddari initInfo);
 
+    std::shared_ptr<GameSession> getSessionById(const std::string &sessionId);
+
 
     void addFinishedSession(std::shared_ptr<GameSession> session);
 

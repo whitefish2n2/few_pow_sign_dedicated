@@ -52,4 +52,18 @@ struct GameSetupBoddari {
     std::string playerConnectKey;
 };
 void from_json(const nlohmann::json &j, GameSetupBoddari &g);
+
+struct PickElementDto{
+    std::string characterId;
+    std::string userId;
+};
+void from_json(const nlohmann::json &j, PickElementDto &c);
+
+struct CharacterSetDto {
+    std::string sessionId;
+    std::vector<PickElementDto> elements;
+};
+void from_json(const nlohmann::json &j, CharacterSetDto &c);
+
+
 #endif //PLAYERNETWORKDTOS_H
