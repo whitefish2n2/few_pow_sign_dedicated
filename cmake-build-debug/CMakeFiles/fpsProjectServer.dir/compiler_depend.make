@@ -684,6 +684,7 @@ CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: "C:\Program Files (
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\qos.h"
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\types.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\protocol.h
+CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\list.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\enet\callbacks.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\..\FhishiX\Vector2.h
 CMakeFiles\fpsProjectServer.dir\Session\Game\Player.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cmath"
@@ -1159,6 +1160,7 @@ CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\M
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\intrin0.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\intrin0.inl.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xatomic_wait.h"
+CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cstdlib"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\math.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_math.h"
 CMakeFiles\fpsProjectServer.dir\Session\GameSession.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h"
@@ -2725,7 +2727,6 @@ CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x8
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\basetsd.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\guiddef.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack4.h"
-CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack4.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack4.h"
@@ -2912,6 +2913,7 @@ CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x8
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\commdlg.h"
+CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\prsht.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\stralign.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\winsvc.h"
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\mcx.h"
@@ -3063,6 +3065,7 @@ CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Deskto
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\..\FhishiX\GameObject.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\triangle.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\ObjectTag.h
+CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Layer.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\SessionNetworkDto.h
 CMakeFiles\fpsProjectServer.dir\Socket\EnetClient.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\netcode\DedicatedNewPlayerDto.h
@@ -3570,6 +3573,7 @@ CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\cwchar"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\wchar.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wconio.h"
+CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wctype.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wdirect.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wio.h"
 CMakeFiles\fpsProjectServer.dir\http-client\DedicateServerNotifier.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_wprocess.h"
@@ -4496,7 +4500,6 @@ CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\w
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\input\input_adapters.hpp
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\numeric"
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\input\json_sax.hpp
-CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\input\lexer.hpp
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\meta\is_sax.hpp
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\input\parser.hpp
 CMakeFiles\fpsProjectServer.dir\http-listener\httpRestClient.cpp.obj: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\include\nlohmann\detail\iterators\internal_iterator.hpp
@@ -4819,7 +4822,6 @@ CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Ki
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\winapifamily.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\winpackagefamily.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\windows.h"
-CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\sdkddkver.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\excpt.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\stdarg.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\windef.h"
@@ -4877,6 +4879,7 @@ CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Ki
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\enclaveapi.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\threadpoollegacyapiset.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\threadpoolapiset.h"
+CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\jobapi.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\jobapi2.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\wow64apiset.h"
 CMakeFiles\fpsProjectServer.dir\main.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\libloaderapi.h"
@@ -5135,7 +5138,6 @@ CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Fi
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\malloc.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\corecrt_malloc.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\zmmintrin.h"
-CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\ammintrin.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xtr1common"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp"
@@ -5529,6 +5531,7 @@ CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Fi
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack1.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
+CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\pshpack1.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\poppack.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared\winsmcrd.h"
 CMakeFiles\fpsProjectServer.dir\server-status\ServerStat.cpp.obj: "C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um\winspool.h"

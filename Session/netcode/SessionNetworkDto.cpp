@@ -64,5 +64,5 @@ void from_json(const nlohmann::json &j, CharacterSetDto &c) {
 void from_json(const nlohmann::json &j, PickElementDto &g) {
     g.characterId = j["characterId"];
     g.userId = j["userId"];
-}
+}   
 
