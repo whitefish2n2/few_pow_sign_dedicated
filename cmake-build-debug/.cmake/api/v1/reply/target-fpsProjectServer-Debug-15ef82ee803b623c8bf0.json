@@ -49,25 +49,25 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 47,
+				"line" : 59,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 54,
+				"line" : 66,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 57,
+				"line" : 69,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 53,
+				"line" : 65,
 				"parent" : 0
 			},
 			{
@@ -105,13 +105,13 @@
 			{
 				"command" : 7,
 				"file" : 1,
-				"line" : 46,
+				"line" : 58,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 56,
+				"line" : 68,
 				"parent" : 0
 			}
 		]
@@ -174,8 +174,9 @@
 				16,
 				23,
 				24,
-				29,
-				31
+				30,
+				32,
+				43
 			]
 		}
 	],
@@ -189,7 +190,11 @@
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "/subsystem:console",
 				"role" : "flags"
 			},
 			{
@@ -276,8 +281,9 @@
 				16,
 				23,
 				24,
-				29,
-				31
+				30,
+				32,
+				43
 			]
 		},
 		{
@@ -294,15 +300,26 @@
 				26,
 				27,
 				28,
-				30,
-				32
+				29,
+				31,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				44
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				33
+				45
 			]
 		}
 	],
@@ -422,7 +439,7 @@
 		},
 		{
 			"backtrace" : 2,
-			"path" : "Session/FhishiX/GameObject.h",
+			"path" : "Session/FhishiX/gameobject/GameObject.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -474,13 +491,7 @@
 		},
 		{
 			"backtrace" : 2,
-			"compileGroupIndex" : 0,
-			"path" : "Session/Game/Collider.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 2,
-			"path" : "Session/Game/Collider.h",
+			"path" : "Session/FhishiX/gameobject/Collider/Collider.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -492,6 +503,73 @@
 		{
 			"backtrace" : 2,
 			"path" : "Session/Game/Property.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/SessionUtil.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/SessionUtil.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Game/data/staticData/weapon.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/ObjectType.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/Collider/BoxCollider.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/Transform.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/Collider/MeshCollider.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/quaternion/Quaternion.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Matrix/Matrix.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Matrix/Matrix3.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Matrix/Matrix4.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/quaternion/Quaternion.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/Collider/CapsuleCollider.h",
 			"sourceGroupIndex" : 1
 		},
 		{

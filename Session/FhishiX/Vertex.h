@@ -6,7 +6,7 @@
 #define VERTEX_H
 #include <vector>
 
-#include "Vector3.h"
+#include "Vector/Vector3.h"
 
 struct Vertex
 {

@@ -6,8 +6,8 @@
 #define MOVEDTO_H
 #include <memory>
 #include <vector>
-#include "../../Session/FhishiX/Vector2.h"
-#include "../../Session/FhishiX/Vector3.h"
+#include "../../Session/FhishiX/Vector/Vector2.h"
+#include "../../Session/FhishiX/Vector/Vector3.h"
 
 class MoveDto {
     public:

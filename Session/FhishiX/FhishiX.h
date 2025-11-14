@@ -3,5 +3,5 @@
 //
 
 #pragma once
-#include "GameObject.h"
-#include "Vector2.h"
+#include "gameobject/GameObject.h"
+#include "Vector/Vector2.h"

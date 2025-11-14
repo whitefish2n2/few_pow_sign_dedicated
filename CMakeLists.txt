@@ -25,7 +25,7 @@ add_executable(fpsProjectServer
         Session/Game/MapManager.cpp
         Session/FhishiX/ObjectTag.h
         Session/FhishiX/triangle.h
-        Session/FhishiX/GameObject.h
+        Session/FhishiX/gameobject/GameObject.h
         Session/Game/BspTree.h
         Session/FhishiX/AABB.h
         Session/FhishiX/FhishiX.h
@@ -35,10 +35,22 @@ add_executable(fpsProjectServer
         Socket/Game/Gun.h
         Socket/Game/InteractableObject.h
         Session/FhishiX/Layer.h
-        Session/Game/Collider.cpp
-        Session/Game/Collider.h
+        Session/FhishiX/gameobject/Collider/Collider.h
         Session/Game/Property.cpp
         Session/Game/Property.h
+        Session/SessionUtil.cpp
+        Session/SessionUtil.h
+        Session/Game/data/staticData/weapon.h
+        Session/FhishiX/gameobject/ObjectType.h
+        Session/FhishiX/gameobject/Collider/BoxCollider.h
+        Session/FhishiX/gameobject/Transform.h
+        Session/FhishiX/gameobject/Collider/MeshCollider.h
+        Session/FhishiX/quaternion/Quaternion.h
+        Session/FhishiX/Matrix/Matrix.h
+        Session/FhishiX/Matrix/Matrix3.h
+        Session/FhishiX/Matrix/Matrix4.h
+        Session/FhishiX/quaternion/Quaternion.cpp
+        Session/FhishiX/gameobject/Collider/CapsuleCollider.h
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

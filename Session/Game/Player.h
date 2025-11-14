@@ -5,7 +5,7 @@
 #include <string>
 #include <enet/enet.h>
 
-#include "../FhishiX/Vector2.h"
+#include "../FhishiX/Vector/Vector2.h"
 #include "PlayerStatus.h"
 class Player {
     public:

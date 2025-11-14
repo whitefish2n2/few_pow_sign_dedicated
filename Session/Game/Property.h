@@ -6,7 +6,7 @@
 #define PROPERTY_H
 #include <string>
 
-#include "../FhishiX/GameObject.h"
+#include "../FhishiX/gameobject/GameObject.h"
 
 
 class Property {

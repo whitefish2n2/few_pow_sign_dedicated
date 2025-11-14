@@ -7,7 +7,7 @@
 
 #include "BspTree.h"
 #include "../Dto/MapEnum.h"
-#include "../FhishiX/GameObject.h"
+#include "../FhishiX/gameobject/GameObject.h"
 //loadmap으로 맵 버텍스,트라이앵글 정보를 불러와요
 //init으로 맵의 진행상황, 트리거같은걸 초기화해요
 
@@ -28,5 +28,14 @@ class Map
     ~Map();
     Map(const Map &);
     Map(Map &&);
+
+    Map &operator=(const Map & target) {
+        type = target.type;
+        for (const auto &[fst, snd] : target.objects) {
+            GameObject clone = snd;
+            objects.insert({fst, clone});
+        };
+        return *this;
+    }
 };
 

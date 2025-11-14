@@ -4,7 +4,7 @@
 
 #ifndef BSPTREE_H
 #define BSPTREE_H
-#include "../FhishiX/GameObject.h"
+#include "../FhishiX/gameobject/GameObject.h"
 struct BSPNode {
     AABB bounds;
     Vector3 mid;

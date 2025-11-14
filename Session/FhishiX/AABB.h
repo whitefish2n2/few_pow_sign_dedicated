@@ -4,7 +4,7 @@
 
 #ifndef AABB_H
 #define AABB_H
-#include "Vector3.h"
+#include "Vector/Vector3.h"
 #include <limits>
 
 struct AABB {

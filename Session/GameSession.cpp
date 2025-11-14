@@ -5,10 +5,14 @@
 #include <thread>
 #include <random>
 #include <string>
+#include <ranges>
+#include "Game/Player.h"
+#include "SessionUtil.h"
 #include "../Constants.h"
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/SocketEventType.h"
 #include "../util/util.h"
+;
 
 GameSession::~GameSession() {
     Log("server destroyed");
@@ -36,9 +40,10 @@ void GameSession::ProcessEventQueue() {
             {
                 case SocketEventType::Assign: {
                     auto dto = *(std::get_if<std::shared_ptr<AssignRequestDto>>(&e->payload));
-                    for (const auto& val: *players | std::views::values) {
+                        for (const auto& val: *players | std::views::values) {
                         if (val.assignKey == dto->Key){
-                            //todo
+                            //val.peer = dto->
+
                         }
                     }
                     //todo
@@ -53,7 +58,7 @@ void GameSession::ProcessEventQueue() {
                     if (dto==nullptr) continue;
                     auto secretKey = (*dto)->UserSecretKey;
                     auto inputVector = (*dto)->InputVector;
-                    players->at(secretKey).Move(inputVector);
+                    SessionUtil::GetPlayerFromPeer(e->peer)->Move(inputVector);
                     break;
                 }
                 case SocketEventType::Setup:
@@ -83,9 +88,10 @@ void GameSession::Tick() {
 }
 void GameSession::SetCharacter(CharacterSetDto& dto) {
     for (auto v : dto.elements) {
-        for (auto p : *players) {
-            if (p.second.userId == v.userId) {
-                p.second.SetCharacter(v.characterId);
+        for (auto p : *players | std::views::values) {
+            if (p.userId == v.userId)
+            if (p.userId == v.userId) {
+                p.SetCharacter(v.characterId);
                 break;
             }
         }
@@ -138,15 +144,8 @@ void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
 
         do {
             privateKey = dist(rng);
-        } while (players->contains(privateKey));
-        player_status newStatus = player_status(
-            0,
-            0,
-            0,
-            Vector3(0,0,0),
-            Vector3(0,0,0),
-            Vector3(0,0,0)
-        );
+        } while (SessionUtil::ContainsPrivateKey(*players, privateKey));
+        player_status newStatus = player_status();
         Player newPlayer = Player(p.id, p.name,p.key, privateKey, publicKey++, newStatus);
         (*players)[privateKey] = newPlayer;
         std::cout<<"Enqueue Succeced"<<std::endl;
@@ -165,17 +164,14 @@ std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENet
 {
     if (!running) return nullptr;
     Player* p = nullptr;
-    for(auto& v : *this->players)
+    for(auto& v : *this->players | std::views::values)
     {
-        if (v.second.assignKey == userKey)
-        {
-            p = &v.second;
-            break;
+        if (v.assignKey == userKey) {
+            p->peer = peer;
+            peer->data = p;
+            return std::make_shared<Player>(*p);
         }
     }
-    if (p == nullptr) return nullptr;
-    p->peer = peer;
-    return std::make_shared<Player>(*p);
 }
 
 void GameSession::ProcessEvent(const std::shared_ptr<GameEvent>& event)

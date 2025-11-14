@@ -2,7 +2,6 @@
 #ifndef FPS_SERVER_H
 #define FPS_SERVER_H
 
-#include <atomic>
 #include <condition_variable>
 #include <cstdint>
 #include <list>
@@ -11,17 +10,13 @@
 #include <string>
 #include <variant>
 #include <enet/enet.h>
-
 #include "../Socket/dto/AssignDto.h"
-#include "FhishiX/Vector2.h"
-#include "FhishiX/Vector3.h"
 #include "../Socket/dto/DefaultDto.h"
 #include "../Socket/dto/MoveDto.h"
 #include "../Socket/dto/SocketEventType.h"
 #include "Dto/MapEnum.h"
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
-#include "FhishiX/Vertex.h"
 #include "Game/Map.h"
 #include "netcode/SessionNetworkDto.h"
 
@@ -48,23 +43,15 @@ struct GameEvent {
     ENetPeer* peer = nullptr;
 };
 
-struct BroadCastEvent
-{
+struct BroadCastEvent {
     SocketEventType type = SocketEventType::Update;
     BroadCastPayloadVariant payload = nullptr;
     std::vector<ENetPeer*> target;
 
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload)
-    {
-        this->type = type;
-        this->payload = payload;
-    }
-    BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*> target)
-    {
-        this->type = type;
-        this->payload = payload;
-        this->target = target;
-    }
+        :type(type), payload(payload){}
+    BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*>& target)
+        : type(type), payload(payload), target(target) {}
 };
 class GameSession {
     public:

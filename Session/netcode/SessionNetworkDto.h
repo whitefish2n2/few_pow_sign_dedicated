@@ -8,7 +8,7 @@
 
 #include "../Game/Player.h"
 #include "../Dto/SessionStatus.h"
-#include "../FhishiX/Vector3.h"
+#include "../FhishiX/Vector/Vector3.h"
 #include <nlohmann/json.hpp>
 
 #include "DedicatedNewPlayerDto.h"

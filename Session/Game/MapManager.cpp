@@ -2,9 +2,9 @@
 
 #include <fstream>
 #include <memory>
-#include <memory>
 #include <sstream>
-
+#include "../FhishiX/gameobject/Collider/BoxCollider.h"
+#include "../FhishiX/gameobject/Collider/CapsuleCollider.h"
 
 void MapManager::Init() {
 
@@ -22,6 +22,80 @@ Map MapManager::GetMap(MapEnum type)
     }
 
     return *it->second;
+}
+GameObject CreateBoxGameObject(const std::string& name, const std::string& tagStr,
+                               const Vector3& pos, const Vector3& size) {
+    GameObject obj = GameObject();
+    obj.id = name;
+    obj.tag = ObjectTag::GetObjectTagFromString(tagStr);
+    obj.type = ObjectTypeEnum::Box;
+    obj.layer = Layers::Ground;
+
+    // 박스의 8개 버텍스 생성
+    float hx = size.x * 0.5f;
+    float hy = size.y * 0.5f;
+    float hz = size.z * 0.5f;
+
+    obj.vertices = {
+        Vector3(pos.x - hx, pos.y - hy, pos.z - hz), // 0
+        Vector3(pos.x + hx, pos.y - hy, pos.z - hz), // 1
+        Vector3(pos.x + hx, pos.y + hy, pos.z - hz), // 2
+        Vector3(pos.x - hx, pos.y + hy, pos.z - hz), // 3
+        Vector3(pos.x - hx, pos.y - hy, pos.z + hz), // 4
+        Vector3(pos.x + hx, pos.y - hy, pos.z + hz), // 5
+        Vector3(pos.x + hx, pos.y + hy, pos.z + hz), // 6
+        Vector3(pos.x - hx, pos.y + hy, pos.z + hz)  // 7
+    };
+
+    // 박스의 12개 삼각형 (6면 x 2삼각형)
+    obj.triangles = {
+        Triangle{0, 2, 1}, Triangle{0, 3, 2}, // Front
+        Triangle{1, 2, 6}, Triangle{1, 6, 5}, // Right
+        Triangle{4, 5, 6}, Triangle{4, 6, 7}, // Back
+        Triangle{0, 7, 3}, Triangle{0, 4, 7}, // Left
+        Triangle{3, 7, 6}, Triangle{3, 6, 2}, // Top
+        Triangle{0, 1, 5}, Triangle{0, 5, 4}  // Bottom
+    };
+
+    obj.CalculateAABB();
+    return obj;
+}
+GameObject CreateCapsuleGameObject(const std::string& name, const std::string& tagStr,
+                                  const Vector3& pos, const float radius, const float height) {
+    GameObject obj = GameObject();
+    obj.id = name;
+    obj.tag = ObjectTag::GetObjectTagFromString(tagStr);
+    obj.type = ObjectTypeEnum::Capsule;
+    obj.layer = Layers::Ground;
+    obj.collider = std::make_unique<CapsuleCollider>(CapsuleCollider(&obj, true, {0,0,0}, height, radius));
+
+    obj.transform.position = pos;
+    obj.transform.rotation =
+
+    return obj;
+}
+GameObject CreateMeshGameObject(const std::string& name, const std::string& tagStr,
+                                const std::vector<Vector3>& vertices,
+                                const std::vector<int>& triangleIndices) {
+    GameObject obj;
+    obj.id = name;
+    obj.tag = ObjectTag::GetObjectTagFromString(tagStr);
+    obj.type = ObjectTypeEnum::Mesh;
+    obj.layer = Layers::Ground;
+
+    obj.vertices = vertices;
+
+    // 인덱스를 Triangle 구조체로 변환
+    for (size_t i = 0; i < triangleIndices.size(); i += 3) {
+        obj.triangles.push_back(Triangle{
+            triangleIndices[i],
+            triangleIndices[i + 1],
+            triangleIndices[i + 2]
+        });
+    }
+
+    obj.CalculateAABB();
+    return obj;
 }
 GameObject ParseGameObjectFromRawFormat(const std::string& raw) {
     std::istringstream ss(raw);

@@ -7,23 +7,23 @@
 #ifndef PLAYERSTATUS_H
 #define PLAYERSTATUS_H
 #include "../Dto/NetworkStatus.h"
-#include "../Dto/Weapons.h"
-#include "../FhishiX/Vector3.h"
+#include "../Dto/WEAPON.h"
+#include "../FhishiX/Vector/Vector3.h"
 #include <vector>
 
 
 struct player_status {
-    uint8_t team;
+    uint8_t team = 0;
 
-    int kill;
-    int death;
+    int kill = 0;
+    int death = 0;
 
     Vector3 position = Vector3::Zero();
-    Vector3 velocity;
+    Vector3 velocity = Vector3::Zero();
 
-    Vector3 rotation;
-    WEAPONS holdingWeapon;
-    std::vector<WEAPONS> weapons = std::vector<WEAPONS>();
+    Vector3 rotation = Vector3::Zero();
+    WEAPON holdingWeapon;
+    std::vector<WEAPON> weapons = std::vector<WEAPON>();
     NetworkStatus networkStatus;
 };
 #endif //PLAYERSTATUS_H

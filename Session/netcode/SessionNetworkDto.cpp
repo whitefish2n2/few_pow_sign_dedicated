@@ -31,8 +31,8 @@ player_dto playerToPlayerDto(const Player& p) {
 }
 GameSessionDto getGameSessionDto(GameSession& p) {
     std::vector<player_dto> newPlayers;
-    for (const auto& e: *(p.players)) {
-        newPlayers.push_back(playerToPlayerDto(e.second));
+    for (const auto& e: (*p.players | std::views::values)) {
+        newPlayers.push_back(playerToPlayerDto(e));
     }
     return GameSessionDto{p.sessionId , p.status, newPlayers};
 }

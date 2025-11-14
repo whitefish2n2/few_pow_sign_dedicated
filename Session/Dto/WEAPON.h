@@ -5,7 +5,7 @@
 #pragma once
 #ifndef WEAPONS_H
 #define WEAPONS_H
-enum WEAPONS {
+enum WEAPON {
     fisher,
     blabla,
     naga

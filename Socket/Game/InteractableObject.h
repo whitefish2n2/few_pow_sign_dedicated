@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "../../Session/FhishiX/GameObject.h"
+#include "../../Session/FhishiX/gameobject/GameObject.h"
 
 class InteractableObject:GameObject {
     public:
