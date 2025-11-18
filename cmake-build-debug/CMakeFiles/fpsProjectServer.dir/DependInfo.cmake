@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/gameobject/GameObjectAABB.cpp" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/quaternion/Quaternion.cpp" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/BspTree.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/Map.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj.d"

@@ -23,7 +23,6 @@ public:
         const float halfH_local = height * 0.5f;
 
         // 2) 스케일 적용
-        // 캡슐 radius는 XZ 스케일에 영향을 받는다.
         const float scaledRadius = radius * std::max(tr.scale.x, tr.scale.z);
         const float scaledHalfH  = halfH_local * tr.scale.y;
 
@@ -46,18 +45,8 @@ public:
 
         return aabb;
     }
-    Vector3 GetAABBSize() const override {
-        return Vector3::Zero();
-        //todo ㅇ
-    }
-    Vector3 GetAABBCenter() const override {
-        const auto &[min, max] = GetAABB();
-        return (max + min) *0.5f;
-    }
-    bool AABBContainsPoint(const Vector3& point) const override {
-        auto aabb = GetAABB();
-        return ((point.x >= aabb.min.x && point.x <= aabb.max.x) && (point.y >= aabb.min.y && point.y <= aabb.max.y) && (point.z >= aabb.min.z && point.z <= aabb.max.z));
-    }
+
+
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<CapsuleCollider>(*this);
     }

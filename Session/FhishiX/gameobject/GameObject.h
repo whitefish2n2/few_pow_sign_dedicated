@@ -10,7 +10,7 @@
 #include "ObjectType.h"
 #include "Transform.h"
 #include "../Vector/Vector3.h"
-#include "../triangle.h"
+#include "../Triangle.h"
 #include "../ObjectTag.h"
 #include "../AABB.h"
 #include "../Layer.h"
@@ -34,6 +34,10 @@ class GameObject {
     Transform transform;
 
     void CalculateAABB();
+
+    Vector3 GetAABBCenter() const;
+
+    Vector3 GetAABBSize() const;
 
     bool ContainsPoint(const Vector3 &point) const;
 

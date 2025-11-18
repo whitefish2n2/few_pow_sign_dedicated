@@ -23,15 +23,25 @@ class Collider {
     GameObject* gameobject = nullptr;
     public:
     Collider(GameObject* go, const bool isStatic = false) : gameobject(go), staticObject(isStatic) {}
+    Collider(const Collider& other);
     bool staticObject = false;
     virtual ~Collider() = default;
     virtual std::unique_ptr<Collider> clone() const = 0;
 
     virtual ObjectTypeEnum GetType() const = 0;
     virtual AABB GetAABB() const = 0;
-    virtual bool AABBContainsPoint(const Vector3& point) const = 0;
-    virtual Vector3 GetAABBCenter() const = 0;
-    virtual Vector3 GetAABBSize() const = 0;
+    virtual Vector3 GetAABBSize() const {
+        const AABB aabb = GetAABB();
+        return aabb.max - aabb.min;
+    }
+    virtual bool AABBContainsPoint(const Vector3& point) const{
+        auto aabb = GetAABB();
+        return ((point.x >= aabb.min.x && point.x <= aabb.max.x) && (point.y >= aabb.min.y && point.y <= aabb.max.y) && (point.z >= aabb.min.z && point.z <= aabb.max.z));
+    }
+    virtual Vector3 GetAABBCenter() const{
+        const auto &[min, max] = GetAABB();
+        return (max + min) *0.5f;
+    }
     private:
         AABB aabb = AABB::Empty();
         bool shouldUpdateAABB = true;

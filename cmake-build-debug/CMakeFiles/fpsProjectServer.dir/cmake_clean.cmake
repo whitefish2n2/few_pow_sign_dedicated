@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj"
+  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj"
   "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj"

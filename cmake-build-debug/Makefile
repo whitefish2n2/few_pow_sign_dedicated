@@ -118,6 +118,30 @@ fpsProjectServer\fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\build
 .PHONY : fpsProjectServer\fast
 
+Session\FhishiX\gameobject\GameObjectAABB.obj: Session\FhishiX\gameobject\GameObjectAABB.cpp.obj
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\GameObjectAABB.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectAABB.cpp.obj
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.cpp.obj
+
+Session\FhishiX\gameobject\GameObjectAABB.i: Session\FhishiX\gameobject\GameObjectAABB.cpp.i
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\GameObjectAABB.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectAABB.cpp.i
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.cpp.i
+
+Session\FhishiX\gameobject\GameObjectAABB.s: Session\FhishiX\gameobject\GameObjectAABB.cpp.s
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\GameObjectAABB.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectAABB.cpp.s
+.PHONY : Session\FhishiX\gameobject\GameObjectAABB.cpp.s
+
 Session\FhishiX\quaternion\Quaternion.obj: Session\FhishiX\quaternion\Quaternion.cpp.obj
 .PHONY : Session\FhishiX\quaternion\Quaternion.obj
 
@@ -655,6 +679,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... fpsProjectServer
+	@echo ... Session/FhishiX/gameobject/GameObjectAABB.obj
+	@echo ... Session/FhishiX/gameobject/GameObjectAABB.i
+	@echo ... Session/FhishiX/gameobject/GameObjectAABB.s
 	@echo ... Session/FhishiX/quaternion/Quaternion.obj
 	@echo ... Session/FhishiX/quaternion/Quaternion.i
 	@echo ... Session/FhishiX/quaternion/Quaternion.s

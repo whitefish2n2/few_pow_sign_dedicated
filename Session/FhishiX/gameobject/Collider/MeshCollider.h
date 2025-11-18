@@ -4,7 +4,12 @@
 
 #ifndef MESHCOLLIDER_H
 #define MESHCOLLIDER_H
+#include <memory>
+#include <vector>
+#include <cpprest/asyncrt_utils.h>
+
 #include "Collider.h"
+#include "../GameObject.h"
 
 
 class MeshCollider: public Collider {
@@ -13,12 +18,11 @@ public:
     mutable std::vector<int> triangles;
     MeshCollider(GameObject* owner,const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<int> &triangles) : Collider(owner,isStatic),vertices(vertices),triangles(triangles) {
     }
-
-    ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Box; }
-    const std::vector<Vector3>& GetVertices() {
+    ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Mesh; }
+    const std::vector<Vector3>& GetVertices() const {
         return vertices;
     }
-    const std::vector<int>& GetTriangles() {
+    const std::vector<int>& GetTriangles() const {
         return triangles;
     }
     AABB GetAABB() const override {
@@ -26,6 +30,10 @@ public:
         AABB aabb = AABB::Empty();
         aabb.min = verts[0];
         aabb.max = verts[0];
+        const Vector3 pos   = gameobject->transform.position;
+        const Vector3 scale = gameobject->transform.scale;
+        const Quaternion rot = gameobject->transform.rotation;
+
 
         for (size_t i = 1; i < verts.size(); ++i) {
             const Vector3& v = verts[i];
@@ -41,7 +49,9 @@ public:
 
         return aabb;
     }
-    virtual const std::vector<Vector3>& GetVertices() const = 0;
-    virtual const std::vector<Triangle>& GetTriangles() const = 0;
+
+    std::unique_ptr<Collider> clone() const override {
+        return std::make_unique<MeshCollider>(*this);
+    }
 };
 #endif //MESHCOLLIDER_H

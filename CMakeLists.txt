@@ -51,6 +51,7 @@ add_executable(fpsProjectServer
         Session/FhishiX/Matrix/Matrix4.h
         Session/FhishiX/quaternion/Quaternion.cpp
         Session/FhishiX/gameobject/Collider/CapsuleCollider.h
+        Session/FhishiX/gameobject/GameObjectAABB.cpp
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)
