@@ -32,8 +32,8 @@ add_executable(fpsProjectServer
         Session/Game/BspTree.cpp
         Socket/BroadcastMoveDto.cpp
         Socket/BroadcastMoveDto.h
-        Socket/Game/Gun.h
-        Socket/Game/InteractableObject.h
+        Session/Game/GameLogic/Gun.h
+        Session/Game/GameLogic/InteractableObject.h
         Session/FhishiX/Layer.h
         Session/FhishiX/gameobject/Collider/Collider.h
         Session/Game/Property.cpp
@@ -51,7 +51,13 @@ add_executable(fpsProjectServer
         Session/FhishiX/Matrix/Matrix4.h
         Session/FhishiX/quaternion/Quaternion.cpp
         Session/FhishiX/gameobject/Collider/CapsuleCollider.h
-        Session/FhishiX/gameobject/GameObjectAABB.cpp
+        Session/FhishiX/gameobject/GameObject.cpp
+        Session/SessionDXViewer/DirectXCore.cpp
+        Session/SessionDXViewer/WIN32PROC.h
+        Session/SessionDXViewer/DirectXCore.h
+        Session/FhishiX/vector/Vector2Int.h
+        ServerStatics.h
+        Session/FhishiX/gameobject/Component.h
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

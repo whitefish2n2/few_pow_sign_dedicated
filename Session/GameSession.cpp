@@ -9,6 +9,7 @@
 #include "Game/Player.h"
 #include "SessionUtil.h"
 #include "../Constants.h"
+#include "../ServerStatics.h"
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/SocketEventType.h"
 #include "../util/util.h"
@@ -16,20 +17,22 @@
 
 GameSession::~GameSession() {
     Log("server destroyed");
+    Stop();
 }
 
 //스레드로 실행
 void GameSession::RunAsync() {
     running = true;
-    std::thread([this]() {
+    gameThread = std::thread([this]() {
         this->Start();
-    }).detach();
+    });
+    isStopped = false;
 }
 
 void GameSession::ProcessEventQueue() {
     std::unique_lock<std::mutex> lock(queueMutex);
     while (!eventQueue.empty()) {
-        if (!running) break;
+        if (!this->running or !isRunning.load()) break;
         std::shared_ptr<GameEvent> e;
         e = eventQueue.front();
         eventQueue.pop();
@@ -86,10 +89,9 @@ void GameSession::Tick() {
     tick++;
     ProcessEventQueue();
 }
-void GameSession::SetCharacter(CharacterSetDto& dto) {
+void GameSession::SetCharacter(const CharacterSetDto& dto) const {
     for (auto v : dto.elements) {
-        for (auto p : *players | std::views::values) {
-            if (p.userId == v.userId)
+        for (auto& p : *players | std::views::values) {
             if (p.userId == v.userId) {
                 p.SetCharacter(v.characterId);
                 break;
@@ -101,19 +103,21 @@ constexpr int tickRateMs = 33;
 void GameSession::Start() {
     Log("server is running on port " + std::to_string(Consts::port));
     // Run server loop
-    auto lastTickTime = std::chrono::steady_clock::now();
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> distrib(0, 255);
-    while (running) {
+    auto previousTime = std::chrono::steady_clock::now();
+    double lag = 0.0;
+    while (isRunning.load() and running) {
         auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTickTime);
-        if (elapsed.count()>=tickRateMs) {
-            lastTickTime += std::chrono::milliseconds(tickRateMs);
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - previousTime);
+        previousTime = now;
+        lag += elapsed.count();
+        while (lag>=tickRateMs) {
             Tick();
-        }else {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            lag -= tickRateMs;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
         /*while (enet_host_service(server, &event, 10) > 0) {
             std::cout<<event.type<< std::endl;
@@ -121,8 +125,12 @@ void GameSession::Start() {
         }*/
 }
 void GameSession::Stop() {
-    Log("session stopped at " + initInfo.gameId);
+    Log("session stopped id: " + initInfo.gameId);
     running = false;
+    if (gameThread.joinable()) {
+        gameThread.join();
+    }
+    isStopped = true;
 }
 
 void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
@@ -131,7 +139,6 @@ void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
     this->initInfo = initInfo;
     uint64_t privateKey;
     uint8_t publicKey=129;
-    initInfo.map;
     //todo: 생성위치를 담은 map 클래스를 만들자
     std::cout<<"New Session Enqueue Players:"<< std::endl;
     for (auto p : initInfo.players)
@@ -160,21 +167,20 @@ void GameSession::cleanUp() {
     Stop();
 }
 
-std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENetPeer *peer)
-{
-    if (!running) return nullptr;
-    Player* p = nullptr;
+std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENetPeer *peer) const {
+    if (!isRunning.load() and running) return nullptr;
     for(auto& v : *this->players | std::views::values)
     {
         if (v.assignKey == userKey) {
-            p->peer = peer;
-            peer->data = p;
-            return std::make_shared<Player>(*p);
+            v.peer = peer;
+            peer->data = &v;
+            return std::make_shared<Player>(v);
         }
     }
+    return nullptr;
 }
 
-void GameSession::ProcessEvent(const std::shared_ptr<GameEvent>& event)
+void GameSession::ProcessEvent(std::shared_ptr<GameEvent>& event)
 {
     std::lock_guard<std::mutex> lock(queueMutex);
     eventQueue.push(event);

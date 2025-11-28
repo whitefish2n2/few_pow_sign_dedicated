@@ -9,7 +9,6 @@
 #include <queue>
 #include <string>
 #include <variant>
-#include <enet/enet.h>
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/DefaultDto.h"
 #include "../Socket/dto/MoveDto.h"
@@ -19,7 +18,7 @@
 #include "Dto/SessionStatus.h"
 #include "Game/Map.h"
 #include "netcode/SessionNetworkDto.h"
-
+struct _EnetPeer;
 using EventPayloadVariant = std::variant<
     std::nullptr_t,
     std::shared_ptr<AssignRequestDto>,
@@ -68,6 +67,10 @@ class GameSession {
     std::mutex queueMutex;
     std::condition_variable queueCV;
 
+    bool running = true;
+    std::thread gameThread; /// 현재 진행중인 세션 스레드
+    bool isStopped = false; /// 스레드가 제대로 종료되었는지 확인
+
     long long int tick;
 
     ~GameSession();
@@ -78,11 +81,11 @@ class GameSession {
 
     void Tick();
 
-    void SetCharacter(CharacterSetDto &dto);
+    void SetCharacter(const CharacterSetDto &dto) const;
 
-    std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer);
+    std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer) const;
 
-    void ProcessEvent(const std::shared_ptr<GameEvent>& event);
+    void ProcessEvent(std::shared_ptr<GameEvent> &event);
 
     void BroadcastEvent(const std::shared_ptr<GameEvent>& event);
     void Start();
@@ -90,7 +93,6 @@ class GameSession {
     void Init(std::string sessionId, GameSetupBoddari initInfo);
     bool reset();
     void cleanUp();
-    bool running = true;
 };
 
 

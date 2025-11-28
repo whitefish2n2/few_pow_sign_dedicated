@@ -8,7 +8,7 @@
 #define PLAYERSTATUS_H
 #include "../Dto/NetworkStatus.h"
 #include "../Dto/WEAPON.h"
-#include "../FhishiX/Vector/Vector3.h"
+#include "../FhishiX/vector/Vector3.h"
 #include <vector>
 
 

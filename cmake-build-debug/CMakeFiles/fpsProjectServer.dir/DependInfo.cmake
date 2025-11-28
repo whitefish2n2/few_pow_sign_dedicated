@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/gameobject/GameObjectAABB.cpp" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj.d"
+  "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/gameobject/GameObject.cpp" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObject.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObject.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/FhishiX/quaternion/Quaternion.cpp" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/BspTree.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/Map.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/Map.cpp.obj.d"
@@ -17,6 +17,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/Property.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/Property.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/Game/SimulationMap.cpp" "CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/GameSession.cpp" "CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj.d"
+  "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/SessionDXViewer/DirectXCore.cpp" "CMakeFiles/fpsProjectServer.dir/Session/SessionDXViewer/DirectXCore.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/SessionDXViewer/DirectXCore.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/SessionUtil.cpp" "CMakeFiles/fpsProjectServer.dir/Session/SessionUtil.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/SessionUtil.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/CreateSessionNetworkDto.cpp" "CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj.d"
   "C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Session/netcode/SessionNetworkDto.cpp" "CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj" "msvc" "CMakeFiles/fpsProjectServer.dir/Session/netcode/SessionNetworkDto.cpp.obj.d"

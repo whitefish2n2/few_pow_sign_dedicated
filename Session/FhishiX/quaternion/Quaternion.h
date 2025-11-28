@@ -6,8 +6,8 @@
 #define QUATERNION_H
 #pragma once
 #include <cmath>
-#include "../Vector/Vector3.h"
-#include "../Matrix/Matrix4.h"
+#include "../vector/Vector3.h"
+#include "../matrix/Matrix4.h"
 
 class Quaternion {
 public:

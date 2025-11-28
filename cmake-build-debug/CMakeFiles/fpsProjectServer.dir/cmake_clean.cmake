@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj"
-  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectAABB.cpp.obj.d"
+  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObject.cpp.obj"
+  "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObject.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj"
   "CMakeFiles/fpsProjectServer.dir/Session/FhishiX/quaternion/Quaternion.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/Game/BspTree.cpp.obj"
@@ -17,6 +17,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/fpsProjectServer.dir/Session/Game/SimulationMap.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj"
   "CMakeFiles/fpsProjectServer.dir/Session/GameSession.cpp.obj.d"
+  "CMakeFiles/fpsProjectServer.dir/Session/SessionDXViewer/DirectXCore.cpp.obj"
+  "CMakeFiles/fpsProjectServer.dir/Session/SessionDXViewer/DirectXCore.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/SessionUtil.cpp.obj"
   "CMakeFiles/fpsProjectServer.dir/Session/SessionUtil.cpp.obj.d"
   "CMakeFiles/fpsProjectServer.dir/Session/netcode/CreateSessionNetworkDto.cpp.obj"

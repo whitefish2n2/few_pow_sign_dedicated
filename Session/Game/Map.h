@@ -16,7 +16,7 @@ class Map
     public:
     MapEnum type;
 
-    std::unordered_map<std::string,GameObject> objects;
+    std::unordered_map<std::string, GameObject> objects;
     std::unordered_map<std::string,GameObject> MovableObjects;
     std::unordered_map<std::string,GameObject> PlayerObjects;
 
@@ -30,11 +30,14 @@ class Map
     Map(Map &&);
 
     Map &operator=(const Map & target) {
+        if (this == &target) return *this;
+
         type = target.type;
-        for (const auto &[fst, snd] : target.objects) {
-            GameObject clone = snd;
-            objects.insert({fst, clone});
-        };
+        objects = target.objects;
+        MovableObjects = target.MovableObjects;
+        PlayerObjects = target.PlayerObjects;
+        staticObjectsBSP = target.staticObjectsBSP;
+
         return *this;
     }
 };

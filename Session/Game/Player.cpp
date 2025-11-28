@@ -7,7 +7,7 @@ void Player::SetCharacter(const std::string characterId) {
     //레전드 캐릭터 id 기반 캐릭터 스탯이고 뭐고 설정
 }
 
-void Player::Move(const Vector2<int> inputVector)
+void Player::Move(const Vector2 inputVector)
 {
     status.position += inputVector;
     //레전드 벨로시티연산으로 변환할 필요가있음

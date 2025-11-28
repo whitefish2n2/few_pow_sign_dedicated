@@ -3,8 +3,9 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
-#include "../FhishiX/gameobject/Collider/BoxCollider.h"
-#include "../FhishiX/gameobject/Collider/CapsuleCollider.h"
+#include "../FhishiX/gameobject/collider/BoxCollider.h"
+#include "../FhishiX/gameobject/collider/CapsuleCollider.h"
+#include "../FhishiX/gameobject/collider/MeshCollider.h"
 
 void MapManager::Init() {
 
@@ -73,7 +74,7 @@ GameObject CreateMeshGameObject(const std::string& name, const std::string& tagS
             triangleIndices[i + 2]
         });
     }
-
+    obj.collider = std::make_unique<MeshCollider>(MeshCollider(&obj,false, vertices, triangleIndices));
     obj.CalculateAABB();
     return obj;
 }

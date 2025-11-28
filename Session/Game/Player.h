@@ -5,7 +5,7 @@
 #include <string>
 #include <enet/enet.h>
 
-#include "../FhishiX/Vector/Vector2.h"
+#include "../FhishiX/vector/Vector2.h"
 #include "PlayerStatus.h"
 class Player {
     public:
@@ -20,7 +20,7 @@ class Player {
 
     void SetCharacter(std::string characterId);
 
-    void Move(Vector2<int> inputVector);
+    void Move(Vector2 inputVector);
     void Rotate(Vector3 r);
     void Jump();
     Player() = default;

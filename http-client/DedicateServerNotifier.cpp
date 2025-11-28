@@ -74,7 +74,7 @@ void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, co
                     return pplx::task_from_result(utility::string_t{});
                 }
             })
-            .then([](utility::string_t jsonRespStr) {
+            .then([](const utility::string_t &jsonRespStr) {
                 if (!jsonRespStr.empty()) {
                     std::string jsonRespUtf8 = utility::conversions::to_utf8string(jsonRespStr);
                     auto jsonResp = nlohmann::json::parse(jsonRespUtf8);

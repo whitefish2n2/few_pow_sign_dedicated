@@ -6,13 +6,13 @@
 #define MOVEDTO_H
 #include <memory>
 #include <vector>
-#include "../../Session/FhishiX/Vector/Vector2.h"
-#include "../../Session/FhishiX/Vector/Vector3.h"
+#include "../../Session/FhishiX/vector/Vector2.h"
+#include "../../Session/FhishiX/vector/Vector3.h"
 
 class MoveDto {
     public:
     uint64_t UserSecretKey;
-    Vector2<int> InputVector;
+    Vector2 InputVector;
     Vector3 RotationVector;
     static MoveDto Parse(const uint8_t* data, const size_t& size);
 };

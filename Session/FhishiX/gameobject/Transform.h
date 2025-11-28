@@ -7,7 +7,7 @@
 #define TRANSFORM_H
 
 #include "../quaternion/Quaternion.h"
-#include "../Vector/Vector3.h"
+#include "../vector/Vector3.h"
 
 class Transform {
     public:
