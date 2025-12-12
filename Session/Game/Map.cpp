@@ -15,8 +15,8 @@ Map::Map(MapEnum type) {
 
 Map::~Map() {
     for (auto& o :objects) {
-        o.second.vertices.clear();
-        o.second.triangles.clear();
+        o.second->vertices.clear();
+        o.second->triangles.clear();
     }
 }
 

@@ -101,7 +101,7 @@ void GameSession::SetCharacter(const CharacterSetDto& dto) const {
 }
 constexpr int tickRateMs = 33;
 void GameSession::Start() {
-    Log("server is running on port " + std::to_string(Consts::port));
+    Log("session is running on port " + std::to_string(Consts::port));
     // Run server loop
     std::random_device rd;
     std::mt19937 gen(rd());

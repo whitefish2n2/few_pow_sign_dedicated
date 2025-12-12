@@ -5,12 +5,13 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
+#include "../GameObjectArgument.h"
 #include "../ObjectType.h"
 #include "../../vector/Vector3.h"
 #include "../../AABB.h"
 
 
-
+class GameObjectArgument;
 class GameObject;
 
 struct Collision {

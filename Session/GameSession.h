@@ -4,7 +4,6 @@
 
 #include <condition_variable>
 #include <cstdint>
-#include <list>
 #include <memory>
 #include <queue>
 #include <string>
@@ -16,6 +15,8 @@
 #include "Dto/MapEnum.h"
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
+#include "FhishiX/gameobject/ComponentManager.h"
+#include "FhishiX/gameobject/GameObjectManager.h"
 #include "Game/Map.h"
 #include "netcode/SessionNetworkDto.h"
 struct _EnetPeer;
@@ -31,6 +32,8 @@ using EventPayloadVariant = std::variant<
 using BroadCastPayloadVariant = std::variant<
     std::nullptr_t
 >;
+
+
 ///<summary>
 /// 세션에서 처리할 이벤트를 전달하기 위한 구조체에요
 /// payload에 type에 맞는 전달 인자를 전달하세요
@@ -59,9 +62,11 @@ class GameSession {
     GameSetupBoddari initInfo;
     SESSIONSTATUS status = idle; // 세션 상태
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
-
     MapEnum mapType;
     Map map;
+
+    GameObjectManager objectManager = GameObjectManager(this);
+    ComponentManager componentManager = ComponentManager(this);
 
     std::queue<std::shared_ptr<GameEvent>> eventQueue;
     std::mutex queueMutex;

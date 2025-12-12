@@ -37,4 +37,3 @@ private:
     web::http::client::http_client* clientBase = nullptr;
 };
 
-

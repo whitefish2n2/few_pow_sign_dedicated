@@ -7,61 +7,30 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "ObjectType.h"
-#include "Transform.h"
-#include "../vector/Vector3.h"
-#include "../Triangle.h"
-#include "../ObjectTag.h"
-#include "../AABB.h"
-#include "../Layer.h"
 #include "collider/Collider.h"
+class GameSession;
+class GameObjectArgument;
+class GameObjectManager;
 
 class GameObject {
+    protected:
+    long long targetId = -1;
+    long generationId = -1;
+    GameSession *gameSession;
     public:
-    bool enablePhysics = true;
-    GameObject(const GameObject&){}
-    GameObject()= default;
+    [[nodiscard]] long long GetId() const {return targetId;}
+    [[nodiscard]] long GetGenerationId() const {return generationId;}
+    GameObjectArgument* operator->() const;
 
+    explicit GameObject(GameSession *owner);
 
-    std::string id = "";
-    TagEnum tag = TagEnum::Untagged;
-    ObjectTypeEnum type = ObjectTypeEnum::Undefined;
-    Layers layer = Layers::Default;
-    std::unique_ptr<Collider> collider;
-    std::vector<Vector3> vertices;
-    std::vector<Triangle> triangles = std::vector<Triangle>();
-    AABB boundBox = AABB::Empty();
-    Transform transform;
-
-    void CalculateAABB();
-
-    [[nodiscard]] Vector3 GetAABBCenter() const;
-
-    [[nodiscard]] Vector3 GetAABBSize() const;
-
-    [[nodiscard]] bool ContainsPoint(const Vector3 &point) const;
-
-    [[nodiscard]] bool IntersectsAABB(const GameObject &other) const;
-
-    void ExpandAABB(const Vector3 &point);
-
-    void MergeAABB(const AABB &other);
-
-    GameObject& operator=(const GameObject & target) {
-        if (this == &target)
-            return *this;
-        this->id = target.id;
-        this->tag = target.tag;
-        this->transform = target.transform;
-        if (target.collider) {
-            this->collider = target.collider->clone();
-            this->collider->gameobject = this;
-        }
-        else
-            collider.reset();
-        this->vertices = target.vertices;
-        this->layer = target.layer;
-        return *this;
+    GameObject& operator=(const GameObject & target);
+    bool operator==(const GameObject & target) const;
+    explicit operator bool() const;
+};
+struct GameObjectHash {
+    std::size_t operator()(const GameObject& k) const {
+        return std::hash<long long>()(k.GetId()) ^ (std::hash<long>()(k.GetGenerationId()) << 1);
     }
 };
 #endif //OBJECT_H
