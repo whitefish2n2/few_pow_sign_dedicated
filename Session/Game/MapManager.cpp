@@ -6,6 +6,7 @@
 #include "../FhishiX/gameobject/collider/BoxCollider.h"
 #include "../FhishiX/gameobject/collider/CapsuleCollider.h"
 #include "../FhishiX/gameobject/collider/MeshCollider.h"
+#include "../FhishiX/quaternion/Quaternion.h"
 
 void MapManager::Init() {
 

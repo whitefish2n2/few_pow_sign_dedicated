@@ -4,7 +4,7 @@
 
 #ifndef FPSPROJECTSERVER_RIGIDBODY_H
 #define FPSPROJECTSERVER_RIGIDBODY_H
-#include "../ComponentArgument.h"
+#include "../../../Component/Definition/ComponentArgument.h"
 
 
 class RigidBody:public ComponentArgument {

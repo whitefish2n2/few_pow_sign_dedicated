@@ -4,7 +4,12 @@
 
 #ifndef BSPTREE_H
 #define BSPTREE_H
+#include <vector>
+
+#include "../FhishiX/AABB.h"
 #include "../FhishiX/gameobject/GameObject.h"
+#include "../FhishiX/vector/Vector3.h"
+
 struct BSPNode {
     AABB bounds;
     Vector3 mid;
@@ -32,7 +37,7 @@ public:
     ~BSPTree();
 
 private:
-    void InsertRecursive(BSPNode*& node, GameObject* obj, int depth);
+    void InsertRecursive(BSPNode *&node, GameObject obj, int depth);
 
     static void SplitNode(BSPNode*& node, int depth);
 

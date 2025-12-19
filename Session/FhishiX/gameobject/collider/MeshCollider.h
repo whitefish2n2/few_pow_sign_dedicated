@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 #include <cpprest/asyncrt_utils.h>
-
 #include "Collider.h"
 #include "../GameObject.h"
 
@@ -30,9 +29,9 @@ public:
         AABB aabb = AABB::Empty();
         aabb.min = verts[0];
         aabb.max = verts[0];
-        const Vector3 pos   = gameobject->transform.position;
-        const Vector3 scale = gameobject->transform.scale;
-        const Quaternion rot = gameobject->transform.rotation;
+        const Vector3 pos   =  gameObject-> transform.position;
+        const Vector3 scale = gameObject->transform.scale;
+        const Quaternion rot = gameObject->transform.rotation;
 
 
         for (size_t i = 1; i < verts.size(); ++i) {
@@ -53,7 +52,7 @@ public:
         return std::make_unique<MeshCollider>(*this);
     }
     MeshCollider(const MeshCollider& other):
-        Collider(other.gameobject, other.staticObject),
+        Collider(other.gameObject, other.staticObject),
         vertices(other.vertices),
         triangles(other.triangles)
     {}

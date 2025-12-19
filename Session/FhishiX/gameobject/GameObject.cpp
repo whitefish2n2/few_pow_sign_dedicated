@@ -1,14 +1,14 @@
 #include "GameObjectArgument.h"
 #include "GameObjectManager.h"
 #include "../../GameSession.h"
+#include "../../SessionContext.h"
 #include "../../Game/MapManager.h"
 
 GameObjectArgument *GameObject::operator->() const {
-    return gameSession->objectManager.GetGameObject(this);
+    return gameObjectManagerInstance->GetGameObject(*this);
 }
-GameObject::GameObject(GameSession* owner) {
-    gameSession = owner;
-}
+GameObject::GameObject(GameObjectId targetId, GameObjectGenerationId gen ):targetId(targetId),generationId(gen){}
+
 GameObject &GameObject::operator=(const GameObject &target)  {
     if (this == &target)
         return *this;
@@ -23,5 +23,11 @@ bool GameObject::operator==(const GameObject &target) const {
 
 GameObject::operator bool() const {
     return operator->() != nullptr;
+}
+
+bool GameObject::IsNull(const GameObject &target) {
+    if (target.GetId() == -1 || target.GetGenerationId() == -1) return true;
+    if (gameObjectManagerInstance->GetGameObject(target) == nullptr) return true;
+    return false;
 }
 

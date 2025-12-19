@@ -3,9 +3,12 @@
 //
 #include "BspTree.h"
 
+#include "../FhishiX/gameobject/GameObjectArgument.h"
+#include "../FhishiX/gameobject/collider/Collider.h"
+
 void BSPTree::Insert(GameObject *obj) {
     if (!obj) return;
-    InsertRecursive(root, obj, 0);
+    InsertRecursive(root, *obj, 0);
 }
 void BSPTree::DeleteNode(BSPNode* node) {
     if (!node) return;
@@ -16,10 +19,10 @@ void BSPTree::DeleteNode(BSPNode* node) {
     delete node;
 }
 
-void BSPTree::InsertRecursive(BSPNode*& node, GameObject* obj, int depth) {
+void BSPTree::InsertRecursive(BSPNode*& node, GameObject obj, int depth) {
     if (!node) {
         node = new BSPNode();
-        node->bounds = obj->boundBox;
+        node->bounds = obj->    GetComponent<Collider>()->boundBox;
         node->updateMid();
     }
 

@@ -118,77 +118,77 @@ fpsProjectServer\fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\build
 .PHONY : fpsProjectServer\fast
 
-Session\FhishiX\gameobject\ComponentArgument.obj: Session\FhishiX\gameobject\ComponentArgument.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.obj
+Session\Component\Definition\ComponentArgument.obj: Session\Component\Definition\ComponentArgument.cpp.obj
+.PHONY : Session\Component\Definition\ComponentArgument.obj
 
 # target to build an object file
-Session\FhishiX\gameobject\ComponentArgument.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.cpp.obj
+Session\Component\Definition\ComponentArgument.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj
+.PHONY : Session\Component\Definition\ComponentArgument.cpp.obj
 
-Session\FhishiX\gameobject\ComponentArgument.i: Session\FhishiX\gameobject\ComponentArgument.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.i
+Session\Component\Definition\ComponentArgument.i: Session\Component\Definition\ComponentArgument.cpp.i
+.PHONY : Session\Component\Definition\ComponentArgument.i
 
 # target to preprocess a source file
-Session\FhishiX\gameobject\ComponentArgument.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.cpp.i
+Session\Component\Definition\ComponentArgument.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.i
+.PHONY : Session\Component\Definition\ComponentArgument.cpp.i
 
-Session\FhishiX\gameobject\ComponentArgument.s: Session\FhishiX\gameobject\ComponentArgument.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.s
+Session\Component\Definition\ComponentArgument.s: Session\Component\Definition\ComponentArgument.cpp.s
+.PHONY : Session\Component\Definition\ComponentArgument.s
 
 # target to generate assembly for a file
-Session\FhishiX\gameobject\ComponentArgument.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentArgument.cpp.s
+Session\Component\Definition\ComponentArgument.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.s
+.PHONY : Session\Component\Definition\ComponentArgument.cpp.s
 
-Session\FhishiX\gameobject\ComponentHandle.obj: Session\FhishiX\gameobject\ComponentHandle.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.obj
+Session\Component\Definition\ComponentHandle.obj: Session\Component\Definition\ComponentHandle.cpp.obj
+.PHONY : Session\Component\Definition\ComponentHandle.obj
 
 # target to build an object file
-Session\FhishiX\gameobject\ComponentHandle.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.cpp.obj
+Session\Component\Definition\ComponentHandle.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj
+.PHONY : Session\Component\Definition\ComponentHandle.cpp.obj
 
-Session\FhishiX\gameobject\ComponentHandle.i: Session\FhishiX\gameobject\ComponentHandle.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.i
+Session\Component\Definition\ComponentHandle.i: Session\Component\Definition\ComponentHandle.cpp.i
+.PHONY : Session\Component\Definition\ComponentHandle.i
 
 # target to preprocess a source file
-Session\FhishiX\gameobject\ComponentHandle.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.cpp.i
+Session\Component\Definition\ComponentHandle.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.i
+.PHONY : Session\Component\Definition\ComponentHandle.cpp.i
 
-Session\FhishiX\gameobject\ComponentHandle.s: Session\FhishiX\gameobject\ComponentHandle.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.s
+Session\Component\Definition\ComponentHandle.s: Session\Component\Definition\ComponentHandle.cpp.s
+.PHONY : Session\Component\Definition\ComponentHandle.s
 
 # target to generate assembly for a file
-Session\FhishiX\gameobject\ComponentHandle.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentHandle.cpp.s
+Session\Component\Definition\ComponentHandle.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.s
+.PHONY : Session\Component\Definition\ComponentHandle.cpp.s
 
-Session\FhishiX\gameobject\ComponentManager.obj: Session\FhishiX\gameobject\ComponentManager.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentManager.obj
+Session\Component\Definition\ComponentManager.obj: Session\Component\Definition\ComponentManager.cpp.obj
+.PHONY : Session\Component\Definition\ComponentManager.obj
 
 # target to build an object file
-Session\FhishiX\gameobject\ComponentManager.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj
-.PHONY : Session\FhishiX\gameobject\ComponentManager.cpp.obj
+Session\Component\Definition\ComponentManager.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj
+.PHONY : Session\Component\Definition\ComponentManager.cpp.obj
 
-Session\FhishiX\gameobject\ComponentManager.i: Session\FhishiX\gameobject\ComponentManager.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentManager.i
+Session\Component\Definition\ComponentManager.i: Session\Component\Definition\ComponentManager.cpp.i
+.PHONY : Session\Component\Definition\ComponentManager.i
 
 # target to preprocess a source file
-Session\FhishiX\gameobject\ComponentManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.i
-.PHONY : Session\FhishiX\gameobject\ComponentManager.cpp.i
+Session\Component\Definition\ComponentManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.i
+.PHONY : Session\Component\Definition\ComponentManager.cpp.i
 
-Session\FhishiX\gameobject\ComponentManager.s: Session\FhishiX\gameobject\ComponentManager.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentManager.s
+Session\Component\Definition\ComponentManager.s: Session\Component\Definition\ComponentManager.cpp.s
+.PHONY : Session\Component\Definition\ComponentManager.s
 
 # target to generate assembly for a file
-Session\FhishiX\gameobject\ComponentManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.s
-.PHONY : Session\FhishiX\gameobject\ComponentManager.cpp.s
+Session\Component\Definition\ComponentManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.s
+.PHONY : Session\Component\Definition\ComponentManager.cpp.s
 
 Session\FhishiX\gameobject\GameObject.obj: Session\FhishiX\gameobject\GameObject.cpp.obj
 .PHONY : Session\FhishiX\gameobject\GameObject.obj
@@ -237,6 +237,30 @@ Session\FhishiX\gameobject\GameObjectArgument.s: Session\FhishiX\gameobject\Game
 Session\FhishiX\gameobject\GameObjectArgument.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectArgument.cpp.s
 .PHONY : Session\FhishiX\gameobject\GameObjectArgument.cpp.s
+
+Session\FhishiX\gameobject\GameObjectManager.obj: Session\FhishiX\gameobject\GameObjectManager.cpp.obj
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\GameObjectManager.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.cpp.obj
+
+Session\FhishiX\gameobject\GameObjectManager.i: Session\FhishiX\gameobject\GameObjectManager.cpp.i
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\GameObjectManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.i
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.cpp.i
+
+Session\FhishiX\gameobject\GameObjectManager.s: Session\FhishiX\gameobject\GameObjectManager.cpp.s
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\GameObjectManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.s
+.PHONY : Session\FhishiX\gameobject\GameObjectManager.cpp.s
 
 Session\FhishiX\gameobject\rigidBody\RigidBody.obj: Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.obj
 .PHONY : Session\FhishiX\gameobject\rigidBody\RigidBody.obj
@@ -823,21 +847,24 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... fpsProjectServer
-	@echo ... Session/FhishiX/gameobject/ComponentArgument.obj
-	@echo ... Session/FhishiX/gameobject/ComponentArgument.i
-	@echo ... Session/FhishiX/gameobject/ComponentArgument.s
-	@echo ... Session/FhishiX/gameobject/ComponentHandle.obj
-	@echo ... Session/FhishiX/gameobject/ComponentHandle.i
-	@echo ... Session/FhishiX/gameobject/ComponentHandle.s
-	@echo ... Session/FhishiX/gameobject/ComponentManager.obj
-	@echo ... Session/FhishiX/gameobject/ComponentManager.i
-	@echo ... Session/FhishiX/gameobject/ComponentManager.s
+	@echo ... Session/Component/Definition/ComponentArgument.obj
+	@echo ... Session/Component/Definition/ComponentArgument.i
+	@echo ... Session/Component/Definition/ComponentArgument.s
+	@echo ... Session/Component/Definition/ComponentHandle.obj
+	@echo ... Session/Component/Definition/ComponentHandle.i
+	@echo ... Session/Component/Definition/ComponentHandle.s
+	@echo ... Session/Component/Definition/ComponentManager.obj
+	@echo ... Session/Component/Definition/ComponentManager.i
+	@echo ... Session/Component/Definition/ComponentManager.s
 	@echo ... Session/FhishiX/gameobject/GameObject.obj
 	@echo ... Session/FhishiX/gameobject/GameObject.i
 	@echo ... Session/FhishiX/gameobject/GameObject.s
 	@echo ... Session/FhishiX/gameobject/GameObjectArgument.obj
 	@echo ... Session/FhishiX/gameobject/GameObjectArgument.i
 	@echo ... Session/FhishiX/gameobject/GameObjectArgument.s
+	@echo ... Session/FhishiX/gameobject/GameObjectManager.obj
+	@echo ... Session/FhishiX/gameobject/GameObjectManager.i
+	@echo ... Session/FhishiX/gameobject/GameObjectManager.s
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.obj
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.i
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.s

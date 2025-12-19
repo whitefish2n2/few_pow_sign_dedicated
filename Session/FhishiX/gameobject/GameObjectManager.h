@@ -4,18 +4,17 @@
 
 #ifndef FPSPROJECTSERVER_GAMEOBJECTMANAGER_H
 #define FPSPROJECTSERVER_GAMEOBJECTMANAGER_H
-#include <unordered_map>
 
-#include "GameObjectArgument.h"
+
+#include <queue>
+#include <vector>
+
 #include "GameObject.h"
-#include "../../GameSession.h"
-
+#include "GameObjectArgument.h"
 class GameSession;
 
 class GameObjectManager {
     protected:
-    GameSession* ownerSession;
-    std::unordered_map<GameObject, GameObjectArgument,GameObjectHash> gameObjects;
     struct EntitySlot {
         uint32_t generation;
         bool isActive = false;
@@ -28,21 +27,28 @@ class GameObjectManager {
     public:
     GameObject CreateGameObject() {
         if (freeIndices.empty()) {
-            auto obj = GameObjectArgument(ownerSession);
+            uint32_t idx = objects.size();
+            auto obj = GameObjectArgument(idx, 1);
             objects.push_back(obj);
-
-        }
-    }
-    GameObjectManager(GameSession* session) {
-        ownerSession = session;
-    };
-    GameObjectArgument* GetGameObject(const GameObject* ref) {
-        if (gameObjects.contains(*ref)) {
-            return &gameObjects[*ref];
+            GameObject handle = GameObject(idx,1);
+            return handle;
         }
         else {
-            return nullptr;
+            uint32_t index = freeIndices.front();
+            freeIndices.pop();
+            uint32_t gen = objects[index].generationId++;
+            GameObject handle = GameObject(index,gen);
+            return handle;
         }
+    };
+    GameObjectArgument* GetGameObject(const GameObject ref) {
+        if (ref.GetId() < objects.size()) {
+            auto* obj = &objects[ref.GetId()];
+            if (obj->generationId != ref.GetGenerationId()) return nullptr;
+            return obj;
+        }
+        else
+            return nullptr;
     }
 };
 #endif //FPSPROJECTSERVER_GAMEOBJECTMANAGER_H

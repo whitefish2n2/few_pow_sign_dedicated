@@ -49,25 +49,25 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 66,
+				"line" : 84,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 73,
+				"line" : 91,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 76,
+				"line" : 94,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 72,
+				"line" : 90,
 				"parent" : 0
 			},
 			{
@@ -105,13 +105,13 @@
 			{
 				"command" : 7,
 				"file" : 1,
-				"line" : 65,
+				"line" : 83,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 75,
+				"line" : 93,
 				"parent" : 0
 			}
 		]
@@ -178,7 +178,13 @@
 				32,
 				43,
 				45,
-				46
+				46,
+				53,
+				54,
+				58,
+				59,
+				61,
+				62
 			]
 		}
 	],
@@ -287,7 +293,13 @@
 				32,
 				43,
 				45,
-				46
+				46,
+				53,
+				54,
+				58,
+				59,
+				61,
+				62
 			]
 		},
 		{
@@ -321,14 +333,22 @@
 				48,
 				49,
 				50,
-				51
+				51,
+				52,
+				55,
+				56,
+				57,
+				60,
+				63,
+				64,
+				65
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				52
+				66
 			]
 		}
 	],
@@ -448,7 +468,7 @@
 		},
 		{
 			"backtrace" : 2,
-			"path" : "Session/FhishiX/gameobject/GameObject.h",
+			"path" : "Session/FhishiX/gameobject/GameObjectArgument.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -584,7 +604,7 @@
 		{
 			"backtrace" : 2,
 			"compileGroupIndex" : 0,
-			"path" : "Session/FhishiX/gameobject/GameObject.cpp",
+			"path" : "Session/FhishiX/gameobject/GameObjectArgument.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -615,7 +635,83 @@
 		},
 		{
 			"backtrace" : 2,
-			"path" : "Session/FhishiX/gameobject/Component.h",
+			"path" : "Session/Component/Definition/ComponentArgument.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/GameObjectManager.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/gameobject/GameObject.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/Component/Definition/ComponentManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Component/Definition/ComponentManager.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Component/Definition/ComponentHandle.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/EntityTypes.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/Component/Definition/ComponentHandle.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/gameobject/rigidBody/RigidBody.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/rigidBody/RigidBody.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/Component/Definition/ComponentArgument.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/gameobject/GameObjectManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Component/Definition/ComponentHandleBase.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/SessionContext.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Component/Definition/ComponentTypeCounter.h",
 			"sourceGroupIndex" : 1
 		},
 		{

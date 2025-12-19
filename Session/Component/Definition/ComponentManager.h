@@ -1,13 +1,13 @@
 //
-// Created by white on 25. 12. 11..
+// Created by white on 25. 12. 11.
 //
 
 #ifndef FPSPROJECTSERVER_COMPONENTMANAGER_H
 #define FPSPROJECTSERVER_COMPONENTMANAGER_H
 #include <memory>
 #include <unordered_map>
-#include "ComponentArgument.h"
 #include "ComponentHandle.h"
+#include "../../SessionContext.h"
 /*
  *ECS 패턴을 도입함. 컴포넌트는 해당 클래스의 각 타입별 Array에 저장되고, 소유권도 해당 클래스가 가짐.
  *외부에서 사용되는 Component는 해당 클래스에 접근하는 핸들의 역할을 함.
@@ -53,7 +53,6 @@ public:
 
         ComponentHandle<T> handle;
         handle.entityId = entityId;
-        handle.session = session;
 
         return handle;
     }
@@ -74,33 +73,29 @@ public:
     ComponentArgument* GetArgument(ComponentEntityId id) override {
         auto it = indexArray.find(id);
         if (it==indexArray.end()) return nullptr;
-        return &dataArray.at(it->second);
+        return &dataArray[it->second];
     }
 };
+
 class ComponentManager {
 protected:
     std::unordered_map<size_t, std::unique_ptr<BasePool>> componentPool;
     template<typename T>
     DrivenPool<T>* GetOrCreatePool() {
         size_t typeId = ComponentHandle<T>::getTypeId();
-        if (componentPool.find(typeId) == componentPool.end()) {
-            componentPool[typeId] = std::make_unique<DrivenPool<T>>(session);
+        if (!componentPool.contains(typeId)) {
+            componentPool[typeId] = std::make_unique<DrivenPool<T>>(gameSessionInstance);
         }
         return static_cast<DrivenPool<T>*>(componentPool[typeId].get());
     }
-    public:
-    GameSession *session;
-
-    ComponentManager(GameSession *session) {
-        this->session = session;
-    }
+public:
 
     template<typename T>
     T* GetComponentFromPool(ComponentHandle<T>* handle) {
         size_t typeId = handle->getTypeId();
         const auto it = componentPool.find(typeId);
         if (it == componentPool.end()) return nullptr;
-        return static_cast<T*>(it->second.get()->GetArgument(handle->entityId));
+        return static_cast<T*>(it->second->GetArgument(handle->entityId));
     }
 
     template<typename T>
@@ -108,21 +103,13 @@ protected:
         size_t typeId = handle->getTypeId();
         auto it = componentPool.find(typeId);
         if (it == componentPool.end()) return;
-        it->second.get()->DeleteComponent(handle->entityId);
+        it->second->DeleteComponent(handle->entityId);
     }
 
     template<typename T, typename... Args>
     ComponentHandle<T> CreateComponentAtPool(Args&&... args) {
-        return GetOrCreatePool<T>()->CreateComponent(session, std::forward<Args>(args)...);
+        return GetOrCreatePool<T>()->CreateComponent(gameSessionInstance, std::forward<Args>(args)...);
     }
-
-    ///컴포넌트들의 타입에 대해 Type Id를 매겨주는 클래스(함수)
-    class ComponentTypeCounter {
-        protected:
-        static size_t typeId;
-        public:
-        static size_t GetNextTypeId() {return typeId++;}
-    };
 };
 
 

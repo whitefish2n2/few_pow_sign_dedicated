@@ -1,7 +1,16 @@
 #include "GameObjectArgument.h"
+
+#include "../AABB.h"
+#include "../../Component/Definition/ComponentManager.h"
 //
 // Created by white on 25. 10. 28.
 //
+
+GameObject GameObjectArgument::MakeHandle() const {
+    return {id,generationId};
+}
+
+
 void GameObjectArgument::CalculateAABB() {
     boundBox = this->collider->GetAABB();
 }
@@ -48,8 +57,12 @@ GameObjectArgument & GameObjectArgument::operator=(const GameObjectArgument &tar
     if (this == &target)
         return *this;
     this->id = target.id;
+    this->generationId = target.generationId;
     this->tag = target.tag;
     this->transform = target.transform;
+    for (auto component : target.components ) {
+        this->components.push_back(component);
+    }
     if (target.collider) {
         this->collider = target.collider->clone();
         this->collider->gameobject = this;

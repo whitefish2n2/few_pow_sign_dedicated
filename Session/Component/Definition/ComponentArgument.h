@@ -4,9 +4,7 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENT_H
 #define FPSPROJECTSERVER_COMPONENT_H
-#include <ranges>
 
-#include "ComponentManager.h"
 #include "ComponentManager.h"
 #include "../../GameSession.h"
 
@@ -14,11 +12,16 @@ class GameObject;
 class GameSession;
 class ComponentArgument {
 protected:
-    GameObject* gameObject = nullptr;
-    GameSession* session = nullptr;
+    GameObject gameObject = GameObject::NullPTR();
     public:
-    ComponentEntityId entityId;
-    ComponentArgument(const ComponentEntityId entityId, GameSession* session):session(session), entityId(entityId){}
+    ComponentEntityId entityId = -1;
+    ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
+    ComponentArgument(const ComponentArgument& other):gameObject(GameObject::NullPTR()), entityId(-1) {
+        //entityId와 gameObject는 복사 금지
+    }
+    ComponentArgument& operator=(const ComponentArgument& other) = default;
+    ComponentArgument();
+
     virtual ~ComponentArgument () = default ;
     virtual void OnAttach() = 0;
     virtual void OnDetach() = 0;
@@ -26,10 +29,11 @@ protected:
     virtual void Reset() = 0;
     virtual void Start() = 0;
     virtual void Awake() = 0;
-    void SetOwner(GameObject *owner) {
+
+    void SetOwner(GameObject owner) {
         this->gameObject = owner;
     };
-    [[nodiscard]] GameObject* GetGameObject() const {
+    [[nodiscard]] GameObject GetGameObject() const {
         return gameObject;
     }
 

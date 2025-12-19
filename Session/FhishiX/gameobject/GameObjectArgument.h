@@ -4,84 +4,66 @@
 
 #ifndef GameObjectArgument_H
 #define GameObjectArgument_H
-#include <string>
 #include <vector>
-#include <memory>
 
-#include "ComponentArgument.h"
-#include "ComponentHandle.h"
+#include "../../Component/Definition/ComponentArgument.h"
 #include "ObjectType.h"
 #include "Transform.h"
-#include "../vector/Vector3.h"
-#include "../Triangle.h"
-#include "../ObjectTag.h"
-#include "../AABB.h"
 #include "../Layer.h"
-#include "collider/Collider.h"
-#include "GameObject.h"
-class GameSession;
+#include "../ObjectTag.h"
+#include "../../SessionContext.h"
+#include "../../Component/Definition/ComponentHandleBase.h"
 
+class GameSession;
+class GameObject;
 class GameObjectArgument {
 protected:
-    GameSession* gameSession;
     public:
     void Clear() {
 
     }
-    std::vector<ComponentHandle> components;
-    bool enablePhysics = true;
+    std::vector<ComponentHandleBase> components;
+    Transform transform = Transform();
+    Layers layer = Layers::Default;
+
     GameObjectArgument()=default;
-    GameObjectArgument(GameSession* owner) {
-        gameSession = owner;
-    }
-    long long id;
+    GameObjectArgument(const uint32_t id, uint32_t generationId):id(id),generationId(generationId){};
+
+    uint32_t id = -1;
+    uint32_t generationId = -1;
     TagEnum tag = TagEnum::Untagged;
     ObjectTypeEnum type = ObjectTypeEnum::Undefined;
 
-    /*
-    Layers layer = Layers::Default;
-    std::unique_ptr<Collider> collider;
-    std::vector<Vector3> vertices;
-    std::vector<Triangle> triangles = std::vector<Triangle>();
-    AABB boundBox = AABB::Empty();
-    Transform transform;
-    */
+
+    [[nodiscard]] GameObject MakeHandle() const;
+
     template<typename  T, typename... Args>
-    T* AddComponent(GameObject ownerHandle, Args&&... args) {
+    ComponentHandle<T> AddComponent(Args&&... args){
         static_assert(std::is_base_of<ComponentArgument, T>::value, "T must derive from Component");
 
-        auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
-        newComponent.get()->setOwner(ownerHandle);
-        components.push_back(std::move(newComponent));
-        T* ptr = newComponent.get();
-        return ptr;
+        ComponentHandle<T> handleT = componentManagerInstance->CreateComponentAtPool<T>(std::forward<Args>(args)...);
+        handleT->SetOwner(MakeHandle());
+        ComponentHandleBase componentBase = handleT;
+        componentBase.typeId = handleT.getTypeId();
+        components.push_back(std::move(handleT));
+        return handleT;
     }
     template <typename T>
-    T* GetComponent() {
+    ComponentHandle<T> GetComponent() {
         for (auto& comp : components) {
-            // dynamic_cast로 타입 확인
-            if (T* ptr = dynamic_cast<T*>(comp.get())) {
-                return ptr;
+            const size_t typeId = GetTypeId<T>();
+            if (comp.typeId == typeId) {
+                ComponentHandle<T> handle;
+                handle.entityId = comp.entityId;
+                handle.typeId = typeId;
+                return handle;
             }
         }
-        return nullptr;
+        return ComponentHandle<T>::NULLPTR();
     }
 
-    /*
-    void CalculateAABB();
 
-    [[nodiscard]] Vector3 GetAABBCenter() const;
 
-    [[nodiscard]] Vector3 GetAABBSize() const;
-
-    [[nodiscard]] bool ContainsPoint(const Vector3 &point) const;
-
-    [[nodiscard]] bool IntersectsAABB(const GameObjectArgument &other) const;
-
-    void ExpandAABB(const Vector3 &point);
-
-    void MergeAABB(const AABB &other);
-    */
     GameObjectArgument& operator=(const GameObjectArgument & target);
 
 };

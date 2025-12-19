@@ -561,44 +561,44 @@ CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObject.cpp.s: cma
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObject.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObject.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentManager.cpp
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentManager.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentManager.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentManager.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentManager.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentManager.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentManager.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentManager.cpp.s"
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentManager.cpp.s"
 	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentManager.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentManager.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentHandle.cpp
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentHandle.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentHandle.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentHandle.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentHandle.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentHandle.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentHandle.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentHandle.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentHandle.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentHandle.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentHandle.cpp.s"
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentHandle.cpp.s"
 	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentHandle.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentHandle.cpp
 <<
 
 CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
@@ -621,24 +621,44 @@ CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\rigidBody\RigidBody.c
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\rigidBody\RigidBody.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentArgument.cpp
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentArgument.cpp.obj"
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentArgument.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentArgument.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentArgument.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentArgument.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentArgument.cpp.i"
-	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentArgument.cpp
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentArgument.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentArgument.cpp
 <<
 
-CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/ComponentArgument.cpp.s"
+CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/Component/Definition/ComponentArgument.cpp.s"
 	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ComponentArgument.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentArgument.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\flags.make
+CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj: C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObjectManager.cpp
+CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj: CMakeFiles\fpsProjectServer.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectManager.cpp.obj"
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj.d --working-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug --filter-prefix="참고: 포함 파일: " -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj /FdCMakeFiles\fpsProjectServer.dir\ /FS -c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObjectManager.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectManager.cpp.i"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe > CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObjectManager.cpp
+<<
+
+CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fpsProjectServer.dir/Session/FhishiX/gameobject/GameObjectManager.cpp.s"
+	C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.s /c C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObjectManager.cpp
 <<
 
 # Object files for target fpsProjectServer
@@ -668,10 +688,11 @@ fpsProjectServer_OBJECTS = \
 "CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectArgument.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\SessionDXViewer\DirectXCore.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObject.cpp.obj" \
-"CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj" \
-"CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj" \
 "CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.obj" \
-"CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj"
+"CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj" \
+"CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj"
 
 # External object files for target fpsProjectServer
 fpsProjectServer_EXTERNAL_OBJECTS =
@@ -701,10 +722,11 @@ fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\quaternion
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectArgument.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\SessionDXViewer\DirectXCore.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObject.cpp.obj
-fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentManager.cpp.obj
-fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentHandle.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentManager.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentHandle.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.obj
-fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\ComponentArgument.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\Component\Definition\ComponentArgument.cpp.obj
+fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.obj
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\build.make
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib
@@ -713,7 +735,7 @@ fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\de
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib
 fpsProjectServer.exe: C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib
 fpsProjectServer.exe: CMakeFiles\fpsProjectServer.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Linking CXX executable fpsProjectServer.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Linking CXX executable fpsProjectServer.exe"
 	C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=CMakeFiles\fpsProjectServer.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests -- C:\PROGRA~1\MICROS~1\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\fpsProjectServer.dir\objects1.rsp @<<
  /out:fpsProjectServer.exe /implib:fpsProjectServer.lib /pdb:C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug\fpsProjectServer.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib ws2_32.lib winmm.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib Rpcrt4.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\zlibd.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlienc.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<

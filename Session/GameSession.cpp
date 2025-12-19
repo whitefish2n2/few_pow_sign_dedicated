@@ -6,6 +6,8 @@
 #include <random>
 #include <string>
 #include <ranges>
+
+#include "SessionContext.h"
 #include "Game/Player.h"
 #include "SessionUtil.h"
 #include "../Constants.h"
@@ -103,6 +105,12 @@ constexpr int tickRateMs = 33;
 void GameSession::Start() {
     Log("session is running on port " + std::to_string(Consts::port));
     // Run server loop
+
+    // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성
+    gameSessionInstance = this;
+    gameObjectManagerInstance = new GameObjectManager();
+    componentManagerInstance = new ComponentManager();
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> distrib(0, 255);

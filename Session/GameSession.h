@@ -15,7 +15,7 @@
 #include "Dto/MapEnum.h"
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
-#include "FhishiX/gameobject/ComponentManager.h"
+#include "Component/Definition/ComponentManager.h"
 #include "FhishiX/gameobject/GameObjectManager.h"
 #include "Game/Map.h"
 #include "netcode/SessionNetworkDto.h"
@@ -55,6 +55,7 @@ struct BroadCastEvent {
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*>& target)
         : type(type), payload(payload), target(target) {}
 };
+
 class GameSession {
     public:
     std::string sessionId;
@@ -64,9 +65,6 @@ class GameSession {
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
     MapEnum mapType;
     Map map;
-
-    GameObjectManager objectManager = GameObjectManager(this);
-    ComponentManager componentManager = ComponentManager(this);
 
     std::queue<std::shared_ptr<GameEvent>> eventQueue;
     std::mutex queueMutex;

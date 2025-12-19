@@ -57,17 +57,25 @@ add_executable(fpsProjectServer
         Session/SessionDXViewer/DirectXCore.h
         Session/FhishiX/vector/Vector2Int.h
         ServerStatics.h
-        Session/FhishiX/gameobject/ComponentArgument.h
+        Session/Component/Definition/ComponentArgument.h
         Session/FhishiX/gameobject/GameObjectManager.h
         Session/FhishiX/gameobject/GameObject.cpp
-        Session/FhishiX/gameobject/ComponentManager.cpp
-        Session/FhishiX/gameobject/ComponentManager.h
-        Session/FhishiX/gameobject/ComponentHandle.h
+        Session/Component/Definition/ComponentManager.cpp
+        Session/Component/Definition/ComponentManager.h
+        Session/Component/Definition/ComponentHandle.h
         Session/FhishiX/gameobject/EntityTypes.h
-        Session/FhishiX/gameobject/ComponentHandle.cpp
+        Session/Component/Definition/ComponentHandle.cpp
         Session/FhishiX/gameobject/rigidBody/RigidBody.cpp
         Session/FhishiX/gameobject/rigidBody/RigidBody.h
-        Session/FhishiX/gameobject/ComponentArgument.cpp
+        Session/Component/Definition/ComponentArgument.cpp
+        Session/FhishiX/gameobject/GameObjectManager.cpp
+        Session/Component/Definition/ComponentHandleBase.h
+        Session/SessionContext.h
+        Session/SessionContext.h
+        Session/Component/Definition/ComponentArgument.cpp
+        Session/Component/Definition/ComponentArgument.h
+        Session/Component/Definition/ComponentTypeCounter.h
+        Session/Component/Definition/ComponentTypeCounter.h
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

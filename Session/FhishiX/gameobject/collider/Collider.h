@@ -4,27 +4,23 @@
 
 #ifndef COLLIDER_H
 #define COLLIDER_H
-
-#include "../GameObjectArgument.h"
 #include "../ObjectType.h"
-#include "../../vector/Vector3.h"
 #include "../../AABB.h"
-
-
-class GameObjectArgument;
+#include "../../../Component/Definition/ComponentArgument.h"
+struct Triangle;
 class GameObject;
 
 struct Collision {
 
 };
 
-class Collider {
-    public:
-    GameObject* gameobject = nullptr;
-    Collider(GameObject* go, const bool isStatic = false) : gameobject(go), staticObject(isStatic) {}
-    Collider(const Collider& other);
+class Collider: public ComponentArgument{
+public:
+    Collider() = default;
+    Collider(const Collider& other)  : ComponentArgument(other) {
+        this->staticObject = other.staticObject;
+    };
     bool staticObject = false;
-    virtual ~Collider() = default;
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
 
     [[nodiscard]] virtual ObjectTypeEnum GetType() const = 0;
@@ -41,9 +37,22 @@ class Collider {
         const auto &[min, max] = GetAABB();
         return (max + min) *0.5f;
     }
-    private:
-        AABB aabb = AABB::Empty();
-        bool shouldUpdateAABB = true;
+    std::unique_ptr<Collider> collider;
+    std::vector<Vector3> vertices;
+    std::vector<Triangle> triangles = std::vector<Triangle>();
+    AABB boundBox = AABB::Empty();
+    void CalculateAABB();
+
+    [[nodiscard]] bool ContainsPoint(const Vector3 &point) const;
+
+    [[nodiscard]] bool IntersectsAABB(const GameObjectArgument &other) const;
+
+    void ExpandAABB(const Vector3 &point);
+
+    void MergeAABB(const AABB &other);
+private:
+    AABB aabb = AABB::Empty();
+    bool shouldUpdateAABB = true;
 };
 
 

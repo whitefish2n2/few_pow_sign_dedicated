@@ -16,7 +16,7 @@ public:
     AABB GetAABB() const override {
         AABB aabb = AABB::Empty();
 
-        const auto& tr = gameobject->transform;
+        const auto& tr = owner->transform;
 
 
         // 1) 로컬 파라미터
@@ -53,7 +53,7 @@ public:
 
     //CapsuleCollider 복사 생성자(Collider 복사 오버라이딩)
     CapsuleCollider(const CapsuleCollider& other):
-        Collider(other.gameobject, other.staticObject),
+        Collider(other.owner, other.staticObject),
         center(other.center),
         height(other.height),
         radius(other.radius),
