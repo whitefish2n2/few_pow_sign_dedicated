@@ -3,8 +3,10 @@
 //
 #include "Player.h"
 
+#include <utility>
+
 void Player::SetCharacter(const std::string characterId) {
-    //레전드 캐릭터 id 기반 캐릭터 스탯이고 뭐고 설정
+    //todo: 레전드 캐릭터 id 기반 캐릭터 스탯이고 뭐고 설정
 }
 
 void Player::Move(const Vector2 inputVector)
@@ -23,10 +25,13 @@ void Player::Jump()
 
 Player::Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey,
     player_status status) {
-    this->userId = id;
-    this->userName = name;
-    this->assignKey = assignKey;
+    this->userId = std::move(id);
+    this->userName = std::move(name);
+    this->assignKey = std::move(assignKey);
     this->privateKey = privateKey;
     this->publicKey = publicKey;
-    this->status = status;
+    this->status = std::move(status);
 }
+
+
+

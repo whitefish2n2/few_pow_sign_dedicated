@@ -22,7 +22,7 @@ class ComponentHandle: public ComponentHandleBase {
         return GetTypeId<T>();
     }
 
-    ComponentHandleBase *Clone() override;
+    ComponentHandleBase Clone() override;
     T*  operator->();
 
     T& operator*() { return *operator->(); }

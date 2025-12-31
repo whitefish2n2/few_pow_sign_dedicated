@@ -20,9 +20,10 @@ void BSPTree::DeleteNode(BSPNode* node) {
 }
 
 void BSPTree::InsertRecursive(BSPNode*& node, GameObject obj, int depth) {
+    ComponentHandle<Collider> collider = obj->GetComponent<Collider>();
     if (!node) {
         node = new BSPNode();
-        node->bounds = obj->    GetComponent<Collider>()->boundBox;
+        node->bounds = collider->boundBox;
         node->updateMid();
     }
 
@@ -34,7 +35,7 @@ void BSPTree::InsertRecursive(BSPNode*& node, GameObject obj, int depth) {
     if (node->isLeaf()) {
         SplitNode(node, depth);
     }
-    if (ShouldGoMultipleInsert(obj,node,depth+1)) {
+    if (ShouldGoMultipleInsert(collider,node,depth+1)) {
         InsertRecursive(node->front, obj, depth + 1);
         InsertRecursive(node->back, obj, depth + 1);
     }
@@ -47,7 +48,6 @@ void BSPTree::SplitNode(BSPNode*& node, int depth) {
 
     node->front = new BSPNode();
     node->back = new BSPNode();
-
     int axis = depth % 3; //x:0, y:1, z=2
     float mid;
     switch (axis) {
@@ -67,29 +67,30 @@ void BSPTree::SplitNode(BSPNode*& node, int depth) {
 
     node->front->bounds = AABB::Empty();
     node->back->bounds = AABB::Empty();
-    for (auto* obj : node->objects) {
+    for (auto obj : node->objects) {
+        ComponentHandle<Collider> collider = obj->GetComponent<Collider>();
         float value;
 
-        if (ShouldGoMultipleInsert(obj, node, depth+1)) {
+        if (ShouldGoMultipleInsert(collider, node, depth+1)) {
             node->front->objects.push_back(obj);
-            node->front->bounds = AABB::ComputeUnion(node->front->bounds, obj->boundBox);
+            node->front->bounds = AABB::ComputeUnion(node->front->bounds, collider->boundBox);
             node->back->objects.push_back(obj);
-            node->back->bounds = AABB::ComputeUnion(node->back->bounds, obj->boundBox);
+            node->back->bounds = AABB::ComputeUnion(node->back->bounds, collider->boundBox);
         }
         else {
             switch (axis) {
-                case 0: value = obj->boundBox.min.x; break;
-                case 1: value = obj->boundBox.min.y; break;
-                case 2: value = obj->boundBox.min.z; break;
-                default: value = obj->boundBox.max.x; break;
+                case 0: value = collider->boundBox.min.x; break;
+                case 1: value = collider->boundBox.min.y; break;
+                case 2: value = collider->boundBox.min.z; break;
+                default: value = collider->boundBox.max.x; break;
             }
             if (value >= mid) {
                 node->front->objects.push_back(obj);
-                node->front->bounds = AABB::ComputeUnion(node->front->bounds, obj->boundBox);
+                node->front->bounds = AABB::ComputeUnion(node->front->bounds, collider->boundBox);
             }
             else {
                 node->back->objects.push_back(obj);
-                node->back->bounds = AABB::ComputeUnion(node->back->bounds, obj->boundBox);
+                node->back->bounds = AABB::ComputeUnion(node->back->bounds, collider->boundBox);
             }
         }
     }
@@ -98,21 +99,21 @@ void BSPTree::SplitNode(BSPNode*& node, int depth) {
     node->objects.clear();
 }
 
-bool BSPTree::ShouldGoMultipleInsert(GameObject* obj, BSPNode* node, int depth) {
+bool BSPTree::ShouldGoMultipleInsert(ComponentHandle<Collider> collider, BSPNode* node, int depth) {
     int axis = depth % 3;
     switch (axis) {
         case 0:
-            if (obj->boundBox.min.x <= node->mid.x && obj->boundBox.max.x >= node->mid.x) {
+            if (collider-> boundBox.min.x <= node->mid.x && collider->boundBox.max.x >= node->mid.x) {
                 return true;
             }
             break;
         case 1:
-            if (obj->boundBox.min.y <= node->mid.y && obj->boundBox.max.y >= node->mid.y) {
+            if (collider->boundBox.min.y <= node->mid.y && collider->boundBox.max.y >= node->mid.y) {
                 return true;
             }
             break;
         case 2:
-            if (obj->boundBox.min.z <= node->mid.z && obj->boundBox.max.z >= node->mid.z) {
+            if (collider->boundBox.min.z <= node->mid.z && collider->boundBox.max.z >= node->mid.z) {
                 return true;
             }
             break;
@@ -120,20 +121,20 @@ bool BSPTree::ShouldGoMultipleInsert(GameObject* obj, BSPNode* node, int depth) 
     }
     return false;
 }
-bool BSPTree::IsInFront(GameObject* obj, BSPNode* node, int depth) {
+bool BSPTree::IsInFront(GameObject gameobject, BSPNode* node, int depth) {
     int axis = depth % 3;
-
+    ComponentHandle<Collider> collider = gameobject->GetComponent<Collider>();
     switch (axis) {
         case 0:
-            return obj->boundBox.min.x>node->mid.x;
+            return collider->boundBox.min.x>node->mid.x;
             break;
         case 1:
-            return obj->boundBox.min.y>node->mid.y;
+            return collider->boundBox.min.y>node->mid.y;
             break;
         case 2:
-            return obj->boundBox.min.z>node->mid.z;
+            return collider->boundBox.min.z>node->mid.z;
             break;
-        default: return obj->boundBox.min.x>node->mid.x;
+        default: return collider->boundBox.min.x>node->mid.x;
     }
 }
 

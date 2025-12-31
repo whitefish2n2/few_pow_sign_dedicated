@@ -51,7 +51,7 @@ struct Vector3 {
     }
 
     ///벡터 외적
-    Vector3 cross(const Vector3& v) const {
+    [[nodiscard]] Vector3 cross(const Vector3& v) const {
         return {
             y * v.z - z * v.y,
             z * v.x - x * v.z,

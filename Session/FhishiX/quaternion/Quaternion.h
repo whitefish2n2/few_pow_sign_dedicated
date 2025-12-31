@@ -17,38 +17,53 @@ public:
     Quaternion(float w = 1, float x = 0, float y = 0, float z = 0)
         : w(w), x(x), y(y), z(z) {}
 
+    [[nodiscard]] Vector3 XYZ() const { return Vector3(x, y, z); }
+
     // 단위화
-    Quaternion Normalized() const {
+    [[nodiscard]] Quaternion Normalized() const {
         float mag = std::sqrt(w*w + x*x + y*y + z*z);
-        return Quaternion(w / mag, x / mag, y / mag, z / mag);
+        if (mag==0) return Identity;
+        return {w / mag, x / mag, y / mag, z / mag};
     }
 
     // 쿼터니언 곱셈 (회전 누적)
     Quaternion operator*(const Quaternion& q) const {
-        return Quaternion(
+        return {
             w*q.w - x*q.x - y*q.y - z*q.z,
             w*q.x + x*q.w + y*q.z - z*q.y,
             w*q.y - x*q.z + y*q.w + z*q.x,
             w*q.z + x*q.y - y*q.x + z*q.w
-        );
+        };
     }
 
     // 벡터 회전
     Vector3 operator*(const Vector3& v) const {
+        Vector3 qv = XYZ();
+        const auto t = 2 * qv.cross(v);
+        return v + w * t + qv.cross(t);
+
+        /*
         Quaternion qv(0, v.x, v.y, v.z);
         Quaternion inv = Inverse();
         Quaternion res = (*this) * qv * inv;
         return Vector3(res.x, res.y, res.z);
+        */
     }
 
     // 역쿼터니언 (단위 쿼터니언 기준)
-    Quaternion Inverse() const {
-        return Quaternion(w, -x, -y, -z);
+    [[nodiscard]] Quaternion Conjugate() const {
+        return {w, -x, -y, -z};
     }
 
     //쿼터니언의 크기 제곱
-    float MagnitudeSq() const {
+    [[nodiscard]] float MagnitudeSq() const {
         return w * w + x * x + y * y + z * z;
+    }
+
+    [[nodiscard]] Quaternion Inverse() const {
+        float magSq = MagnitudeSq();
+        if (magSq==0) return Identity;
+        return Quaternion(w, -x, -y, -z) * (1.0f/magSq);
     }
 
     // 오일러 -> 쿼터니언
@@ -70,7 +85,7 @@ public:
     }
 
     // 쿼터니언 -> 오일러 (도 단위)
-    Vector3 ToEuler() const {
+    [[nodiscard]] Vector3 ToEuler() const {
         float sinr_cosp = 2 * (w * x + y * z);
         float cosr_cosp = 1 - 2 * (x * x + y * y);
         float roll = std::atan2(sinr_cosp, cosr_cosp);
@@ -86,7 +101,7 @@ public:
     }
 
     //주의: 이 함수를 호출하기 전에 쿼터니언은 반드시 정규화(Normalize())하세요
-    Matrix4 ToMatrix4() const {
+    [[nodiscard]] Matrix4 ToMatrix4() const {
 
         float x2 = x + x;
         float y2 = y + y;
@@ -133,30 +148,30 @@ public:
 
     //오퍼레이터
     Quaternion operator+(const Quaternion& other) const {
-        return Quaternion(
+        return {
             w + other.w,
             x + other.x,
             y + other.y,
             z + other.z
-        );
+        };
     }
     Quaternion operator-(const Quaternion& other) const {
-        return Quaternion(
+        return {
             w - other.w,
             x - other.x,
             y - other.y,
             z - other.z
-        );
+        };
     }
     Quaternion operator*(float scalar) const {
-        return Quaternion(
+        return {
             w * scalar,
             x * scalar,
             y * scalar,
             z * scalar
-        );
+        };
     }
-    Quaternion operator=(const Quaternion& other) {
+    Quaternion& operator=(const Quaternion& other) {
         w = other.w;
         x = other.x;
         y = other.y;

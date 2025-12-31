@@ -20,6 +20,7 @@ class GameObject {
     GameObject(GameObjectId targetId, GameObjectGenerationId gen);
 
     GameObject& operator=(const GameObject & target);
+    GameObject(const GameObject & other):targetId(other.targetId),generationId(other.generationId){};
     bool operator==(const GameObject & target) const;
     explicit operator bool() const;
 

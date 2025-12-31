@@ -5,13 +5,13 @@
 #pragma once
 #include <map>
 #include <memory>
-#include <queue>
 
 
 #include "Map.h"
 #include "../Dto/MapEnum.h"
 class MapManager
 {
+protected:
 
     public:
     static MapManager* GetInstance()

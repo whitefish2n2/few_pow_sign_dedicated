@@ -16,9 +16,9 @@ class Map
     public:
     MapEnum type;
 
-    std::unordered_map<std::string, GameObject> objects;
-    std::unordered_map<std::string,GameObject> MovableObjects;
-    std::unordered_map<std::string,GameObject> PlayerObjects;
+    std::unordered_map<uint32_t, GameObject> objects;
+    std::unordered_map<uint32_t,GameObject> MovableObjects;
+    std::unordered_map<uint32_t,GameObject> PlayerObjects;
 
     BSPTree staticObjectsBSP;
 
@@ -27,7 +27,7 @@ class Map
     Map(MapEnum type);
     ~Map();
     Map(const Map &);
-    Map(Map &&);
+    Map(Map &&) noexcept;
 
     Map &operator=(const Map & target) {
         if (this == &target) return *this;

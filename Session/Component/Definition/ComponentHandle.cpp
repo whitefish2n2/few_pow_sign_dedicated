@@ -2,9 +2,9 @@
 #include "ComponentManager.h"
 
 template<typename T>
-ComponentHandleBase *ComponentHandle<T>::Clone() {
+ComponentHandleBase ComponentHandle<T>::Clone() {
     static_assert(std::is_base_of_v<ComponentArgument, T>, "T MUST Driven By ComponentArgument To Access EntityId(ComponentHandle.cpp 6:)");
-    auto* newHandle = componentManagerInstance->CreateComponentAtPool<T>();
+    auto newHandle = componentManagerInstance->CreateComponentAtPool<T>();
     T* dest = newHandle->operator->();
     T* src  = this->operator->();
 
@@ -19,7 +19,8 @@ ComponentHandleBase *ComponentHandle<T>::Clone() {
 
 template<typename T>
 T *ComponentHandle<T>::operator->() {
-    return componentManagerInstance->GetComponentFromPool<T>(this);
+    void* ptr = componentManagerInstance->GetRawPtr(this->typeId, this->entityId);
+    return static_cast<T*>(ptr);
 }
 
 

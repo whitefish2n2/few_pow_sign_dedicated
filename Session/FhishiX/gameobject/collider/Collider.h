@@ -4,9 +4,14 @@
 
 #ifndef COLLIDER_H
 #define COLLIDER_H
+#include <memory>
+#include <vector>
+
 #include "../ObjectType.h"
 #include "../../AABB.h"
 #include "../../../Component/Definition/ComponentArgument.h"
+#include "../../../FhishiX/Triangle.h"
+
 struct Triangle;
 class GameObject;
 
@@ -17,9 +22,9 @@ struct Collision {
 class Collider: public ComponentArgument{
 public:
     Collider() = default;
-    Collider(const Collider& other)  : ComponentArgument(other) {
-        this->staticObject = other.staticObject;
-    };
+    Collider(bool isStatic):staticObject(isStatic){};
+    Collider(const Collider& other);
+    virtual ~Collider() noexcept = default;
     bool staticObject = false;
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
 
@@ -37,19 +42,18 @@ public:
         const auto &[min, max] = GetAABB();
         return (max + min) *0.5f;
     }
-    std::unique_ptr<Collider> collider;
     std::vector<Vector3> vertices;
     std::vector<Triangle> triangles = std::vector<Triangle>();
     AABB boundBox = AABB::Empty();
     void CalculateAABB();
 
-    [[nodiscard]] bool ContainsPoint(const Vector3 &point) const;
+    [[nodiscard]]virtual bool ContainsPoint(const Vector3 &point) const=0;
 
-    [[nodiscard]] bool IntersectsAABB(const GameObjectArgument &other) const;
+    [[nodiscard]]virtual bool IntersectsAABB(const GameObjectArgument &other) const=0;
 
-    void ExpandAABB(const Vector3 &point);
+    virtual void ExpandAABB(const Vector3 &point) const=0;
 
-    void MergeAABB(const AABB &other);
+    virtual void MergeAABB(const AABB &other) const=0;
 private:
     AABB aabb = AABB::Empty();
     bool shouldUpdateAABB = true;

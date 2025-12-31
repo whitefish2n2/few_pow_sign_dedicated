@@ -6,6 +6,7 @@
 #include <random>
 #include <string>
 #include <ranges>
+#include <utility>
 
 #include "SessionContext.h"
 #include "Game/Player.h"
@@ -55,7 +56,7 @@ void GameSession::ProcessEventQueue() {
                     break;
                 }
 
-                case SocketEventType::Input:
+                [[likely]]case SocketEventType::Input:
                     break;
                 case SocketEventType::Move:
                 {
@@ -143,7 +144,7 @@ void GameSession::Stop() {
 
 void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
     this->players = std::make_shared<std::map<uint64_t, Player>>();
-    this->sessionId = sessionId;
+    this->sessionId = std::move(sessionId);
     this->initInfo = initInfo;
     uint64_t privateKey;
     uint8_t publicKey=129;
@@ -155,7 +156,7 @@ void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
 
         // TODO 이좀 처리해봐
         static std::mt19937 rng(std::random_device{}());
-        std::uniform_int_distribution<uint64_t> dist(1, 18446744073709551615);
+        std::uniform_int_distribution<uint64_t> dist(1, (std::numeric_limits<uint64_t>::max_digits10));
 
         do {
             privateKey = dist(rng);

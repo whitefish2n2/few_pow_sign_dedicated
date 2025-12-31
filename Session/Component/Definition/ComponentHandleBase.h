@@ -14,7 +14,7 @@ class ComponentHandleBase {
     ComponentHandleBase();
     virtual ~ComponentHandleBase() = default;
     ComponentEntityId entityId = -1;
-    virtual ComponentHandleBase *Clone() {
+    virtual ComponentHandleBase Clone() {
         return {};
     };
 };

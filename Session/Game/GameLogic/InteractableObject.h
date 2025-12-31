@@ -4,8 +4,9 @@
 
 #pragma once
 #include "../../FhishiX/gameobject/GameObject.h"
+#include "../../FhishiX/gameobject/GameObjectArgument.h"
 
-class InteractableObject:GameObject {
+class InteractableObject:GameObjectArgument {
     public:
     bool isInteractable;
 

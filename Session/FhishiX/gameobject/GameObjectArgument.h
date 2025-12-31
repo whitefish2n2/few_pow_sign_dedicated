@@ -12,8 +12,9 @@
 #include "../Layer.h"
 #include "../ObjectTag.h"
 #include "../../SessionContext.h"
+#include "../../Component/Definition/ComponentHandle.h"
 #include "../../Component/Definition/ComponentHandleBase.h"
-
+#include "../../Component/Definition/ComponentManager.h"
 class GameSession;
 class GameObject;
 class GameObjectArgument {
@@ -31,40 +32,47 @@ protected:
 
     uint32_t id = -1;
     uint32_t generationId = -1;
+    std::string name;
     TagEnum tag = TagEnum::Untagged;
     ObjectTypeEnum type = ObjectTypeEnum::Undefined;
 
 
     [[nodiscard]] GameObject MakeHandle() const;
 
+    // T는 ComponentArgument를 상속받아야 하고,
+    // T는 Args... 인자들로 생성 가능해야 한다고 명시
     template<typename  T, typename... Args>
-    ComponentHandle<T> AddComponent(Args&&... args){
-        static_assert(std::is_base_of<ComponentArgument, T>::value, "T must derive from Component");
+    requires std::constructible_from<T, Args...>
+    ComponentHandle<T> AddComponent(Args&&... args);
 
-        ComponentHandle<T> handleT = componentManagerInstance->CreateComponentAtPool<T>(std::forward<Args>(args)...);
-        handleT->SetOwner(MakeHandle());
-        ComponentHandleBase componentBase = handleT;
-        componentBase.typeId = handleT.getTypeId();
-        components.push_back(std::move(handleT));
-        return handleT;
+    template<typename T>
+   ComponentHandle<T> AttachComponent(ComponentHandle<T> handle) {
+        components.push_back(handle);
+        static_cast<ComponentArgument>(handle.operator->()).GetGameObject()->AddComponent(handle);
+
     }
     template <typename T>
     ComponentHandle<T> GetComponent() {
         for (auto& comp : components) {
             const size_t typeId = GetTypeId<T>();
             if (comp.typeId == typeId) {
-                ComponentHandle<T> handle;
-                handle.entityId = comp.entityId;
-                handle.typeId = typeId;
-                return handle;
+                return comp;
+            }
+            ComponentArgument* rawPtr = componentManagerInstance->GetRawPtr(comp.typeId, comp.entityId);
+            if (rawPtr == nullptr) continue;
+            if (T* castedType = dynamic_cast<T*>(rawPtr)) {
+                return ComponentHandle<T>(castedType,typeId);
             }
         }
         return ComponentHandle<T>::NULLPTR();
     }
+template <typename T>
+void DetachComponent() {
+        
+    }
 
-
-
-    GameObjectArgument& operator=(const GameObjectArgument & target);
+    GameObjectArgument& operator=(const GameObjectArgument & target) = delete;
 
 };
+#include "GameObjectArgument.inl"
 #endif

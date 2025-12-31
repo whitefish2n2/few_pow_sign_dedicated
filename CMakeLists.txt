@@ -76,6 +76,11 @@ add_executable(fpsProjectServer
         Session/Component/Definition/ComponentArgument.h
         Session/Component/Definition/ComponentTypeCounter.h
         Session/Component/Definition/ComponentTypeCounter.h
+        Session/FhishiX/gameobject/collider/CapsuleCollider.cpp
+        Session/FhishiX/gameobject/collider/MeshCollider.cpp
+        Session/FhishiX/gameobject/collider/Collider.cpp
+        Session/FhishiX/gameobject/collider/BoxCollider.cpp
+        Session/FhishiX/gameobject/GameObjectArgument.inl
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

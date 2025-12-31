@@ -9,11 +9,13 @@
 #include "../FhishiX/AABB.h"
 #include "../FhishiX/gameobject/GameObject.h"
 #include "../FhishiX/vector/Vector3.h"
+#include "../Component/Definition/ComponentHandle.h"
+#include "../FhishiX/gameobject/collider/Collider.h"
 
 struct BSPNode {
     AABB bounds;
     Vector3 mid;
-    std::vector<GameObject*> objects;
+    std::vector<GameObject> objects;
 
     BSPNode* front = nullptr;
     BSPNode* back = nullptr;
@@ -41,9 +43,9 @@ private:
 
     static void SplitNode(BSPNode*& node, int depth);
 
-    static bool ShouldGoMultipleInsert(GameObject *obj, BSPNode *node, int depth);
+    static bool ShouldGoMultipleInsert(ComponentHandle<Collider> collider, BSPNode *node, int depth);
 
-    static bool IsInFront(GameObject *obj, BSPNode *node, int depth);
+    static bool IsInFront(GameObject gameobject, BSPNode *node, int depth);
 
 
 };

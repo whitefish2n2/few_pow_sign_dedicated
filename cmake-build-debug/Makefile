@@ -262,6 +262,102 @@ Session\FhishiX\gameobject\GameObjectManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\GameObjectManager.cpp.s
 .PHONY : Session\FhishiX\gameobject\GameObjectManager.cpp.s
 
+Session\FhishiX\gameobject\collider\BoxCollider.obj: Session\FhishiX\gameobject\collider\BoxCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\collider\BoxCollider.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\BoxCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.cpp.obj
+
+Session\FhishiX\gameobject\collider\BoxCollider.i: Session\FhishiX\gameobject\collider\BoxCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\collider\BoxCollider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\BoxCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.cpp.i
+
+Session\FhishiX\gameobject\collider\BoxCollider.s: Session\FhishiX\gameobject\collider\BoxCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\collider\BoxCollider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\BoxCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\BoxCollider.cpp.s
+
+Session\FhishiX\gameobject\collider\CapsuleCollider.obj: Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.obj
+
+Session\FhishiX\gameobject\collider\CapsuleCollider.i: Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.i
+
+Session\FhishiX\gameobject\collider\CapsuleCollider.s: Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\CapsuleCollider.cpp.s
+
+Session\FhishiX\gameobject\collider\Collider.obj: Session\FhishiX\gameobject\collider\Collider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\Collider.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\collider\Collider.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\Collider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\Collider.cpp.obj
+
+Session\FhishiX\gameobject\collider\Collider.i: Session\FhishiX\gameobject\collider\Collider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\Collider.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\collider\Collider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\Collider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\Collider.cpp.i
+
+Session\FhishiX\gameobject\collider\Collider.s: Session\FhishiX\gameobject\collider\Collider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\Collider.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\collider\Collider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\Collider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\Collider.cpp.s
+
+Session\FhishiX\gameobject\collider\MeshCollider.obj: Session\FhishiX\gameobject\collider\MeshCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.obj
+
+# target to build an object file
+Session\FhishiX\gameobject\collider\MeshCollider.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\MeshCollider.cpp.obj
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.cpp.obj
+
+Session\FhishiX\gameobject\collider\MeshCollider.i: Session\FhishiX\gameobject\collider\MeshCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.i
+
+# target to preprocess a source file
+Session\FhishiX\gameobject\collider\MeshCollider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\MeshCollider.cpp.i
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.cpp.i
+
+Session\FhishiX\gameobject\collider\MeshCollider.s: Session\FhishiX\gameobject\collider\MeshCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.s
+
+# target to generate assembly for a file
+Session\FhishiX\gameobject\collider\MeshCollider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\fpsProjectServer.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\fpsProjectServer.dir\Session\FhishiX\gameobject\collider\MeshCollider.cpp.s
+.PHONY : Session\FhishiX\gameobject\collider\MeshCollider.cpp.s
+
 Session\FhishiX\gameobject\rigidBody\RigidBody.obj: Session\FhishiX\gameobject\rigidBody\RigidBody.cpp.obj
 .PHONY : Session\FhishiX\gameobject\rigidBody\RigidBody.obj
 
@@ -865,6 +961,18 @@ help:
 	@echo ... Session/FhishiX/gameobject/GameObjectManager.obj
 	@echo ... Session/FhishiX/gameobject/GameObjectManager.i
 	@echo ... Session/FhishiX/gameobject/GameObjectManager.s
+	@echo ... Session/FhishiX/gameobject/collider/BoxCollider.obj
+	@echo ... Session/FhishiX/gameobject/collider/BoxCollider.i
+	@echo ... Session/FhishiX/gameobject/collider/BoxCollider.s
+	@echo ... Session/FhishiX/gameobject/collider/CapsuleCollider.obj
+	@echo ... Session/FhishiX/gameobject/collider/CapsuleCollider.i
+	@echo ... Session/FhishiX/gameobject/collider/CapsuleCollider.s
+	@echo ... Session/FhishiX/gameobject/collider/Collider.obj
+	@echo ... Session/FhishiX/gameobject/collider/Collider.i
+	@echo ... Session/FhishiX/gameobject/collider/Collider.s
+	@echo ... Session/FhishiX/gameobject/collider/MeshCollider.obj
+	@echo ... Session/FhishiX/gameobject/collider/MeshCollider.i
+	@echo ... Session/FhishiX/gameobject/collider/MeshCollider.s
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.obj
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.i
 	@echo ... Session/FhishiX/gameobject/rigidBody/RigidBody.s

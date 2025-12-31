@@ -1,8 +1,6 @@
 #include "GameObjectArgument.h"
 #include "GameObjectManager.h"
-#include "../../GameSession.h"
 #include "../../SessionContext.h"
-#include "../../Game/MapManager.h"
 
 GameObjectArgument *GameObject::operator->() const {
     return gameObjectManagerInstance->GetGameObject(*this);

@@ -4,11 +4,8 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENT_H
 #define FPSPROJECTSERVER_COMPONENT_H
-
-#include "ComponentManager.h"
-#include "../../GameSession.h"
-
-class GameObject;
+#include "../../FhishiX/gameobject/EntityTypes.h"
+#include "../../FhishiX/gameobject/GameObject.h"
 class GameSession;
 class ComponentArgument {
 protected:
@@ -16,19 +13,17 @@ protected:
     public:
     ComponentEntityId entityId = -1;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
-    ComponentArgument(const ComponentArgument& other):gameObject(GameObject::NullPTR()), entityId(-1) {
-        //entityId와 gameObject는 복사 금지
-    }
+    ComponentArgument(const ComponentArgument& other);
     ComponentArgument& operator=(const ComponentArgument& other) = default;
-    ComponentArgument();
+    ComponentArgument () = default;
 
-    virtual ~ComponentArgument () = default ;
-    virtual void OnAttach() = 0;
-    virtual void OnDetach() = 0;
-    virtual void Update() = 0;
-    virtual void Reset() = 0;
-    virtual void Start() = 0;
-    virtual void Awake() = 0;
+    virtual ~ComponentArgument () noexcept = default ;
+    virtual void OnAttach() { };
+    virtual void OnDetach() { };
+    virtual void Update() { };
+    virtual void Reset() { };
+    virtual void Start() { };
+    virtual void Awake(){ };
 
     void SetOwner(GameObject owner) {
         this->gameObject = owner;

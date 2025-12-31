@@ -43,7 +43,7 @@ public:
     DrivenPool(GameSession * session):BasePool(session){};
     ///새로운 Component 요소를 생성하는 함수, 해당 컴포넌트의 핸들을 반환한다.
     template<typename... Args>
-    ComponentHandle<T> CreateComponent(GameSession* session, Args&&... args ) {
+    ComponentHandle<T> CreateComponent(Args&&... args ) {
         auto h = T(std::forward<Args>(args)...);
         ComponentEntityId entityId = nextId++;
         h.entityId = entityId;
@@ -107,8 +107,16 @@ public:
     }
 
     template<typename T, typename... Args>
+    requires std::constructible_from<T, Args...>
     ComponentHandle<T> CreateComponentAtPool(Args&&... args) {
-        return GetOrCreatePool<T>()->CreateComponent(gameSessionInstance, std::forward<Args>(args)...);
+        return GetOrCreatePool<T>()->CreateComponent(std::forward<Args>(args)...);
+    }
+
+    ///해당 타입의 특정 엔티티 id를 가진 객체의 ComponentArgument*(Raw PTR) 객체를 반환합니다.
+    /// !! ALERT !! 해당 함수로 얻은 데이터를 캐싱하여 사용하지 마세요. 댕글링 포인터 위헙이 있습니다.
+    ComponentArgument* GetRawPtr(size_t type_id, ComponentEntityId entity_id) {
+        if (!componentPool.contains(type_id)) return nullptr;
+        return componentPool[type_id]->GetArgument(entity_id);
     }
 };
 
