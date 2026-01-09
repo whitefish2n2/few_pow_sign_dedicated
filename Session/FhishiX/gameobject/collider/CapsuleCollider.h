@@ -14,6 +14,7 @@ public:
     float height, radius;
     mutable bool haveMesh = false;
     explicit CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Collider(isStatic), center(center), height(height), radius(radius) {}
+    CapsuleCollider() = default;
     ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Capsule; }
     AABB GetAABB() const override;
 

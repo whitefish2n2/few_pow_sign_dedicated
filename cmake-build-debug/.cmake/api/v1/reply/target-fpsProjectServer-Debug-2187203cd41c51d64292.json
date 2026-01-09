@@ -49,25 +49,25 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 89,
+				"line" : 90,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 96,
+				"line" : 97,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 99,
+				"line" : 100,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 95,
+				"line" : 96,
 				"parent" : 0
 			},
 			{
@@ -105,13 +105,13 @@
 			{
 				"command" : 7,
 				"file" : 1,
-				"line" : 88,
+				"line" : 89,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 98,
+				"line" : 99,
 				"parent" : 0
 			}
 		]
@@ -350,14 +350,15 @@
 				63,
 				64,
 				65,
-				70
+				70,
+				71
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				71
+				72
 			]
 		}
 	],
@@ -750,6 +751,11 @@
 		{
 			"backtrace" : 2,
 			"path" : "Session/FhishiX/gameobject/GameObjectArgument.inl",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Component/Definition/ComponentFactory.h",
 			"sourceGroupIndex" : 1
 		},
 		{

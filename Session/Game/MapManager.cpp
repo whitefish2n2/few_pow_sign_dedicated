@@ -62,6 +62,7 @@ GameObject CreateCapsuleGameObject(const std::string& name, const std::string& t
     obj->type = ObjectTypeEnum::Capsule;
     obj->layer = Layers::Ground;
     ComponentHandle<CapsuleCollider> component = componentManagerInstance->CreateComponentAtPool<CapsuleCollider>(true,pos,height,radius);
+    componentManagerInstance->CreateComponentAtPool<CapsuleCollider>();
     component->haveMesh = false;
     obj->transform = Transform();
     obj->transform.position = pos;
