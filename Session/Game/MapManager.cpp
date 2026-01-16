@@ -19,7 +19,7 @@ void MapManager::Init() {
 
 Map MapManager::GetMap(MapEnum type)
 {
-    auto it = mapTemplates.find(type);
+    const auto it = mapTemplates.find(type);
     if (it == mapTemplates.end())
     {
         auto loaded = LoadMap(type);
@@ -30,12 +30,36 @@ Map MapManager::GetMap(MapEnum type)
 
     return *it->second;
 }
-void SetupCommonProperties(const GameObject obj, const std::string& name, const std::string& tagStr, const Layers layer, const Vector3 pos, const Quaternion rot) {
+void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layers layer, const Vector3& pos, const Quaternion &rot) {
     obj->name = name;
     obj->tag = ObjectTag::GetObjectTagFromString(tagStr);
     obj->layer = layer;
     obj->transform.position = pos;
     obj->transform.rotation = rot;
+}
+// 문자열 "x,y,z"를 Vector3로 변환
+Vector3 ParseVector3(const std::string& str) {
+    float x, y, z;
+    // C# 포맷이 "F4,F4,F4" (콤마 구분)이므로 sscanf로 파싱
+    if(sscanf_s(str.c_str(), "%f,%f,%f", &x, &y, &z) == 3) {
+        return Vector3(x, y, z);
+    }
+    return Vector3::Zero();
+}
+
+// 문자열 "x,y,z,w"를 Quaternion으로 변환
+Quaternion ParseQuaternion(const std::string& str) {
+    float x, y, z, w;
+    if(sscanf_s(str.c_str(), "%f,%f,%f,%f", &x, &y, &z, &w) == 4) {
+        return {x, y, z, w};
+    }
+    return Quaternion::Identity;
+}
+
+
+Layers ParseLayerString(const std::string& str) {
+    if (str == "Ground") return Layers::Ground;
+    return Layers::Default;
 }
 GameObject CreateBoxGameObject(const std::string& name, const std::string& tagStr,
                                const Vector3& pos, const Vector3& size, const Quaternion& rot) {
@@ -51,7 +75,6 @@ GameObject CreateBoxGameObject(const std::string& name, const std::string& tagSt
     // AddComponent는 내부적으로 매니저를 호출하고 핸들을 리스트에 넣습니다.
     // BoxCollider 생성자에 맞는 인자를 전달합니다.
     obj->AddComponent<BoxCollider>(false,Vector3::Zero(), Vector3::Zero());
-    BoxCollider a = BoxCollider(*obj->GetComponent<BoxCollider>().operator->());
     return obj;
 }
 GameObject CreateCapsuleGameObject(const std::string& name, const std::string& tagStr,
@@ -81,90 +104,111 @@ GameObject CreateMeshGameObject(const std::string& name, const std::string& tagS
     return obj;
 };
 
-GameObject ParseGameObjectFromRawFormat(const std::string& raw) {
-    std::istringstream ss(raw);
-    std::string line;
-
-    ///대충 컴포넌트 맞춰서 생성했석
-    //ID
-    std::getline(ss, line);
-    // 태그
-    std::getline(ss, line);
-    obj->tag = ObjectTag::GetObjectTagFromString(line);
-
-    // 빈 줄 스킵
-    while (std::getline(ss, line) && line.empty())
-
-    // vertices
-    do {
-        if (line.empty()) break;
-        std::stringstream ls(line);
-        float x, y, z;
-        char comma;
-        ls >> x >> comma >> y >> comma >> z;
-        obj.vertices.emplace_back(x, y, z);
-    } while (std::getline(ss, line) && !line.empty());
-
-    // triangles
-    while (std::getline(ss, line)) {
-        if (line.empty()) continue;
-        std::stringstream ls(line);
-        int a, b, c;
-        char comma;
-        ls >> a >> comma >> b >> comma >> c;
-        obj.triangles.push_back(Triangle{a, b, c});
-    }
-
-    return obj;
-}
-
 std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
 {
-    auto newMap = Map(type);
+    // unique_ptr 생성 수정 (Map 복사가 아닌 포인터 반환)
+    auto newMap = std::make_unique<Map>(type);
     auto path = GetMapInfoPath(type);
 
-    std::ifstream file("./MapInfoFile/"+path, std::ios::binary);
+    std::ifstream file("./MapInfoFile/" + path);
+    if (!file.is_open()) {
+        std::cerr << "[Error] Failed to open map file: " << path << std::endl;
+        return newMap;
+    }
 
-    std::string readValue((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    file.close();
-
-
-    std::vector<GameObject> result;
-    std::stringstream ss(readValue);
-    std::string block;
     std::string line;
-    std::ostringstream currentBlock;
+    GameObject currentObj = GameObject::NullPTR(); // 현재 처리 중인 오브젝트
 
-    while (std::getline(ss, line)) {
+    // 컴포넌트 파싱용 버퍼
+    std::string currentCompName;
+    std::ostringstream currentCompData;
+
+    // --- [Helper: 컴포넌트 생성 및 부착] ---
+    auto FlushComponent = [&]() {
+        if (currentObj && !currentCompName.empty()) {
+            // Factory에 컴포넌트 이름과 데이터(문자열)를 넘겨서 생성
+            // ComponentFactory 내부에서 "Radius: 0.5" 등의 데이터를 다시 파싱해야 함
+            bool complete = ComponentFactory::Instance().Create(currentCompName, currentObj, currentCompData.str());
+
+            if (complete) {
+                // std::cout << "  -> Attached " << currentCompName << std::endl;
+            } else {
+                std::cerr << "  [Warning] Unknown or Failed Component: " << currentCompName << std::endl;
+            }
+        }
+        // 버퍼 초기화
+        currentCompName = "";
+        currentCompData.str("");
+        currentCompData.clear();
+    };
+
+    // 파일 라인별 읽기
+    while (std::getline(file, line)) {
+        // 공백 라인 스킵
+        if (line.empty()) continue;
+
+        // 윈도우 스타일 줄바꿈 문자(\r) 제거
+        if (line.back() == '\r') line.pop_back();
+
+        // 1. 새로운 오브젝트 시작 ("-")
         if (line == "-") {
-            auto obj = ParseGameObjectFromRawFormat(currentBlock.str());
-            newMap.objects[obj->id] = obj;
-            currentBlock.str(""); // 리셋
-            currentBlock.clear();
-        } else {
-            currentBlock << line << "\n";
+            FlushComponent(); // 이전 오브젝트의 마지막 컴포넌트 처리
+
+            // 새 오브젝트 생성
+            currentObj = gameObjectManagerInstance->CreateGameObject();
+            continue;
+        }
+
+        // 2. 컴포넌트 섹션 시작 ("COMPONENT: Name")
+        if (line.rfind("COMPONENT:", 0) == 0) {
+            FlushComponent(); // 이전 컴포넌트 데이터 처리
+
+            // "COMPONENT: " 이후 문자열 추출 (길이 10 + 1)
+            if (line.length() > 11) {
+                currentCompName = line.substr(11);
+            }
+            continue;
+        }
+
+        // 3. 데이터 파싱
+        if (currentCompName.empty()) {
+            // [Header Mode] 컴포넌트가 나오기 전이므로 GameObject의 기본 속성 설정
+            size_t delimPos = line.find(": ");
+            if (delimPos != std::string::npos && currentObj) {
+                std::string key = line.substr(0, delimPos);
+                std::string val = line.substr(delimPos + 2);
+
+                if (key == "Name") {
+                    currentObj->name = val;
+                }
+                else if (key == "Tag") {
+                    currentObj->tag = ObjectTag::GetObjectTagFromString(val);
+                }
+                else if (key == "Layer") {
+                    currentObj->layer = ParseLayerString(val);
+                }
+                else if (key == "Position") {
+                    currentObj->transform.position = ParseVector3(val);
+                }
+                else if (key == "Rotation") {
+                    currentObj->transform.rotation = ParseQuaternion(val);
+                }
+                else if (key == "Scale") {
+                    currentObj->transform.scale = ParseVector3(val);
+                }
+            }
+        }
+        else {
+            // [Component Mode] 현재 컴포넌트 데이터를 버퍼에 누적
+            // ComponentFactory가 내부적으로 "Radius: ..." 등을 파싱하도록 넘겨줌
+            currentCompData << line << "\n";
         }
     }
-    if (!currentBlock.str().empty()) {
-        result.push_back(ParseGameObjectFromRawFormat(currentBlock.str()));
-    }
 
-    /*legacy
-     *std::string readValue;
-    FILE *file = nullptr;
-    if (0==fopen_s(&file, path.c_str(), "rb"))
-    {
+    // 파일 끝 도달 시 마지막 컴포넌트 처리
+    FlushComponent();
+    file.close();
 
-        fseek(file, 0, SEEK_END);
-        long size = ftell(file);
-        rewind(file);
-
-        std::vector<char> buffer(size + 1); // +1은 널 문자 용
-        fread(buffer.data(), 1, size, file);
-        buffer[size] = '\0'; // 문자열로 만들기 위해 종료 문자 추가
-
-        readValue = std::string(buffer.data());
-        fclose(file);
-    }*/
-    return std::make_unique<Map>(newMap);
+    std::cout << "[MapManager] Map Loaded: " << path << std::endl;
+    return newMap;
 }

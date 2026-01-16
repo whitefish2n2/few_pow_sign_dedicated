@@ -11,36 +11,28 @@ enum class Layers {
 
 class Layer {
     public:
-    static bool isCollisionable(Layers l1, Layers l2) {
-        switch (l1) {
-            case Layers::Default:
-                switch (l2) {
-                    case Layers::Default:
-                        return true;
-                    case Layers::Ground:
-                        return true;
-                    case Layers::Gun:
-                        return false;
-                }
-            case Layers::Ground:
-                switch (l2) {
-                    case Layers::Default:
-                        return true;
-                    case Layers::Ground:
-                        return true;
-                    case Layers::Gun:
-                        return true;
-                }
-            case Layers::Gun:
-                switch (l2) {
-                    case Layers::Default:
-                        return false;
-                    case Layers::Ground:
-                        return true;
-                    case Layers::Gun:
-                        return false;
-                }
-        }
-        return false;
+    int idx;
+
+};
+class LayerManager {
+    static std::vector<uint32_t> collisionMasks;
+    static std::unordered_map<int, std::string> layerNames;
+    static void Init() {
+        collisionMasks.resize(32,0);
+    }
+    static void SetLayerInfo(int index, const std::string& name, uint32_t mask) {
+        if (index < 0 || index >= 32) return;
+        layerNames[index] = name;
+        collisionMasks[index] = mask;
+    }
+    static bool CanCollide(int layerA, int layerB) {
+        if (layerA < 0 || layerA >= 32 || layerB < 0 || layerB >= 32) return false;
+
+        return (collisionMasks[layerA] & (1 << layerB)) != 0;
+    }
+
+    static std::string GetLayerName(int index) {
+        if (layerNames.find(index) != layerNames.end()) return layerNames[index];
+        return "Unknown";
     }
 };

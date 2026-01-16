@@ -6,6 +6,8 @@
 #include "../GameObject.h"
 #include "../../quaternion/Quaternion.h"
 #include "../GameObjectArgument.h"
+#include "../../../Component/Definition/ComponentFactory.h"
+
 AABB MeshCollider::GetAABB() const {
     const auto& verts = GetVertices();
     AABB aabb = AABB::Empty();
@@ -30,3 +32,4 @@ AABB MeshCollider::GetAABB() const {
 
     return aabb;
 }
+REGISTER_COMPONENT(MeshCollider)

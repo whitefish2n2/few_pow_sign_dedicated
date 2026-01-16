@@ -12,8 +12,8 @@ class Player {
     std::string userId;
     std::string userName;
     std::string assignKey;
-    uint64_t privateKey;
-    uint8_t publicKey;
+    uint64_t privateKey{};
+    uint8_t publicKey{};
     player_status status;
 
     ENetPeer* peer=nullptr;

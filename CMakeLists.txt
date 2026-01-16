@@ -4,7 +4,9 @@ project(fpsProjectServer)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+if(MSVC)
+    add_compile_options(/utf-8)
+endif()
 add_executable(fpsProjectServer
         main.cpp
         Session/GameSession.cpp
@@ -80,7 +82,6 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/MeshCollider.cpp
         Session/FhishiX/gameobject/collider/Collider.cpp
         Session/FhishiX/gameobject/collider/BoxCollider.cpp
-        Session/FhishiX/gameobject/GameObjectArgument.inl
         Session/Component/Definition/ComponentFactory.h
 )
 

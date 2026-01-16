@@ -30,6 +30,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
         event->type = type;
         event->payload = dto;
         event->peer = peer;
+        peer->data
 
         session->ProcessEvent(event);
     }
@@ -60,7 +61,7 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
     uint8_t messageType = data[10];
 
     uint8_t* payload = &data[11];
-    size_t payloadLength = length - 3;
+    size_t payloadLength = length - 11;
 
     try {
         switch (messageType) {

@@ -30,8 +30,8 @@ protected:
     MapManager& operator=(MapManager&&) = delete;
 private:
     std::map<MapEnum, std::unique_ptr<Map>> mapTemplates;
+    static std::unique_ptr<Map> LoadMap(MapEnum type);
 
-    std::unique_ptr<Map> LoadMap(MapEnum type);
 
     MapManager() = default;
     ~MapManager() = default;

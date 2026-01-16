@@ -4,8 +4,11 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENT_H
 #define FPSPROJECTSERVER_COMPONENT_H
+#include <string>
+
 #include "../../FhishiX/gameobject/EntityTypes.h"
 #include "../../FhishiX/gameobject/GameObject.h"
+
 class GameSession;
 class ComponentArgument {
 protected:
@@ -24,6 +27,8 @@ protected:
     virtual void Reset() { };
     virtual void Start() { };
     virtual void Awake(){ };
+    ///String형식으로 된 컴포넌트 정보를 토대로 컴포넌트를 초기화하는 함수(컴포넌트 ID 등은 이전되지 않음)
+    virtual void ParseFromString(const std::string& arg) { };
 
     void SetOwner(GameObject owner) {
         this->gameObject = owner;

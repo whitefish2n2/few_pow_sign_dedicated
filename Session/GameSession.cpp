@@ -183,6 +183,7 @@ std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENet
         if (v.assignKey == userKey) {
             v.peer = peer;
             peer->data = &v;
+
             return std::make_shared<Player>(v);
         }
     }

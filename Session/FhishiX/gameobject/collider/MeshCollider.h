@@ -17,6 +17,7 @@ public:
     mutable std::vector<int> trianglesIndices;
     MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<int> &triangles) : Collider(isStatic),vertices(vertices),trianglesIndices(triangles) {
     }
+    MeshCollider() = default;
     ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Mesh; }
     const std::vector<Vector3>& GetVertices() const {
         return vertices;

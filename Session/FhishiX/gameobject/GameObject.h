@@ -4,6 +4,7 @@
 
 #ifndef OBJECT_H
 #define OBJECT_H
+#include "EntityTypes.h"
 class GameObjectArgument;
 class GameSession;
 class GameObjectManager;

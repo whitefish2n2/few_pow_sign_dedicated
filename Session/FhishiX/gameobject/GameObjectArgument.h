@@ -12,6 +12,7 @@
 #include "../Layer.h"
 #include "../ObjectTag.h"
 #include "../../SessionContext.h"
+#include "../../Component/Definition/ComponentFactory.h"
 #include "../../Component/Definition/ComponentHandle.h"
 #include "../../Component/Definition/ComponentHandleBase.h"
 #include "../../Component/Definition/ComponentManager.h"
@@ -47,16 +48,20 @@ protected:
 
     template<typename T>
    ComponentHandle<T> AttachComponent(ComponentHandle<T> handle) {
-        components.push_back(handle);
-        static_cast<ComponentArgument>(handle.operator->()).GetGameObject()->AddComponent(handle);
-
+        if ( handle->GetGameObject() != GameObject::NullPTR())
+            handle->GetGameObject()->DetachComponent(handle);
+        components.push_back(std::move(handle));
+        handle->SetOwner(MakeHandle());
+   }
+   ComponentHandleBase AddComponent(std::string typeName, std::string arg) {
+        ComponentFactory::Instance().Create(typeName,MakeHandle(),arg);
     }
     template <typename T>
     ComponentHandle<T> GetComponent() {
+        const size_t typeId = GetTypeId<T>();
         for (auto& comp : components) {
-            const size_t typeId = GetTypeId<T>();
             if (comp.typeId == typeId) {
-                return comp;
+                return static_cast<ComponentHandle<T>&>(comp);
             }
             ComponentArgument* rawPtr = componentManagerInstance->GetRawPtr(comp.typeId, comp.entityId);
             if (rawPtr == nullptr) continue;
@@ -74,5 +79,4 @@ void DetachComponent() {
     GameObjectArgument& operator=(const GameObjectArgument & target) = delete;
 
 };
-#include "GameObjectArgument.inl"
 #endif
