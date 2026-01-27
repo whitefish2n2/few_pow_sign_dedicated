@@ -7,8 +7,8 @@
 #include <memory>
 
 
-#include "Map.h"
-#include "../Dto/MapEnum.h"
+#include "PhysicsSystem.h"
+#include "../Dto/MapInfo.h"
 class MapManager
 {
 protected:
@@ -21,7 +21,7 @@ protected:
     }
     void Init();
 
-    Map GetMap(MapEnum type);
+    PhysicsSystem CreatePhysicsMap(MapInfo type, GameSession *session);
 
 
     MapManager(const MapManager&) = delete;
@@ -29,8 +29,8 @@ protected:
     MapManager(MapManager&&) = delete;
     MapManager& operator=(MapManager&&) = delete;
 private:
-    std::map<MapEnum, std::unique_ptr<Map>> mapTemplates;
-    static std::unique_ptr<Map> LoadMap(MapEnum type);
+    std::unordered_map<MapInfo, std::unique_ptr<PhysicsSystem>> mapTemplates;
+    static std::unique_ptr<PhysicsSystem> LoadMap(MapInfo type, GameSession *targetSession);
 
 
     MapManager() = default;

@@ -10,6 +10,7 @@
 struct AABB {
     Vector3 min, max;
 
+    ///AABB a와 AABB b를 합쳐서 새로운 aabb 반환
     static AABB ComputeUnion(const AABB &a, const AABB &b) {
         AABB result = AABB();
         result.min.x = a.min.x<b.min.x ? a.min.x : b.min.x;
@@ -17,10 +18,11 @@ struct AABB {
         result.min.z = a.min.z<b.min.z ? a.min.z : b.min.z;
         result.max.x = a.max.x>b.max.x ? a.max.x : b.max.x;
         result.max.y = a.max.y>b.max.y ? a.max.y : b.max.y;
-        result.max.z = a.max.z>b.max.z ? a.max.z : b.max.z;
+        result.max.z = a.max.z>b.max.z ? a.max.z : b.max.z;//끔찍..
         return result;
     };
 
+    ///텅텅 AABB
     static AABB Empty() {
         const float float_max = (std::numeric_limits<float>::max)();
         const float float_lowest = (std::numeric_limits<float>::lowest)();

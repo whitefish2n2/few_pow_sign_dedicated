@@ -7,8 +7,9 @@
 #include <memory>
 #include <vector>
 
-#include "../ObjectType.h"
+#include "../ColliderType.h"
 #include "../../AABB.h"
+#include "../../../Component/Definition/Component.h"
 #include "../../../Component/Definition/ComponentArgument.h"
 #include "../../../FhishiX/Triangle.h"
 
@@ -28,7 +29,6 @@ public:
     bool staticObject = false;
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
 
-    [[nodiscard]] virtual ObjectTypeEnum GetType() const = 0;
     [[nodiscard]] virtual AABB GetAABB() const = 0;
     [[nodiscard]] virtual Vector3 GetAABBSize() const {
         const auto [min, max] = GetAABB();
@@ -45,7 +45,7 @@ public:
     std::vector<Vector3> vertices;
     std::vector<Triangle> triangles = std::vector<Triangle>();
     AABB boundBox = AABB::Empty();
-    void CalculateAABB();
+    virtual void CalculateAABB() const  = 0;
 
     [[nodiscard]]virtual bool ContainsPoint(const Vector3 &point) const=0;
 

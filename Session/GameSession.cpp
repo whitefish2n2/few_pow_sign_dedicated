@@ -16,6 +16,7 @@
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/SocketEventType.h"
 #include "../util/util.h"
+#include "FhishiX/gameobject/GameObjectManager.h"
 ;
 
 GameSession::~GameSession() {
@@ -109,8 +110,12 @@ void GameSession::Start() {
 
     // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성
     gameSessionInstance = this;
-    gameObjectManagerInstance = new GameObjectManager();
-    componentManagerInstance = new ComponentManager();
+    objectManager = new GameObjectManager();
+    componentManager = new ComponentManager();
+    gameObjectManagerInstance = objectManager;
+    componentManagerInstance = componentManager;
+    gameObjectManagerInstance->ownerSession  = this;
+    componentManagerInstance->ownerSession = this;
 
     std::random_device rd;
     std::mt19937 gen(rd());

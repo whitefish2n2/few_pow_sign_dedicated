@@ -5,6 +5,5 @@
 #include "Collider.h"
 Collider::Collider(const Collider &other)  :  ComponentArgument(other) {
     this->staticObject = other.staticObject;
-    ComponentArgument a = ComponentArgument(other.staticObject);
 };
 

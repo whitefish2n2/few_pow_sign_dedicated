@@ -3,4 +3,7 @@
 //
 
 #include "BoxCollider.h"
+#include "../GameObjectArgument.h"
+#include "../../../Component/Definition/ComponentFactory.h"
 
+REGISTER_COMPONENT(BoxCollider);

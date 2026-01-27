@@ -12,14 +12,14 @@
 #include "../Socket/dto/DefaultDto.h"
 #include "../Socket/dto/MoveDto.h"
 #include "../Socket/dto/SocketEventType.h"
-#include "Dto/MapEnum.h"
+#include "Dto/MapInfo.h"
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
-#include "Component/Definition/ComponentManager.h"
-#include "FhishiX/gameobject/GameObjectManager.h"
-#include "Game/Map.h"
+#include "Game/PhysicsSystem.h"
 #include "netcode/SessionNetworkDto.h"
 struct _EnetPeer;
+class GameObjectManager;
+class ComponentManager;
 using EventPayloadVariant = std::variant<
     std::nullptr_t,
     std::shared_ptr<AssignRequestDto>,
@@ -63,12 +63,15 @@ class GameSession {
     GameSetupBoddari initInfo;
     SESSIONSTATUS status = idle; // 세션 상태
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
-    MapEnum mapType;
-    Map map;
+    MapInfo mapType;
+    PhysicsSystem map;
 
     std::queue<std::shared_ptr<GameEvent>> eventQueue;
     std::mutex queueMutex;
     std::condition_variable queueCV;
+
+    GameObjectManager* objectManager;
+    ComponentManager* componentManager;
 
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
@@ -77,6 +80,7 @@ class GameSession {
     long long int tick;
 
     ~GameSession();
+    GameSession()=default;
 
     void RunAsync();
 

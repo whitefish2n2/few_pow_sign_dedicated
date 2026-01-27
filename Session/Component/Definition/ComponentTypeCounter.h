@@ -4,12 +4,14 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENTTYPECOUNTER_H
 #define FPSPROJECTSERVER_COMPONENTTYPECOUNTER_H
+#include <atomic>
+
 ///컴포넌트들의 타입에 대해 Type Id를 매겨주는 클래스, 함수
 class ComponentTypeCounter {
     protected:
-        inline static size_t typeId = 0;
+        inline static std::atomic<size_t> typeIdCounter = 0;
     public:
-        static size_t GetNextTypeId() {return typeId++;}
+        static size_t GetNextTypeId() {return typeIdCounter++;}
 };
 
 

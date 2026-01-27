@@ -25,10 +25,14 @@ class GameObjectManager {
     ///삭제된 GameObject들의 인덱스 위치들
     std::queue<uint32_t>freeIndices;
     public:
+
+    GameSession *ownerSession;
+
     GameObject CreateGameObject() {
         if (freeIndices.empty()) {
             uint32_t idx = objects.size();
             auto obj = GameObjectArgument(idx, 1);
+            obj.gameSession = ownerSession;
             objects.push_back(obj);
             GameObject handle = GameObject(idx,1);
             return handle;

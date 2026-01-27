@@ -6,6 +6,8 @@
 #include <iostream>
 
 #include "ComponentArgument.h"
+#include "ComponentHandleBase.h"
+#include "../../FhishiX/gameobject/GameObjectArgument.h"
 
 class ComponentFactory {
 public:
@@ -23,32 +25,13 @@ public:
         creators[name] = std::move(creator);
     }
 
-    ///타입 이름(Class명과 일치)을 넣고 해당 타입의 ParseFromString에서 파싱할 수 있는 String을 arg에 입력하면 object에 Attach합니다. 성공 결과를 boolean으로 반환합니다.
-    bool Create(const std::string& typeName, const GameObject &object, const std::string &arg="") {
-        try {
-            auto it = creators.find(typeName);
-            if (it != creators.end()) {
-                auto comp =  it->second(object);
-                if (comp == nullptr) return false;
-                comp->ParseFromString(arg);
-                return true;
-            }
-            return false;
-        }
-        catch (std::exception e) {
-            std::cout<<e.what()<<std::endl;
-            std::cout<<typeName<<"파싱 실패"<<std::endl;
-            return false;
-        }
+    ///타입 이름(Class명과 일치)을 넣고 해당 타입의 ParseFromString에서 파싱할 수 있는 String을 arg에 입력하면 object에 Attach합니다. 실패시 ComponentHandleBase::NULLPTR을 반환합니다.
+    ComponentHandleBase Create(const std::string& typeName, const GameObject &object, const std::string &arg, ComponentManager *componentManager);
 
-    }
     ~ComponentFactory() = default;
 private:
-    // ComponentFactory() = default; // 이 부분을 아래와 같이 변경
     ComponentFactory() = default;
 
-    // 소멸자도 static 인스턴스 해제 시 접근 문제가 생길 수 있으므로
-    // private에 둘 경우 주의가 필요하나, 내부 정적 변수라 보통은 괜찮습니다.
 
 
     std::map<std::string, CreatorFunc> creators;
@@ -60,20 +43,14 @@ private:
 static struct Register##TYPE { \
 Register##TYPE() { \
 ComponentFactory::Instance().Register(#TYPE, [](const GameObject& obj) -> ComponentArgument* { \
-/* 1. 기존 시스템(매니저)을 통해 생성하고 핸들을 받습니다 */ \
-/* ComponentHandle<BoxCollider> handle = ... */ \
 auto handle = obj->AddComponent<TYPE>(); \
 \
-/* 2. 유효성 체크 (님의 NULLPTR 구현을 보니 entityId -1이 null이군요) */ \
 if (handle.entityId == static_cast<ComponentEntityId>(-1)) { \
 return nullptr; \
 } \
 \
-/* 3. operator->()를 호출하여 T* (Raw Pointer)를 꺼냅니다 */ \
-/* 이때 내부적으로 componentManagerInstance->GetRawPtr()이 실행됩니다 */ \
 TYPE* rawPtr = handle.operator->(); \
 \
-/* 4. ComponentArgument* 로 업캐스팅되어 반환 (파싱용) */ \
 return rawPtr; \
 }); \
 } \

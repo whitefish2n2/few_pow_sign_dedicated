@@ -9,6 +9,7 @@
 #include "ComponentHandle.h"
 #include "../../SessionContext.h"
 /*
+ //fix
  *ECS 패턴을 도입함. 컴포넌트는 해당 클래스의 각 타입별 Array에 저장되고, 소유권도 해당 클래스가 가짐.
  *외부에서 사용되는 Component는 해당 클래스에 접근하는 핸들의 역할을 함.
  *Componant를 받으면 컴포넌트의 엔티티 아이디(핸들에 저장)->맵에 저장된 인덱스로 변환,
@@ -22,16 +23,16 @@
 class BasePool {
     protected:
     std::unordered_map<ComponentEntityId, size_t> indexArray;
-    GameSession * session;
 public:
     virtual ~BasePool() = default;
-    BasePool(GameSession * session):session(session){};
+    BasePool() = default;
     ///엔티티 ID로 하여금 요소를 지우는 함수.
     virtual void DeleteComponent(ComponentEntityId entityId) = 0;
     ///유효한 엔티티 ID인지 확인하는 함수
     virtual bool  ValidateHandle(ComponentEntityId entityId) {
-        return indexArray.find(entityId) != indexArray.end();
+        return indexArray.contains(entityId);
     }
+
     virtual ComponentArgument* GetArgument(ComponentEntityId id) = 0;
 };
 template<typename T>
@@ -40,7 +41,7 @@ protected:
     std::vector<T> dataArray;
     ComponentEntityId nextId = 1;
 public:
-    DrivenPool(GameSession * session):BasePool(session){};
+    DrivenPool()= default;
     ///새로운 Component 요소를 생성하는 함수, 해당 컴포넌트의 핸들을 반환한다.
     template<typename... Args>
     ComponentHandle<T> CreateComponent(Args&&... args ) {
@@ -69,7 +70,7 @@ public:
         dataArray.pop_back();
         indexArray.erase(entityIdToDelete);
     }
-    //override
+
     ComponentArgument* GetArgument(ComponentEntityId id) override {
         auto it = indexArray.find(id);
         if (it==indexArray.end()) return nullptr;
@@ -84,11 +85,13 @@ protected:
     DrivenPool<T>* GetOrCreatePool() {
         size_t typeId = ComponentHandle<T>::getTypeId();
         if (!componentPool.contains(typeId)) {
-            componentPool[typeId] = std::make_unique<DrivenPool<T>>(gameSessionInstance);
+            componentPool[typeId] = std::make_unique<DrivenPool<T>>();
         }
         return static_cast<DrivenPool<T>*>(componentPool[typeId].get());
     }
 public:
+
+    GameSession *ownerSession;
 
     template<typename T>
     T* GetComponentFromPool(ComponentHandle<T>* handle) {
@@ -111,7 +114,31 @@ public:
     ComponentHandle<T> CreateComponentAtPool(Args&&... args) {
         return GetOrCreatePool<T>()->CreateComponent(std::forward<Args>(args)...);
     }
+    ///밖에서 생성된 컴포넌트(여기서 CreateComponentAtPool을 거치지 않고 생성된, 대표적으로 문자열->컴포넌트 파싱으로 생성된 컴포넌트)를 해당 ECS 인스턴스에 편입합니다.
+    template<typename T>
+    ComponentHandle<T> InsertOrphanageComponent(ComponentArgument* comp) {
+        ComponentHandle<T> newHandle = CreateComponentAtPool<T>();
 
+        //  데이터 이동
+        T* poolObj = GetComponentFromPool(&newHandle);
+        ComponentEntityId newId = poolObj->entityId;
+        if (T* sourceObj = dynamic_cast<T*>(comp)) {
+            *poolObj = std::move(*sourceObj);
+        }
+
+
+        poolObj->entityId = newId;
+
+        // 고아 객체 원본 삭제
+        delete comp;
+
+        return newHandle;
+    }
+    ///outHandle에 생성된 객체의 ComponentHandleBase 핸들이 반환됩니다. orphan 객체는 호출 후 해제되니 접근할 수 없습니다.
+    void RegisterOrphan(ComponentArgument* orphan, ComponentHandleBase* outHandle) {
+        if (!orphan) return;
+        orphan->MoveToManager(this, outHandle);
+    }
     ///해당 타입의 특정 엔티티 id를 가진 객체의 ComponentArgument*(Raw PTR) 객체를 반환합니다.
     /// !! ALERT !! 해당 함수로 얻은 데이터를 캐싱하여 사용하지 마세요. 댕글링 포인터 위헙이 있습니다.
     ComponentArgument* GetRawPtr(size_t type_id, ComponentEntityId entity_id) {
@@ -119,6 +146,35 @@ public:
         return componentPool[type_id]->GetArgument(entity_id);
     }
 };
+
+//ComponentHandle 순환 참조 해결
+template<typename T>
+T* ComponentHandle<T>::operator->() {
+    void* ptr = componentManagerInstance->GetRawPtr(this->typeId, this->entityId);
+    return static_cast<T*>(ptr);
+}
+template<typename T>
+ComponentHandleBase ComponentHandle<T>::Clone() {
+    if constexpr (std::is_abstract_v<T>) {
+        return ComponentHandleBase::NULLPTR();
+    }
+    else {
+        static_assert(std::is_base_of_v<ComponentArgument, T>, "T MUST Driven By ComponentArgument To Access EntityId(ComponentHandle.cpp 6:)");
+        auto newHandle = componentManagerInstance->CreateComponentAtPool<T>();
+        T* dest = newHandle.operator->();
+        T* src  = this->operator->();
+
+        if (dest && src) {
+            auto savedId = dest->entityId; // ID 백업
+            *dest = *src;                  // T 타입 전체 데이터 복사
+            dest->entityId = savedId;      // ID 복구
+        }
+
+        return newHandle;
+    }
+
+
+}
 
 
 #endif //FPSPROJECTSERVER_COMPONENTMANAGER_H

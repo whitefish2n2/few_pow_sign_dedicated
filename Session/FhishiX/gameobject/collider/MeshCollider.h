@@ -11,14 +11,13 @@
 #include "../../quaternion/Quaternion.h"
 
 
-class MeshCollider: public Collider {
+class MeshCollider final : public Component<MeshCollider,Collider>{
 public:
     mutable std::vector<Vector3> vertices;
     mutable std::vector<int> trianglesIndices;
-    MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<int> &triangles) : Collider(isStatic),vertices(vertices),trianglesIndices(triangles) {
+    MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<int> &triangles) : Component(isStatic),vertices(vertices),trianglesIndices(triangles) {
     }
     MeshCollider() = default;
-    ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Mesh; }
     const std::vector<Vector3>& GetVertices() const {
         return vertices;
     }
@@ -30,12 +29,13 @@ public:
         return std::make_unique<MeshCollider>(*this);
     }
     MeshCollider(const MeshCollider& other):
-        Collider(other.staticObject),
+        Component(other.staticObject),
         vertices(other.vertices),
         trianglesIndices(other.trianglesIndices)
     {}
 
     Vector3 GetAABBSize() const override {
+        return Vector3::Zero();
     }
 
     bool ContainsPoint(const Vector3& point) const override {
@@ -55,5 +55,8 @@ public:
     void MergeAABB(const AABB& other) const override {
         // 로직 비움
     }
+    void CalculateAABB() const override {
+
+    };
 };
 #endif //MESHCOLLIDER_H

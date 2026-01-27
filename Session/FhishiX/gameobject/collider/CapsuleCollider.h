@@ -4,25 +4,24 @@
 
 #ifndef FPSPROJECTSERVER_CAPSULECOLLIDER_H
 #define FPSPROJECTSERVER_CAPSULECOLLIDER_H
-#include <minwindef.h>
 
 #include "Collider.h"
 
-class CapsuleCollider : public Collider {
+class CapsuleCollider final : public Component<CapsuleCollider,Collider>{
 public:
-    Vector3 center;
-    float height, radius;
+    Vector3 center = Vector3::Zero();
+    float height = 0;
+    float radius = 0;;
     mutable bool haveMesh = false;
-    explicit CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Collider(isStatic), center(center), height(height), radius(radius) {}
+    CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(isStatic), center(center), height(height), radius(radius) {}
     CapsuleCollider() = default;
-    ObjectTypeEnum GetType() const override { return ObjectTypeEnum::Capsule; }
     AABB GetAABB() const override;
 
 
 
     //CapsuleCollider 복사 생성자(Collider 복사 오버라이딩)
     CapsuleCollider(const CapsuleCollider& other):
-        Collider(other.staticObject),
+        Component(other.staticObject),
         center(other.center),
         height(other.height),
         radius(other.radius),
@@ -34,6 +33,7 @@ public:
     }
 
     Vector3 GetAABBSize() const override {
+        return Vector3::Zero();
     }
 
     bool ContainsPoint(const Vector3& point) const override {
@@ -52,6 +52,10 @@ public:
 
     void MergeAABB(const AABB& other) const override {
         // 로직 비움
+    }
+
+    void CalculateAABB() const override {
+
     }
 };
 #endif //FPSPROJECTSERVER_CAPSULECOLLIDER_H

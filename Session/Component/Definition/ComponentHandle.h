@@ -23,7 +23,8 @@ class ComponentHandle: public ComponentHandleBase {
     }
 
     ComponentHandleBase Clone() override;
-    T*  operator->();
+    T *operator->();
+
 
     T& operator*() { return *operator->(); }
 

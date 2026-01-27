@@ -43,16 +43,13 @@
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\SimulationMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map.cpp">
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\PhysicsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\MapManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.cpp">
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\KDTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Socket\BroadcastMoveDto.cpp">
@@ -103,9 +100,24 @@
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\BoxCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Dto\MapInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\ObjectConstructor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\ComponentConstructor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\ObjectTag.h">
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\TagManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\triangle.h">
@@ -114,7 +126,7 @@
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\GameObjectArgument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\BspTree.h">
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\KDTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\AABB.h">
@@ -147,7 +159,7 @@
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\data\staticData\weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ObjectType.h">
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\ColliderType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\Collider\BoxCollider.h">
@@ -214,6 +226,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\StaticCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\PhysicsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\ObjectConstructor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\ComponentConstructor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

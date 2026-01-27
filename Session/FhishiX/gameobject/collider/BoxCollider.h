@@ -4,17 +4,19 @@
 
 #include "Collider.h"
 
-class BoxCollider : public Collider {
+class BoxCollider final : public Component<BoxCollider,Collider> {
 public:
-    Vector3 center, size;
+    Vector3 center = Vector3::Zero();
+    Vector3 size = Vector3::Zero();
     mutable bool haveMesh = false;
 
     BoxCollider(const bool isStatic, const Vector3& center, const Vector3& size)
-        : Collider(isStatic), center(center), size(size) {
+        : Component(isStatic), center(center), size(size) {
     }
+    BoxCollider() = default;
 
     // 복사 생성자
-    BoxCollider(const BoxCollider& other): Collider(other),
+    BoxCollider(const BoxCollider& other): Component(other),
           center(other.center),
           size(other.size),
           haveMesh( other.haveMesh)
@@ -24,9 +26,6 @@ public:
         return std::make_unique<BoxCollider>(*this);
     }
 
-    ObjectTypeEnum GetType() const override {
-        return ObjectTypeEnum::Box;
-    }
 
     AABB GetAABB() const override {
         // 더미 AABB
@@ -54,6 +53,9 @@ public:
 
     void MergeAABB(const AABB& other) const override {
         // 로직 비움
+    }
+    void CalculateAABB() const override {
+
     }
 };
 

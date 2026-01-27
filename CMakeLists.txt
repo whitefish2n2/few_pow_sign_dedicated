@@ -22,16 +22,15 @@ add_executable(fpsProjectServer
         Socket/dto/MoveDto.cpp
         Socket/dto/DefaultDto.cpp
         Session/Game/Player.cpp
-        Session/Game/SimulationMap.cpp
-        Session/Game/Map.cpp
+        Session/Game/PhysicsSystem.cpp
         Session/Game/MapManager.cpp
-        Session/FhishiX/ObjectTag.h
+        Session/FhishiX/TagManager.h
         Session/FhishiX/triangle.h
         Session/FhishiX/gameobject/GameObjectArgument.h
-        Session/Game/BspTree.h
+        Session/Game/KDTree.h
         Session/FhishiX/AABB.h
         Session/FhishiX/FhishiX.h
-        Session/Game/BspTree.cpp
+        Session/Game/KDTree.cpp
         Socket/BroadcastMoveDto.cpp
         Socket/BroadcastMoveDto.h
         Session/Game/GameLogic/Gun.h
@@ -43,7 +42,7 @@ add_executable(fpsProjectServer
         Session/SessionUtil.cpp
         Session/SessionUtil.h
         Session/Game/data/staticData/weapon.h
-        Session/FhishiX/gameobject/ObjectType.h
+        Session/FhishiX/gameobject/ColliderType.h
         Session/FhishiX/gameobject/Collider/BoxCollider.h
         Session/FhishiX/gameobject/Transform.h
         Session/FhishiX/gameobject/Collider/MeshCollider.h
@@ -83,6 +82,17 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/Collider.cpp
         Session/FhishiX/gameobject/collider/BoxCollider.cpp
         Session/Component/Definition/ComponentFactory.h
+        Session/FhishiX/gameobject/collider/StaticCollider.h
+        Session/FhishiX/gameobject/collider/StaticCollider.h
+        Session/Game/PhysicsSystem.h
+        Session/Dto/MapInfo.cpp
+        Session/Game/Map/MapConstructer/ObjectConstructor.cpp
+        Session/Game/Map/MapConstructer/ObjectConstructor.h
+        Session/Game/Map/MapConstructer/ComponentConstructor.cpp
+        Session/Game/Map/MapConstructer/ComponentConstructor.h
+        Session/Component/Definition/Component.cpp
+        Session/Component/Definition/Component.h
+        Session/Component/Definition/ComponentFactory.cpp
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

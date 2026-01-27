@@ -1,4 +1,9 @@
 #include "CapsuleCollider.h"
+#include <algorithm>
+#include <cmath>
+
+#include "../../../Component/Definition/ComponentFactory.h"
+using namespace std;
 #include "../GameObjectArgument.h"
 //
 // Created by white on 25. 12. 23..
@@ -35,3 +40,4 @@ AABB CapsuleCollider::GetAABB() const {
 
     return aabb;
 }
+REGISTER_COMPONENT(CapsuleCollider);

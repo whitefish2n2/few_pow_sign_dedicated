@@ -5,8 +5,9 @@
 #include <sstream>
 
 #include "../SessionContext.h"
+#include "../Component/Definition/ComponentFactory.h"
 #include "../FhishiX/Layer.h"
-#include "../FhishiX/ObjectTag.h"
+#include "../FhishiX/TagManager.h"
 #include "../FhishiX/gameobject/collider/BoxCollider.h"
 #include "../FhishiX/gameobject/collider/CapsuleCollider.h"
 #include "../FhishiX/gameobject/collider/MeshCollider.h"
@@ -17,12 +18,13 @@ void MapManager::Init() {
 
 }
 
-Map MapManager::GetMap(MapEnum type)
+PhysicsSystem MapManager::CreatePhysicsMap(MapInfo type,GameSession* session )
 {
     const auto it = mapTemplates.find(type);
-    if (it == mapTemplates.end())
+    if (it != mapTemplates.end())
     {
-        auto loaded = LoadMap(type);
+
+        auto loaded = LoadMap(type, session);
 
         auto inserted = mapTemplates.emplace(type, std::move(loaded));
         return *inserted.first->second;
@@ -30,9 +32,9 @@ Map MapManager::GetMap(MapEnum type)
 
     return *it->second;
 }
-void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layers layer, const Vector3& pos, const Quaternion &rot) {
+void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layer layer, const Vector3& pos, const Quaternion &rot) {
     obj->name = name;
-    obj->tag = ObjectTag::GetObjectTagFromString(tagStr);
+    obj->tag = TagManager::GetObjectTagFromString(tagStr);
     obj->layer = layer;
     obj->transform.position = pos;
     obj->transform.rotation = rot;
@@ -55,20 +57,17 @@ Quaternion ParseQuaternion(const std::string& str) {
     }
     return Quaternion::Identity;
 }
-
-
-Layers ParseLayerString(const std::string& str) {
-    if (str == "Ground") return Layers::Ground;
-    return Layers::Default;
+Layer ParseLayer(const std::string& str, LayerManager& layerManager) {
+    return layerManager.toLayer(str);
 }
+
 GameObject CreateBoxGameObject(const std::string& name, const std::string& tagStr,
                                const Vector3& pos, const Vector3& size, const Quaternion& rot) {
     // 1. 매니저를 통해 객체 생성 (핸들 반환)
     GameObject obj = gameObjectManagerInstance->CreateGameObject();
 
     // 2. 기본 속성 설정
-    SetupCommonProperties(obj, name, tagStr, Layers::Ground, pos, rot);
-    obj->type = ObjectTypeEnum::Box;
+    SetupCommonProperties(obj, name, tagStr, Layer(), pos, rot);
     obj->transform.scale = size;
 
     // 3. 컴포넌트 부착
@@ -81,9 +80,8 @@ GameObject CreateCapsuleGameObject(const std::string& name, const std::string& t
                                   const Vector3& pos, const Quaternion &rot, const float radius, const float height) {
     GameObject obj = gameObjectManagerInstance->CreateGameObject();
     obj->name = name;
-    obj->tag = ObjectTag::GetObjectTagFromString(tagStr);
-    obj->type = ObjectTypeEnum::Capsule;
-    obj->layer = Layers::Ground;
+    obj->tag = TagManager::GetObjectTagFromString(tagStr);
+    obj->layer = Layer();//todo
     ComponentHandle<CapsuleCollider> component = componentManagerInstance->CreateComponentAtPool<CapsuleCollider>(true,pos,height,radius);
     componentManagerInstance->CreateComponentAtPool<CapsuleCollider>();
     component->haveMesh = false;
@@ -97,23 +95,21 @@ GameObject CreateMeshGameObject(const std::string& name, const std::string& tagS
                                 const std::vector<int>& triangleIndices) {
     GameObject obj = gameObjectManagerInstance->CreateGameObject();
     obj->name = name;
-    obj->tag = ObjectTag::GetObjectTagFromString(tagStr);
-    obj->type = ObjectTypeEnum::Mesh;
-    obj->layer = Layers::Ground;
+    obj->tag = TagManager::GetObjectTagFromString(tagStr);
+    obj->layer = Layer();//todo
     auto v = obj->AddComponent<MeshCollider>(false,vertices, triangleIndices);
     return obj;
 };
 
-std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
+std::unique_ptr<PhysicsSystem> MapManager::LoadMap(MapInfo type, GameSession* targetSession)
 {
-    // unique_ptr 생성 수정 (Map 복사가 아닌 포인터 반환)
-    auto newMap = std::make_unique<Map>(type);
-    auto path = GetMapInfoPath(type);
+    auto newPhysicsMap = std::make_unique<PhysicsSystem>(type);
+    auto path = MapRegister::GetPath(&type);
 
-    std::ifstream file("./MapInfoFile/" + path);
+    std::ifstream file("./PhysicsMapInfoFile/" + path);
     if (!file.is_open()) {
         std::cerr << "[Error] Failed to open map file: " << path << std::endl;
-        return newMap;
+        return newPhysicsMap;
     }
 
     std::string line;
@@ -128,9 +124,9 @@ std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
         if (currentObj && !currentCompName.empty()) {
             // Factory에 컴포넌트 이름과 데이터(문자열)를 넘겨서 생성
             // ComponentFactory 내부에서 "Radius: 0.5" 등의 데이터를 다시 파싱해야 함
-            bool complete = ComponentFactory::Instance().Create(currentCompName, currentObj, currentCompData.str());
+            ComponentHandleBase complete = ComponentFactory::Instance().Create(currentCompName, currentObj, currentCompData.str(),targetSession->componentManager);
 
-            if (complete) {
+            if (!complete.isNull()) {
                 // std::cout << "  -> Attached " << currentCompName << std::endl;
             } else {
                 std::cerr << "  [Warning] Unknown or Failed Component: " << currentCompName << std::endl;
@@ -141,7 +137,11 @@ std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
         currentCompData.str("");
         currentCompData.clear();
     };
-
+    //레이어 정보 읽기
+    LayerManager layerManager;
+    while (std::getline(file, line)) {
+        //todo: 맵 레이어 정보 파싱해서 LayerManager에 담기
+    }
     // 파일 라인별 읽기
     while (std::getline(file, line)) {
         // 공백 라인 스킵
@@ -182,10 +182,10 @@ std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
                     currentObj->name = val;
                 }
                 else if (key == "Tag") {
-                    currentObj->tag = ObjectTag::GetObjectTagFromString(val);
+                    currentObj->tag = TagManager::GetObjectTagFromString(val);
                 }
                 else if (key == "Layer") {
-                    currentObj->layer = ParseLayerString(val);
+                    currentObj->layer = ParseLayer(val, layerManager);
                 }
                 else if (key == "Position") {
                     currentObj->transform.position = ParseVector3(val);
@@ -209,6 +209,6 @@ std::unique_ptr<Map> MapManager::LoadMap(MapEnum type)
     FlushComponent();
     file.close();
 
-    std::cout << "[MapManager] Map Loaded: " << path << std::endl;
-    return newMap;
+    std::cout << "[MapManager] PhysicsMap.h Loaded: " << path << std::endl;
+    return newPhysicsMap;
 }

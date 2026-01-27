@@ -7,7 +7,7 @@
 
 #include "httpRestClient.h"
 
-#include "../Session/sessionPool/SessionManager.h""
+#include "../Session/sessionPool/SessionManager.h"
 #include <queue>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>

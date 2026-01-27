@@ -30,7 +30,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
         event->type = type;
         event->payload = dto;
         event->peer = peer;
-        peer->data
+        peer->data = payload;
 
         session->ProcessEvent(event);
     }
