@@ -14,17 +14,19 @@
 #include "../FhishiX/quaternion/Quaternion.h"
 #include "../FhishiX/gameobject/GameObjectManager.h"
 #include "../FhishiX/gameobject/GameObjectArgument.h"
+#include "Map/MapConstructer/PhysicsSystemConstructor.h"
+
 void MapManager::Init() {
 
 }
 
-PhysicsSystem MapManager::CreatePhysicsMap(MapInfo type,GameSession* session )
+PhysicsSystemConstructor MapManager::CreatePhysicsMap(MapInfo type)
 {
     const auto it = mapTemplates.find(type);
     if (it != mapTemplates.end())
     {
 
-        auto loaded = LoadMap(type, session);
+        auto loaded = LoadMap(type);
 
         auto inserted = mapTemplates.emplace(type, std::move(loaded));
         return *inserted.first->second;
@@ -101,19 +103,25 @@ GameObject CreateMeshGameObject(const std::string& name, const std::string& tagS
     return obj;
 };
 
-std::unique_ptr<PhysicsSystem> MapManager::LoadMap(MapInfo type, GameSession* targetSession)
+std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
 {
-    auto newPhysicsMap = std::make_unique<PhysicsSystem>(type);
+    auto newPhysicsConstructor = std::make_unique<PhysicsSystemConstructor>();
     auto path = MapRegister::GetPath(&type);
 
     std::ifstream file("./PhysicsMapInfoFile/" + path);
     if (!file.is_open()) {
         std::cerr << "[Error] Failed to open map file: " << path << std::endl;
-        return newPhysicsMap;
+        return newPhysicsConstructor;
     }
 
     std::string line;
-    GameObject currentObj = GameObject::NullPTR(); // 현재 처리 중인 오브젝트
+    ParseMode currentMode = ParseMode::None;
+
+    //레이어 파싱용 객체
+    LayerManager layerManager = LayerManager();
+    layerManager.Init();
+
+    ObjectConstructor currentObj = ObjectConstructor(); // 현재 처리 중인 오브젝트
 
     // 컴포넌트 파싱용 버퍼
     std::string currentCompName;
@@ -121,87 +129,90 @@ std::unique_ptr<PhysicsSystem> MapManager::LoadMap(MapInfo type, GameSession* ta
 
     // --- [Helper: 컴포넌트 생성 및 부착] ---
     auto FlushComponent = [&]() {
-        if (currentObj && !currentCompName.empty()) {
-            // Factory에 컴포넌트 이름과 데이터(문자열)를 넘겨서 생성
-            // ComponentFactory 내부에서 "Radius: 0.5" 등의 데이터를 다시 파싱해야 함
-            ComponentHandleBase complete = ComponentFactory::Instance().Create(currentCompName, currentObj, currentCompData.str(),targetSession->componentManager);
-
-            if (!complete.isNull()) {
-                // std::cout << "  -> Attached " << currentCompName << std::endl;
-            } else {
-                std::cerr << "  [Warning] Unknown or Failed Component: " << currentCompName << std::endl;
-            }
+        if (!currentCompName.empty()) {
+            ComponentConstructor constructor = ComponentConstructor(currentCompName,currentCompData.str());
         }
         // 버퍼 초기화
         currentCompName = "";
         currentCompData.str("");
         currentCompData.clear();
     };
-    //레이어 정보 읽기
-    LayerManager layerManager;
-    while (std::getline(file, line)) {
-        //todo: 맵 레이어 정보 파싱해서 LayerManager에 담기
-    }
     // 파일 라인별 읽기
     while (std::getline(file, line)) {
-        // 공백 라인 스킵
         if (line.empty()) continue;
-
-        // 윈도우 스타일 줄바꿈 문자(\r) 제거
         if (line.back() == '\r') line.pop_back();
-
-        // 1. 새로운 오브젝트 시작 ("-")
-        if (line == "-") {
-            FlushComponent(); // 이전 오브젝트의 마지막 컴포넌트 처리
-
-            // 새 오브젝트 생성
-            currentObj = gameObjectManagerInstance->CreateGameObject();
+        //파싱 모드 변경
+        if (line == "[SECTION: LAYERS]") {
+            currentMode = ParseMode::Layers;
+            continue;
+        }
+        else if (line == "[SECTION: OBJECTS]") {
+            currentMode = ParseMode::Objects;
             continue;
         }
 
-        // 2. 컴포넌트 섹션 시작 ("COMPONENT: Name")
-        if (line.rfind("COMPONENT:", 0) == 0) {
-            FlushComponent(); // 이전 컴포넌트 데이터 처리
+        if (currentMode == ParseMode::Layers) {
+            // 포맷: LAYER_DEF: index,name,mask
+            if (line.rfind("LAYER_DEF: ", 0) == 0) {
+                std::string data = line.substr(11); // "LAYER_DEF: " 길이
+                std::stringstream ss(data);
+                std::string segment;
+                std::vector<std::string> parts;
 
-            // "COMPONENT: " 이후 문자열 추출 (길이 10 + 1)
-            if (line.length() > 11) {
-                currentCompName = line.substr(11);
-            }
-            continue;
-        }
+                while(std::getline(ss, segment, ',')) {
+                    parts.push_back(segment);
+                }
 
-        // 3. 데이터 파싱
-        if (currentCompName.empty()) {
-            // [Header Mode] 컴포넌트가 나오기 전이므로 GameObject의 기본 속성 설정
-            size_t delimPos = line.find(": ");
-            if (delimPos != std::string::npos && currentObj) {
-                std::string key = line.substr(0, delimPos);
-                std::string val = line.substr(delimPos + 2);
+                if (parts.size() >= 3) {
+                    int idx = std::stoi(parts[0]);
+                    const std::string& name = parts[1];
+                    auto mask = static_cast<uint32_t>(std::stoll(parts[2])); // int 범위를 넘을 수 있으므로 stoll 후 캐스팅
 
-                if (key == "Name") {
-                    currentObj->name = val;
-                }
-                else if (key == "Tag") {
-                    currentObj->tag = TagManager::GetObjectTagFromString(val);
-                }
-                else if (key == "Layer") {
-                    currentObj->layer = ParseLayer(val, layerManager);
-                }
-                else if (key == "Position") {
-                    currentObj->transform.position = ParseVector3(val);
-                }
-                else if (key == "Rotation") {
-                    currentObj->transform.rotation = ParseQuaternion(val);
-                }
-                else if (key == "Scale") {
-                    currentObj->transform.scale = ParseVector3(val);
+                    Layer layer(idx);
+                    layerManager.SetLayerInfo(layer, name, mask);
+                    // std::cout << "Loaded Layer: " << idx << " (" << name << ")" << std::endl;
                 }
             }
         }
-        else {
-            // [Component Mode] 현재 컴포넌트 데이터를 버퍼에 누적
-            // ComponentFactory가 내부적으로 "Radius: ..." 등을 파싱하도록 넘겨줌
-            currentCompData << line << "\n";
+        else if (currentMode == ParseMode::Objects) {
+            // 오브젝트 파싱
+            if (line == "-") {
+                FlushComponent();
+                currentObj = ObjectConstructor();
+                continue;
+            }
+
+            if (line.rfind("COMPONENT:", 0) == 0) {
+                FlushComponent();
+                if (line.length() > 11) {
+                    currentCompName = line.substr(11);
+                }
+                continue;
+            }
+
+            if (currentCompName.empty()) {
+                // GameObject 속성 파싱
+                size_t delimPos = line.find(": ");
+                if (delimPos != std::string::npos && currentObj.name.empty()) {
+                    std::string key = line.substr(0, delimPos);
+                    std::string val = line.substr(delimPos + 2);
+
+                    if (key == "Name") currentObj.name = val;
+                    else if (key == "Tag") currentObj.tag = TagManager::GetObjectTagFromString(val);
+                    else if (key == "LayerName") {
+                        currentObj.layer = layerManager.toLayer(val);
+                    }
+                    else if (key == "LayerIndex") {
+                        // 만약 인덱스로 저장했다면 바로 캐스팅
+                        currentObj.layer = Layer(std::stoi(val));
+                    }
+                    else if (key == "Position") currentObj.transform.position = ParseVector3(val);
+                    else if (key == "Rotation") currentObj.transform.rotation = ParseQuaternion(val);
+                    else if (key == "Scale") currentObj.transform.scale = ParseVector3(val);
+                }
+            } else {
+                currentCompData << line << "\n";
+            }
         }
     }
 
@@ -209,6 +220,8 @@ std::unique_ptr<PhysicsSystem> MapManager::LoadMap(MapInfo type, GameSession* ta
     FlushComponent();
     file.close();
 
+    newPhysicsConstructor->SetLayerManager(std::move(layerManager));
+
     std::cout << "[MapManager] PhysicsMap.h Loaded: " << path << std::endl;
-    return newPhysicsMap;
+    return newPhysicsConstructor;
 }

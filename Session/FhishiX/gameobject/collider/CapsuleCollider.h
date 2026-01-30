@@ -19,15 +19,6 @@ public:
 
 
 
-    //CapsuleCollider 복사 생성자(Collider 복사 오버라이딩)
-    CapsuleCollider(const CapsuleCollider& other):
-        Component(other.staticObject),
-        center(other.center),
-        height(other.height),
-        radius(other.radius),
-        haveMesh(other.haveMesh)
-    {}
-
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<CapsuleCollider>(*this);
     }

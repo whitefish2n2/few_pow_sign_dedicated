@@ -23,8 +23,7 @@ struct Collision {
 class Collider: public ComponentArgument{
 public:
     Collider() = default;
-    Collider(bool isStatic):staticObject(isStatic){};
-    Collider(const Collider& other);
+    explicit Collider(bool isStatic):staticObject(isStatic){};
     virtual ~Collider() noexcept = default;
     bool staticObject = false;
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;

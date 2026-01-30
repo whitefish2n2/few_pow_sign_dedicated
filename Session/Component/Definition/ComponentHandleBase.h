@@ -20,6 +20,10 @@ class ComponentHandleBase {
     static ComponentHandleBase NULLPTR() {
         return ComponentHandleBase{};
     }
+    void SetFromRawHandle(ComponentEntityId entity_id, size_t type_id) {
+        this->typeId = type_id;
+        this->entityId = entity_id;
+    }
     bool isNull() const {
         return typeId == -1 || entityId == -1;
     }

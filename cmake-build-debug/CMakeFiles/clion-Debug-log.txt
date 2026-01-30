@@ -1,5 +1,5 @@
 C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=C:\Users\white\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -S C:\Users\white\Desktop\Github\few_pow_sign_dedicated -B C:\Users\white\Desktop\Github\few_pow_sign_dedicated\cmake-build-debug
 -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
--- Configuring done (0.2s)
--- Generating done (0.1s)
+-- Configuring done (1.1s)
+-- Generating done (0.3s)
 -- Build files have been written to: C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug

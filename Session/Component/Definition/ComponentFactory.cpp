@@ -3,13 +3,13 @@
 //
 #include "ComponentFactory.h"
 
-ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const GameObject &object,
+ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const GameObject &parent,
     const std::string &arg, ComponentManager *componentManager) {
     try {
         auto it = creators.find(typeName);
         if (it != creators.end()) {
-            auto comp =  it->second(object);
-            comp->SetOwner(object);
+            std::unique_ptr<ComponentArgument> comp(it->second(parent));
+            comp->SetOwner(parent);
             comp->ParseFromString(arg);
             ComponentHandleBase base;
             componentManager->RegisterOrphan(comp,&base);

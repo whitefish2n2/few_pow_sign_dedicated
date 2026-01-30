@@ -115,6 +115,9 @@
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\StaticCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\TagManager.h">
@@ -241,6 +244,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\PhysicsSystemConstructor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

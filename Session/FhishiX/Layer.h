@@ -20,6 +20,7 @@ class Layer {
         return this->idx < other.idx;
     }
 };
+
 namespace std {
     template<>
     struct hash<Layer> {
@@ -28,6 +29,12 @@ namespace std {
         }
     };
 }
+
+enum class ParseMode {
+    None,
+    Layers,
+    Objects
+};
 //fix: 기존 enum 레이어 구조는 맵을 새로 만들고 업데이트할때 유리하지 않았고, 따라서 레이어 이름 map 매핑 방식으로 변경해 유연성과 이래저래 높임.
 class LayerManager {
     private:

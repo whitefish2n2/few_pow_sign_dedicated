@@ -20,8 +20,7 @@ class ObjectConstructor {
     ~ObjectConstructor() =default;
     std::string name;
     Layer layer;
-    Vector3 Position;
-    Quaternion Rotation;
+    Transform transform;
     Tag tag;
     std::vector<ComponentConstructor> components;
     GameObject Construct(GameSession* gameSession);

@@ -115,27 +115,28 @@ public:
         return GetOrCreatePool<T>()->CreateComponent(std::forward<Args>(args)...);
     }
     ///밖에서 생성된 컴포넌트(여기서 CreateComponentAtPool을 거치지 않고 생성된, 대표적으로 문자열->컴포넌트 파싱으로 생성된 컴포넌트)를 해당 ECS 인스턴스에 편입합니다.
+    ///Component::MoveToManager()에서만 호출합니다.(T는 무조건 ComponentArgument여야 합니다.)
     template<typename T>
-    ComponentHandle<T> InsertOrphanageComponent(ComponentArgument* comp) {
+    ComponentHandle<T> InsertOrphanageComponent(T* comp) {
+        static_assert(std::is_base_of<ComponentArgument, T>::value,
+                  "T must inherit from ComponentArgument!(ComponentManager,122)");
         ComponentHandle<T> newHandle = CreateComponentAtPool<T>();
 
         //  데이터 이동
         T* poolObj = GetComponentFromPool(&newHandle);
         ComponentEntityId newId = poolObj->entityId;
-        if (T* sourceObj = dynamic_cast<T*>(comp)) {
-            *poolObj = std::move(*sourceObj);
+        if (comp) {
+            *poolObj = std::move(*comp);
         }
 
 
         poolObj->entityId = newId;
 
-        // 고아 객체 원본 삭제
-        delete comp;
 
         return newHandle;
     }
     ///outHandle에 생성된 객체의 ComponentHandleBase 핸들이 반환됩니다. orphan 객체는 호출 후 해제되니 접근할 수 없습니다.
-    void RegisterOrphan(ComponentArgument* orphan, ComponentHandleBase* outHandle) {
+    void RegisterOrphan(const std::unique_ptr<ComponentArgument> &orphan, ComponentHandleBase* outHandle) {
         if (!orphan) return;
         orphan->MoveToManager(this, outHandle);
     }

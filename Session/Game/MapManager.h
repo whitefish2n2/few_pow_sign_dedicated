@@ -9,6 +9,8 @@
 
 #include "PhysicsSystem.h"
 #include "../Dto/MapInfo.h"
+#include "Map/MapConstructer/PhysicsSystemConstructor.h"
+
 class MapManager
 {
 protected:
@@ -21,7 +23,7 @@ protected:
     }
     void Init();
 
-    PhysicsSystem CreatePhysicsMap(MapInfo type, GameSession *session);
+    PhysicsSystemConstructor CreatePhysicsMap(MapInfo type);
 
 
     MapManager(const MapManager&) = delete;
@@ -29,8 +31,8 @@ protected:
     MapManager(MapManager&&) = delete;
     MapManager& operator=(MapManager&&) = delete;
 private:
-    std::unordered_map<MapInfo, std::unique_ptr<PhysicsSystem>> mapTemplates;
-    static std::unique_ptr<PhysicsSystem> LoadMap(MapInfo type, GameSession *targetSession);
+    std::unordered_map<MapInfo, std::unique_ptr<PhysicsSystemConstructor>> mapTemplates;
+    static std::unique_ptr<PhysicsSystemConstructor> LoadMap(MapInfo type);
 
 
     MapManager() = default;

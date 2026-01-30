@@ -6,6 +6,7 @@
 #define FPSPROJECTSERVER_COMPONENT_ARGUMENT_H
 #include <string>
 
+#include "ComponentHandleBase.h"
 #include "../../FhishiX/gameobject/EntityTypes.h"
 #include "../../FhishiX/gameobject/GameObject.h"
 
@@ -20,6 +21,7 @@ protected:
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
     ComponentArgument(const ComponentArgument& other);
     ComponentArgument& operator=(const ComponentArgument& other) = default;
+    ComponentArgument& operator=(ComponentArgument&& other) = default;
     ComponentArgument () = default;
 
     virtual ~ComponentArgument () noexcept = default ;
@@ -39,6 +41,6 @@ protected:
         return gameObject;
     }
     ///컴포넌트 매니저에 해당 컴포넌트를 편입하는 함수
-    virtual void MoveToManager(ComponentManager* manager, void* handleOut) = 0;
+    virtual void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) = 0;
 };
 #endif

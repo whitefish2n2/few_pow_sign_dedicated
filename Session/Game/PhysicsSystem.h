@@ -17,6 +17,9 @@ class PhysicsSystem
     public:
     MapInfo type;
     LayerManager layerManager;
+    void SetLayerManager(LayerManager&& layerManager) {
+        this->layerManager = layerManager;
+    }
     std::unordered_map<uint32_t, GameObject> objects;
     std::unordered_map<uint32_t,GameObject> MovableObjects;
     std::unordered_map<uint32_t,GameObject> PlayerObjects;

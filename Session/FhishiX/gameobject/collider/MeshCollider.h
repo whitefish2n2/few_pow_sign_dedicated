@@ -28,11 +28,6 @@ public:
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<MeshCollider>(*this);
     }
-    MeshCollider(const MeshCollider& other):
-        Component(other.staticObject),
-        vertices(other.vertices),
-        trianglesIndices(other.trianglesIndices)
-    {}
 
     Vector3 GetAABBSize() const override {
         return Vector3::Zero();

@@ -26,7 +26,7 @@ public:
     }
 
     ///타입 이름(Class명과 일치)을 넣고 해당 타입의 ParseFromString에서 파싱할 수 있는 String을 arg에 입력하면 object에 Attach합니다. 실패시 ComponentHandleBase::NULLPTR을 반환합니다.
-    ComponentHandleBase Create(const std::string& typeName, const GameObject &object, const std::string &arg, ComponentManager *componentManager);
+    ComponentHandleBase Create(const std::string& typeName, const GameObject &parent, const std::string &arg, ComponentManager *componentManager);
 
     ~ComponentFactory() = default;
 private:

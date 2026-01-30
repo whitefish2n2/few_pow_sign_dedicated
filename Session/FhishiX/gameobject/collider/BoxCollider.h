@@ -13,15 +13,8 @@ public:
     BoxCollider(const bool isStatic, const Vector3& center, const Vector3& size)
         : Component(isStatic), center(center), size(size) {
     }
+
     BoxCollider() = default;
-
-    // 복사 생성자
-    BoxCollider(const BoxCollider& other): Component(other),
-          center(other.center),
-          size(other.size),
-          haveMesh( other.haveMesh)
-    {}
-
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<BoxCollider>(*this);
     }

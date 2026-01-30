@@ -461,6 +461,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\Component.cpp" />
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\Component.h" />
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentFactory.cpp" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\PhysicsSystemConstructor.h" />
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\StaticCollider.cpp" />
     <Natvis Include="C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_json.natvis">
     </Natvis>
   </ItemGroup>
