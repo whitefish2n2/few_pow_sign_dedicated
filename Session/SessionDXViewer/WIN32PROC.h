@@ -4,7 +4,7 @@
 #ifndef FPSPROJECTSERVER_WIN32PROC_H
 #define FPSPROJECTSERVER_WIN32PROC_H
 #ifdef _WIN64
-#include <windows.h>
+#include <winsock2.h>
 
 inline LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

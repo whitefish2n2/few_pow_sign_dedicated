@@ -11,7 +11,7 @@ GameObject GameObjectArgument::MakeHandle() const {
 }
 
 void GameObjectArgument::AddComponentFromString(const std::string &typeName, const std::string &arg) const {
-    ComponentFactory::Instance().Create(typeName,MakeHandle(),arg,gameSession->componentManager);
+    ComponentFactory::Instance().Create(typeName,MakeHandle(),arg,gameSession->componentManager.get());
 }
 
 

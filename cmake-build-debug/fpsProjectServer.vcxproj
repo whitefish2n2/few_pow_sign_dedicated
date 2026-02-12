@@ -119,9 +119,18 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	Copying Assets directory to binary output directory...</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/Debug/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/debug/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E copy_directory C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Assets C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/Debug/Assets
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -131,7 +140,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\zlibd.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\cpprest_2_10d.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\zlibd.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -179,9 +188,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	Copying Assets directory to binary output directory...</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/Release/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E copy_directory C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Assets C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/Release/Assets
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -191,7 +209,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -239,9 +257,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	Copying Assets directory to binary output directory...</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/MinSizeRel/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E copy_directory C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Assets C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/MinSizeRel/Assets
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -251,7 +278,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -298,9 +325,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	Copying Assets directory to binary output directory...</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/white/.vcpkg-clion/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/RelWithDebInfo/fpsProjectServer.exe -installedDir C:/Users/white/.vcpkg-clion/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\white\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E copy_directory C:/Users/white/Desktop/Github/few_pow_sign_dedicated/Assets C:/Users/white/Desktop/Github/few_pow_sign_dedicated/cmake-build-debug/RelWithDebInfo/Assets
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -310,7 +346,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\debug\lib\enet.lib;ws2_32.lib;winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\cpprest_2_10.lib;Rpcrt4.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\zlib.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlienc.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlidec.lib;C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\lib\brotlicommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -463,6 +499,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Component\Definition\ComponentFactory.cpp" />
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\PhysicsSystemConstructor.h" />
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\StaticCollider.cpp" />
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\InfoLoader\InfoLoader.cpp" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\InfoLoader\InfoLoader.h" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Dto\MapInfoArgument.h" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\SessionDXViewer\DebugViewStatic.h" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\SessionDXViewer\Camera.h" />
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\ServerStatics.cpp" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Renderer.h" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\MeshManager.h" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\Mesh.h" />
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\SphereCollider.cpp" />
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\SphereCollider.h" />
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\StaticMeshMaker.cpp" />
     <Natvis Include="C:\Users\white\.vcpkg-clion\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_json.natvis">
     </Natvis>
   </ItemGroup>

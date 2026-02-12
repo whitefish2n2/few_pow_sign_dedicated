@@ -118,6 +118,18 @@
     <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\StaticCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\InfoLoader\InfoLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\ServerStatics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\SphereCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\StaticMeshMaker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\TagManager.h">
@@ -247,6 +259,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Game\Map\MapConstructer\PhysicsSystemConstructor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\InfoLoader\InfoLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\Dto\MapInfoArgument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\SessionDXViewer\DebugViewStatic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\SessionDXViewer\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\MeshManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\Mesh\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\white\Desktop\Github\few_pow_sign_dedicated\Session\FhishiX\gameobject\collider\SphereCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

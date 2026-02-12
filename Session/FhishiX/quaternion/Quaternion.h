@@ -6,6 +6,8 @@
 #define QUATERNION_H
 #pragma once
 #include <cmath>
+#include <string>
+
 #include "../vector/Vector3.h"
 #include "../matrix/Matrix4.h"
 
@@ -16,6 +18,15 @@ public:
     static const Quaternion Identity;
     Quaternion(float w = 1, float x = 0, float y = 0, float z = 0)
         : w(w), x(x), y(y), z(z) {}
+
+    // 문자열 "x,y,z,w"를 Quaternion으로 변환
+    static Quaternion ParseQuaternion(const std::string& str) {
+        float x, y, z, w;
+        if(sscanf_s(str.c_str(), "%f,%f,%f,%f", &x, &y, &z, &w) == 4) {
+            return {x, y, z, w};
+        }
+        return Quaternion::Identity;
+    }
 
     [[nodiscard]] Vector3 XYZ() const { return Vector3(x, y, z); }
 

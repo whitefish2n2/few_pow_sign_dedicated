@@ -4,6 +4,9 @@
 
 #ifndef FPSPROJECTSERVER_SERVERSTATICS_H
 #define FPSPROJECTSERVER_SERVERSTATICS_H
+
 #include <atomic>
-inline std::atomic<bool> isRunning = false;
+
+inline std::atomic<bool> isRunning{ false };
+
 #endif //FPSPROJECTSERVER_SERVERSTATICS_H

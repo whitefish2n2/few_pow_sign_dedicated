@@ -73,7 +73,7 @@ protected:
             }
             ComponentArgument* rawPtr = componentManagerInstance->GetRawPtr(comp.typeId, comp.entityId);
             if (rawPtr == nullptr) continue;
-            if ( T* castedType = dynamic_cast<T*>(rawPtr)) {
+            if ( dynamic_cast<T*>(rawPtr)) {
                 return ComponentHandle<T>(comp.entityId,typeId);
             }
         }

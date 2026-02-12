@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Release/fpsProjectServer.exe"
+			"path" : "RelWithDebInfo/fpsProjectServer.exe"
 		},
 		{
-			"path" : "Release/fpsProjectServer.pdb"
+			"path" : "RelWithDebInfo/fpsProjectServer.pdb"
 		}
 	],
 	"backtrace" : 2,
@@ -38,7 +38,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 10,
+				"line" : 12,
 				"parent" : 0
 			},
 			{
@@ -50,25 +50,25 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 104,
+				"line" : 124,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 111,
+				"line" : 135,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 114,
+				"line" : 138,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 110,
+				"line" : 134,
 				"parent" : 0
 			},
 			{
@@ -106,19 +106,19 @@
 			{
 				"command" : 7,
 				"file" : 1,
-				"line" : 8,
+				"line" : 10,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 1,
-				"line" : 103,
+				"line" : 123,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 113,
+				"line" : 137,
 				"parent" : 0
 			}
 		]
@@ -129,7 +129,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -std:c++20 -MD"
 				},
 				{
 					"backtrace" : 13,
@@ -204,7 +204,11 @@
 				75,
 				77,
 				79,
-				81
+				81,
+				82,
+				87,
+				91,
+				93
 			]
 		}
 	],
@@ -220,11 +224,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /O2 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{
@@ -244,6 +248,26 @@
 			{
 				"backtrace" : 3,
 				"fragment" : "winmm.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "d3d11.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "d3dcompiler.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "dxgi.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "dxguid.lib",
 				"role" : "libraries"
 			},
 			{
@@ -334,7 +358,11 @@
 				75,
 				77,
 				79,
-				81
+				81,
+				82,
+				87,
+				91,
+				93
 			]
 		},
 		{
@@ -383,14 +411,22 @@
 				74,
 				76,
 				78,
-				80
+				80,
+				83,
+				84,
+				85,
+				86,
+				88,
+				89,
+				90,
+				92
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				82
+				94
 			]
 		}
 	],
@@ -843,6 +879,70 @@
 			"backtrace" : 2,
 			"compileGroupIndex" : 0,
 			"path" : "Session/FhishiX/gameobject/collider/StaticCollider.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "InfoLoader/InfoLoader.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "InfoLoader/InfoLoader.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/Dto/MapInfoArgument.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/SessionDXViewer/DebugViewStatic.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/SessionDXViewer/Camera.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "ServerStatics.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Renderer.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Mesh/MeshManager.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/Mesh/Mesh.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/gameobject/collider/SphereCollider.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "Session/FhishiX/gameobject/collider/SphereCollider.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "Session/FhishiX/Mesh/StaticMeshMaker.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

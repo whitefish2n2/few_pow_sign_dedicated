@@ -4,6 +4,8 @@
 
 #pragma once
 #include <unordered_map>
+#include <utility>
+
 enum class Layers {
     Default,
     Ground,
@@ -54,6 +56,14 @@ class LayerManager {
     std::string GetLayerName(const Layer index) {
         if (layerNames.contains(index)) return layerNames[index];
         return "Unknown";
+    }
+
+    std::vector<std::pair<uint32_t, std::string>> GetLayers() {
+        std::vector<std::pair<uint32_t, std::string>> layers;
+        for (auto v: stringToLayer) {
+            layers.push_back(std::make_pair(v.second.idx, v.first));
+        }
+        return layers;
     }
     Layer toLayer(const std::string& layerName) {
         if (stringToLayer.contains(layerName)) return stringToLayer[layerName];

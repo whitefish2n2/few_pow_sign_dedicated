@@ -2,6 +2,7 @@
 #include "../../SessionContext.h"
 
 GameObjectArgument *GameObject::operator->() const {
+
     return gameObjectManagerInstance->GetGameObject(*this);
 }
 GameObject::GameObject(GameObjectId targetId, GameObjectGenerationId gen ):targetId(targetId),generationId(gen){}

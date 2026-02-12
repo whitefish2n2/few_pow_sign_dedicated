@@ -20,19 +20,17 @@ void MapManager::Init() {
 
 }
 
-PhysicsSystemConstructor MapManager::CreatePhysicsMap(MapInfo type)
+PhysicsSystemConstructor *MapManager::GetPhysicsMapConstructor(MapInfo type)
 {
-    const auto it = mapTemplates.find(type);
-    if (it != mapTemplates.end())
+    auto it = mapTemplates.find(type);
+    if (it == mapTemplates.end())
     {
-
         auto loaded = LoadMap(type);
-
-        auto inserted = mapTemplates.emplace(type, std::move(loaded));
-        return *inserted.first->second;
+        auto res = mapTemplates.emplace(type, std::move(loaded));
+        it = res.first;
     }
 
-    return *it->second;
+    return it->second.get();
 }
 void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layer layer, const Vector3& pos, const Quaternion &rot) {
     obj->name = name;
@@ -41,24 +39,7 @@ void SetupCommonProperties(const GameObject &obj, const std::string& name, const
     obj->transform.position = pos;
     obj->transform.rotation = rot;
 }
-// 문자열 "x,y,z"를 Vector3로 변환
-Vector3 ParseVector3(const std::string& str) {
-    float x, y, z;
-    // C# 포맷이 "F4,F4,F4" (콤마 구분)이므로 sscanf로 파싱
-    if(sscanf_s(str.c_str(), "%f,%f,%f", &x, &y, &z) == 3) {
-        return Vector3(x, y, z);
-    }
-    return Vector3::Zero();
-}
 
-// 문자열 "x,y,z,w"를 Quaternion으로 변환
-Quaternion ParseQuaternion(const std::string& str) {
-    float x, y, z, w;
-    if(sscanf_s(str.c_str(), "%f,%f,%f,%f", &x, &y, &z, &w) == 4) {
-        return {x, y, z, w};
-    }
-    return Quaternion::Identity;
-}
 Layer ParseLayer(const std::string& str, LayerManager& layerManager) {
     return layerManager.toLayer(str);
 }
@@ -108,7 +89,7 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
     auto newPhysicsConstructor = std::make_unique<PhysicsSystemConstructor>();
     auto path = MapRegister::GetPath(&type);
 
-    std::ifstream file("./PhysicsMapInfoFile/" + path);
+    std::ifstream file(path);
     if (!file.is_open()) {
         std::cerr << "[Error] Failed to open map file: " << path << std::endl;
         return newPhysicsConstructor;
@@ -206,9 +187,9 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
                         // 만약 인덱스로 저장했다면 바로 캐스팅
                         currentObj.layer = Layer(std::stoi(val));
                     }
-                    else if (key == "Position") currentObj.transform.position = ParseVector3(val);
-                    else if (key == "Rotation") currentObj.transform.rotation = ParseQuaternion(val);
-                    else if (key == "Scale") currentObj.transform.scale = ParseVector3(val);
+                    else if (key == "Position") currentObj.transform.position = Vector3::ParseVector3(val);
+                    else if (key == "Rotation") currentObj.transform.rotation = Quaternion::ParseQuaternion(val);
+                    else if (key == "Scale") currentObj.transform.scale = Vector3::ParseVector3(val);
                 }
             } else {
                 currentCompData << line << "\n";

@@ -23,7 +23,7 @@ protected:
     }
     void Init();
 
-    PhysicsSystemConstructor CreatePhysicsMap(MapInfo type);
+    PhysicsSystemConstructor *GetPhysicsMapConstructor(MapInfo type);
 
 
     MapManager(const MapManager&) = delete;

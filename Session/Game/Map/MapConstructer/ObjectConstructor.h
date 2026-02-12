@@ -11,8 +11,6 @@
 #include "../../../FhishiX/Layer.h"
 #include "../../../FhishiX/TagManager.h"
 #include "../../../FhishiX/gameobject/GameObject.h"
-#include "../../../FhishiX/quaternion/Quaternion.h"
-#include "../../../FhishiX/vector/Vector3.h"
 
 class ObjectConstructor {
     public:

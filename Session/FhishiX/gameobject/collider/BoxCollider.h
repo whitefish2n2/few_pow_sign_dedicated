@@ -3,6 +3,8 @@
 #include <memory>
 
 #include "Collider.h"
+#include "../../Renderer.h"
+#include "../../../Component/Definition/Component.h"
 
 class BoxCollider final : public Component<BoxCollider,Collider> {
 public:
@@ -50,6 +52,16 @@ public:
     void CalculateAABB() const override {
 
     }
+
+
+    void ParseFromString(const std::string &arg) override;
+
+
+
+#ifdef _WIN64
+    Renderer GetRenderer() override;
+#endif
+
 };
 
 #endif // BOXCOLLIDER_H

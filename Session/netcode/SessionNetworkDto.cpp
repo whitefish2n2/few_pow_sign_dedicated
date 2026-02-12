@@ -54,7 +54,7 @@ void from_json(const nlohmann::json& j, GameSetupBoddari& g) {
     g.gameId = j.at("gameId").get<std::string>();
     g.players = j.at("players").get<std::vector<DedicatedNewPlayerDto>>();
     g.gameMode = parseGameMode(j.at("gameMode").get<std::string>());
-    g.map = j.at("map").get<std::string>();
+    g.mapId = j.at("map").get<std::uint32_t>();
 }
 
 void from_json(const nlohmann::json &j, CharacterSetDto &c) {

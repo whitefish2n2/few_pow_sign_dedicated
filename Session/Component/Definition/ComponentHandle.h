@@ -13,13 +13,8 @@ class GameSession;
 template<typename T>
 class ComponentHandle: public ComponentHandleBase {
     public:
-    ComponentHandle(ComponentEntityId entity_id, size_t typeId) {
-        this->entityId = entity_id;
-        this->typeId = typeId;
-    }
-    ComponentHandle() { }
-    static size_t getTypeId() {
-        return GetTypeId<T>();
+    [[nodiscard]] size_t getTypeId() const {
+        return typeId;
     }
 
     ComponentHandleBase Clone() override;

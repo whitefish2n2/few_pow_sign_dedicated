@@ -17,6 +17,7 @@
 #include "Session/SessionDXViewer/DirectXCore.h"
 
 #include "ServerStatics.h"
+#include "Session/Game/MapManager.h"
 using std::thread;
 
 #ifdef _WIN64
@@ -27,10 +28,13 @@ std::wstring serverUuid;
 
 void CreateDebugScreen() {
 #ifdef _WIN64
-    auto hwnd = CreateDebugWindow(GetModuleHandle(nullptr), 1920, 1080);
-    DirectXCore::InitD3D(hwnd, 1920, 1080);
-    std::thread debugViewerThread(DirectXCore::RunDirectXLoop);
-    debugViewerThread.join();
+    std::thread debugViewerThread([]() {
+        auto hwnd = CreateDebugWindow(GetModuleHandle(nullptr), 1920, 1080);
+        if (DirectXCore::InitD3D(hwnd, 1920, 1080)) {
+            DirectXCore::RunDirectXLoop();
+        }
+    });
+    debugViewerThread.detach();
 #endif
 }
 
@@ -123,7 +127,11 @@ int main() {
         std::thread statusThread(statusUpdater);
         std::thread httpClientThread(&HttpRestClient::start_http_server, HttpRestClient::getInstance());
         std::cout << "1"<< std::endl;
+        /*Initialize Flow*/
 
+        MapRegister::Init("Assets/MapInfo.json");
+        MapManager::GetInstance()->Init();
+        /*Initialize Flow end*/
         for (auto& t : threads) {
             t.join();
         }

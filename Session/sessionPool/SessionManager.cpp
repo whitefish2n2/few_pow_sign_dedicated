@@ -6,15 +6,22 @@
 
 #include <mutex>
 #include <random>
+#include <shared_mutex>
 #include <utility>
 
-std::shared_ptr<GameSession> SessionManager::acquireSessionById(const std::string &sessionId) {
-    for (auto val: sessions | std::views::values) {
-        if (val->sessionId == sessionId) {
-            return val;
-        }
+
+std::vector<std::weak_ptr<GameSession>> SessionManager::getSessionListWeak() {
+    std::shared_lock lock(_sessionsLock);
+
+    std::vector<std::weak_ptr<GameSession>> sessionsCopy;
+
+    sessionsCopy.reserve(sessions.size());
+
+    for (const auto& val : sessions | std::views::values) {
+        sessionsCopy.push_back(val);
     }
-    return nullptr;
+
+    return sessionsCopy;
 }
 
 ///
@@ -22,20 +29,31 @@ std::shared_ptr<GameSession> SessionManager::acquireSessionById(const std::strin
 /// @return 새롭게 생성한 세션의 식별 id를 반환합니다
 uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
     auto newSession = std::make_shared<GameSession>();
-
-    uint16_t sessionKey = sessionKeyRoundRobin | std::random_device{}();
-    while (sessions.contains(sessionKey))
+    uint16_t sessionKey = 0;
     {
-        sessionKeyRoundRobin++;
-        sessionKey = sessionKeyRoundRobin | std::random_device{}();
+
+        std::unique_lock lock(_sessionsLock);
+
+        thread_local std::mt19937 gen(std::random_device{}());
+        thread_local std::uniform_int_distribution<uint16_t> dist(0, 65535);
+
+        do {
+
+            sessionKey = dist(gen);
+
+
+        } while (sessions.contains(sessionKey)); // 중복 체크
+
+        sessions[sessionKey] = newSession;
     }
     newSession->Init(std::to_string(sessionKey),std::move(initInfo));
     newSession->RunAsync();
-    sessions[sessionKey] = newSession;
+
     return sessionKey;
 }
 
 std::shared_ptr<GameSession> SessionManager::getSessionById(const std::string &sessionId) {
+    std::shared_lock lock(_sessionsLock);
     for (auto val: sessions | std::views::values) {
         if (val->sessionId == sessionId) {
             return val;
@@ -46,7 +64,7 @@ std::shared_ptr<GameSession> SessionManager::getSessionById(const std::string &s
 
 
 void SessionManager::cleanupSessions() {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock lock(_sessionsLock);
     for (auto& session : sessions) {
         session.second->cleanUp();//delete
     }

@@ -1,4 +1,6 @@
+
 cmake_minimum_required(VERSION 3.15)
+#add_compile_options(/showIncludes)
 
 project(fpsProjectServer)
 
@@ -83,7 +85,6 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/BoxCollider.cpp
         Session/Component/Definition/ComponentFactory.h
         Session/FhishiX/gameobject/collider/StaticCollider.h
-        Session/FhishiX/gameobject/collider/StaticCollider.h
         Session/Game/PhysicsSystem.h
         Session/Dto/MapInfo.cpp
         Session/Game/Map/MapConstructer/ObjectConstructor.cpp
@@ -95,7 +96,26 @@ add_executable(fpsProjectServer
         Session/Component/Definition/ComponentFactory.cpp
         Session/Game/Map/MapConstructer/PhysicsSystemConstructor.h
         Session/FhishiX/gameobject/collider/StaticCollider.cpp
-        Session/FhishiX/gameobject/collider/StaticCollider.cpp
+        InfoLoader/InfoLoader.cpp
+        InfoLoader/InfoLoader.h
+        Session/Dto/MapInfoArgument.h
+        Session/SessionDXViewer/DebugViewStatic.h
+        Session/SessionDXViewer/DebugViewStatic.h
+        Session/SessionDXViewer/Camera.h
+        ServerStatics.cpp
+        Session/FhishiX/Renderer.h
+        Session/FhishiX/Mesh/MeshManager.h
+        Session/FhishiX/Mesh/Mesh.h
+        Session/FhishiX/gameobject/collider/SphereCollider.cpp
+        Session/FhishiX/gameobject/collider/SphereCollider.h
+        Session/FhishiX/Mesh/StaticMeshMaker.cpp
+)
+
+add_custom_command(TARGET fpsProjectServer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/Assets
+        $<TARGET_FILE_DIR:fpsProjectServer>/Assets
+        COMMENT "Copying Assets directory to binary output directory..."
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)
@@ -106,6 +126,10 @@ target_link_libraries(fpsProjectServer
         ${ENET_LIBRARY}
         ws2_32
         winmm
+        d3d11
+        d3dcompiler
+        dxgi
+        dxguid
 )
 find_package(cpprestsdk CONFIG REQUIRED)
 target_link_libraries(fpsProjectServer PRIVATE cpprestsdk::cpprest cpprestsdk::cpprestsdk_zlib_internal cpprestsdk::cpprestsdk_brotli_internal)

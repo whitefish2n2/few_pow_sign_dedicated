@@ -5,12 +5,23 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 #include <cmath>
-
+#include <string>
 #include "Vector2.h"
-
+//todo: eigen-like 최적화 적용하기
+///warning: 가상함수가 들어가선 안되는 구조체
 struct Vector3 {
     float x, y, z;
 
+    ///Format: "F4,F4,F4"
+    ///문자열을 Vector3으로 변환, 파싱 실패시 Vector3::Zero()반환
+    static Vector3 ParseVector3(const std::string& str) {
+        float x, y, z;
+        // C# 포맷이 "F4,F4,F4" (콤마 구분)이므로 sscanf로 파싱
+        if(sscanf_s(str.c_str(), "%f,%f,%f", &x, &y, &z) == 3) {
+            return Vector3(x, y, z);
+        }
+        return Vector3::Zero();
+    }
     ///정규화(방향 벡터화) 된 벡터 반환
     Vector3 Normalized() const {
         const float len = this->length();

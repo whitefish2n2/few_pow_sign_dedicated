@@ -17,6 +17,7 @@ void DedicatedServerNotifier::init(const std::string& clientBaseUrl) {
     std::cout<<"Initializing DedicatedServerNotifier with base url:"<<clientBaseUrl<<std::endl;
     if (clientBase != nullptr) {
         delete clientBase;
+        clientBase = nullptr;
     }
     auto baseUrl = U("http://") + utility::conversions::to_string_t(clientBaseUrl);
     clientBase = new http_client(baseUrl);

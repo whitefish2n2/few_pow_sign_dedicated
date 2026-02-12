@@ -16,13 +16,6 @@
 using namespace nlohmann;
 void HttpRestClient::start_http_server(){
     httplib::Server svr;
-    /*
-    gameserverBoddari:
-    val gameId:String,
-    val players:List<PlayerDto>,
-    val gameMode:GameMode,
-    val map: String,
-     */
     svr.Post("/makesession", [this](const httplib::Request& req, httplib::Response& res)->bool {
         try {
             std::cout << "Session creat request detected" << std::endl;

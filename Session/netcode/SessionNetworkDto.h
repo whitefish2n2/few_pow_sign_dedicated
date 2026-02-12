@@ -48,7 +48,7 @@ struct GameSetupBoddari {
     std::string gameId;
     std::vector<DedicatedNewPlayerDto> players;
     GameMode gameMode;
-    std::string map;
+    std::uint32_t mapId;
     std::string playerConnectKey;
 };
 void from_json(const nlohmann::json &j, GameSetupBoddari &g);

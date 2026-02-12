@@ -17,8 +17,14 @@
 #include "../Socket/dto/SocketEventType.h"
 #include "../util/util.h"
 #include "FhishiX/gameobject/GameObjectManager.h"
+#include "Game/MapManager.h"
+#include "Game/Map/MapConstructer/PhysicsSystemConstructor.h"
 ;
 
+GameSession::GameSession() {
+    objectManager = std::make_unique<GameObjectManager>();
+    componentManager = std::make_unique<ComponentManager>();
+}
 GameSession::~GameSession() {
     Log("server destroyed");
     Stop();
@@ -103,40 +109,44 @@ void GameSession::SetCharacter(const CharacterSetDto& dto) const {
         }
     }
 }
-constexpr int tickRateMs = 33;
+constexpr std::chrono::nanoseconds TIME_STEP(33333334);
 void GameSession::Start() {
     Log("session is running on port " + std::to_string(Consts::port));
     // Run server loop
 
     // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성
     gameSessionInstance = this;
-    objectManager = new GameObjectManager();
-    componentManager = new ComponentManager();
-    gameObjectManagerInstance = objectManager;
-    componentManagerInstance = componentManager;
+    gameObjectManagerInstance = objectManager.get();
+    componentManagerInstance = componentManager.get();
     gameObjectManagerInstance->ownerSession  = this;
     componentManagerInstance->ownerSession = this;
 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> distrib(0, 255);
-    auto previousTime = std::chrono::steady_clock::now();
-    double lag = 0.0;
+    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    std::chrono::nanoseconds lag(0);
     while (isRunning.load() and running) {
         auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - previousTime);
+        auto elapsed = now - previousTime;
         previousTime = now;
-        lag += elapsed.count();
-        while (lag>=tickRateMs) {
-            Tick();
-            lag -= tickRateMs;
+        if (elapsed > std::chrono::milliseconds(250)) {
+            elapsed = std::chrono::milliseconds(250);
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        lag += elapsed;
+        while (lag >= TIME_STEP) {
+            Tick();
+            lag -= TIME_STEP;
+        }
+        auto remainingTime = TIME_STEP - lag;
+        if (remainingTime > std::chrono::milliseconds(2)) {
+            // 시간이 2ms 이상 남았을 때만 Sleep
+            std::this_thread::sleep_for(remainingTime - std::chrono::milliseconds(1));
+        } else {
+            // 시간이 별로 없으면 Sleep 대신 양보만 하여 즉시 반응 준비
+            std::this_thread::yield();
+        }
     }
-        /*while (enet_host_service(server, &event, 10) > 0) {
-            std::cout<<event.type<< std::endl;
-            서버마다 enet host를 달자-폐기
-        }*/
 }
 void GameSession::Stop() {
     Log("session stopped id: " + initInfo.gameId);
@@ -147,13 +157,14 @@ void GameSession::Stop() {
     isStopped = true;
 }
 
-void GameSession::Init(std::string sessionId, GameSetupBoddari initInfo) {
+void GameSession::Init(std::string sessionId, const GameSetupBoddari& initInfo) {
     this->players = std::make_shared<std::map<uint64_t, Player>>();
     this->sessionId = std::move(sessionId);
     this->initInfo = initInfo;
     uint64_t privateKey;
-    uint8_t publicKey=129;
-    //todo: 생성위치를 담은 map 클래스를 만들자
+    uint8_t publicKey=0;
+    auto res = MapManager::GetInstance()->GetPhysicsMapConstructor(MapInfo(initInfo.mapId))->Construct(this) ;
+    if (!res){/*todo: 매칭 취소 로직*/ return; }
     std::cout<<"New Session Enqueue Players:"<< std::endl;
     for (auto p : initInfo.players)
     {
@@ -181,6 +192,9 @@ void GameSession::cleanUp() {
     Stop();
 }
 
+void GameSession::Draw() {
+}
+
 std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENetPeer *peer) const {
     if (!isRunning.load() and running) return nullptr;
     for(auto& v : *this->players | std::views::values)
@@ -200,5 +214,9 @@ void GameSession::ProcessEvent(std::shared_ptr<GameEvent>& event)
     std::lock_guard<std::mutex> lock(queueMutex);
     eventQueue.push(event);
     queueCV.notify_one();
+}
+
+void GameSession::BroadcastEvent(const std::shared_ptr<GameEvent> &event) {
+
 }
 

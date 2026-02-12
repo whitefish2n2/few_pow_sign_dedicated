@@ -7,20 +7,22 @@
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <shared_mutex>
 #include <vector>
 #include "../GameSession.h"
 
 class SessionManager {
 public:
-    std::queue<std::shared_ptr<GameSession>> EventQueue;
+    std::shared_mutex _sessionsLock;
     std::unordered_map<std::uint16_t, std::shared_ptr<GameSession>> sessions;
-    std::shared_ptr<GameSession> acquireSessionById(const std::string &sessionId);
     SessionManager(const SessionManager&) = delete;
     SessionManager& operator=(const SessionManager&) = delete;
     static SessionManager& getInstance() {
         static SessionManager instance;
         return instance;
     }
+
+    std::vector<std::weak_ptr<GameSession>> getSessionListWeak();
 
     uint16_t makeNewSession(GameSetupBoddari initInfo);
 
@@ -34,7 +36,6 @@ public:
 
 private:
     SessionManager() = default;
-    std::mutex mutex_;
     uint16_t sessionKeyRoundRobin = 0;
 };
 

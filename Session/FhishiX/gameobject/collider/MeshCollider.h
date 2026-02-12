@@ -8,6 +8,7 @@
 #include <vector>
 #include <cpprest/asyncrt_utils.h>
 #include "Collider.h"
+#include "../../../Component/Definition/Component.h"
 #include "../../quaternion/Quaternion.h"
 
 
@@ -53,5 +54,11 @@ public:
     void CalculateAABB() const override {
 
     };
+
+    void ParseFromString(const std::string &arg) override;
+
+#ifdef _WIN64
+    Renderer GetRenderer() override;
+    #endif
 };
 #endif //MESHCOLLIDER_H

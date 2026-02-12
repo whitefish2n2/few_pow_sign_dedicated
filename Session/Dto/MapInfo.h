@@ -5,21 +5,22 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <nlohmann/json.hpp>
+
+#include "MapInfoArgument.h"
+#include "../../InfoLoader/InfoLoader.h"
 
 
 struct MapInfo;
 
-struct MapInfoArgument {
-public:
-    uint32_t id = 0;
-    std::string name;
-    std::string path;
-};
+
 class MapRegister {
 public:
     //main()에서 호출, MapInfo.json 파일을 불러와서 맵 리스트,를 초기화합니다.
-    void Init() {
+    static void Init(const std::string& MapInfoFilePath) {
         //MapInfo.json 가져와서 idToInfo 초기화
+        idToInfo = InfoLoader::LoadMapInfo(MapInfoFilePath);
+
     }
     static const std::string& GetPath(uint32_t id);
     static const std::string& GetPath(const MapInfo* Info) ;
@@ -30,8 +31,7 @@ private:
 };
 
 struct MapInfo {
-public:
-    explicit MapInfo(uint32_t id):id(id) {};
+    explicit MapInfo(const uint32_t id):id(id) {};
     MapInfo()=default;
     [[nodiscard]] std::string GetPath() const {
         return MapRegister::GetPath(id);
@@ -49,7 +49,7 @@ public:
         return id < other.id;
     }
 private:
-    uint32_t id = 0;;
+    uint32_t id = 0;
 };
 namespace std {
     template<> struct hash<MapInfo> {

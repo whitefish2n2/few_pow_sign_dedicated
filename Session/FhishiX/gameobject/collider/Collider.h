@@ -7,12 +7,14 @@
 #include <memory>
 #include <vector>
 
-#include "../ColliderType.h"
 #include "../../AABB.h"
-#include "../../../Component/Definition/Component.h"
+
 #include "../../../Component/Definition/ComponentArgument.h"
 #include "../../../FhishiX/Triangle.h"
 
+#ifdef _WIN64
+#endif
+class Renderer;
 struct Triangle;
 class GameObject;
 
@@ -26,6 +28,7 @@ public:
     explicit Collider(bool isStatic):staticObject(isStatic){};
     virtual ~Collider() noexcept = default;
     bool staticObject = false;
+    bool isTrigger = false;
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
 
     [[nodiscard]] virtual AABB GetAABB() const = 0;
@@ -53,6 +56,10 @@ public:
     virtual void ExpandAABB(const Vector3 &point) const=0;
 
     virtual void MergeAABB(const AABB &other) const=0;
+
+    #ifdef _WIN64
+    virtual Renderer GetRenderer() = 0;
+    #endif
 private:
     AABB aabb = AABB::Empty();
     bool shouldUpdateAABB = true;

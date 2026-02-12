@@ -13,6 +13,7 @@ class GameObject {
     protected:
     GameObjectId targetId = -1;
     GameObjectGenerationId generationId = -1;
+    GameSession *session = nullptr;
     public:
     [[nodiscard]] GameObjectId GetId() const {return targetId;}
     [[nodiscard]] GameObjectGenerationId GetGenerationId() const {return generationId;}

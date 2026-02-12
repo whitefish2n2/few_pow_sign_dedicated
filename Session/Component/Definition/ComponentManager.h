@@ -83,7 +83,7 @@ protected:
     std::unordered_map<size_t, std::unique_ptr<BasePool>> componentPool;
     template<typename T>
     DrivenPool<T>* GetOrCreatePool() {
-        size_t typeId = ComponentHandle<T>::getTypeId();
+        size_t typeId = GetTypeId<T>();
         if (!componentPool.contains(typeId)) {
             componentPool[typeId] = std::make_unique<DrivenPool<T>>();
         }
@@ -120,16 +120,16 @@ public:
     ComponentHandle<T> InsertOrphanageComponent(T* comp) {
         static_assert(std::is_base_of<ComponentArgument, T>::value,
                   "T must inherit from ComponentArgument!(ComponentManager,122)");
+
+        //새로운 오브젝트 생성
         ComponentHandle<T> newHandle = CreateComponentAtPool<T>();
 
-        //  데이터 이동
+        //  데이터 복제
         T* poolObj = GetComponentFromPool(&newHandle);
         ComponentEntityId newId = poolObj->entityId;
         if (comp) {
             *poolObj = std::move(*comp);
         }
-
-
         poolObj->entityId = newId;
 
 
@@ -152,6 +152,7 @@ public:
 template<typename T>
 T* ComponentHandle<T>::operator->() {
     void* ptr = componentManagerInstance->GetRawPtr(this->typeId, this->entityId);
+    if (ptr == nullptr) return nullptr;
     return static_cast<T*>(ptr);
 }
 template<typename T>

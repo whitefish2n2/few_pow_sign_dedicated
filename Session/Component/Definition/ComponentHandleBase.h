@@ -12,6 +12,7 @@ class ComponentHandleBase {
     public:
     size_t typeId = -1;
     ComponentHandleBase() = default;
+    ComponentHandleBase(size_t typeId, ComponentEntityId entityId):typeId(typeId),entityId(entityId){}
     virtual ~ComponentHandleBase() = default;
     ComponentEntityId entityId = -1;
     virtual ComponentHandleBase Clone() {

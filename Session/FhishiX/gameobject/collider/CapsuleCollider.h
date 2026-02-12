@@ -11,7 +11,8 @@ class CapsuleCollider final : public Component<CapsuleCollider,Collider>{
 public:
     Vector3 center = Vector3::Zero();
     float height = 0;
-    float radius = 0;;
+    float radius = 0;
+    int direction;;//0:X,1:Y,2:Z
     mutable bool haveMesh = false;
     CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(isStatic), center(center), height(height), radius(radius) {}
     CapsuleCollider() = default;
@@ -48,5 +49,6 @@ public:
     void CalculateAABB() const override {
 
     }
+    void ParseFromString(const std::string &arg) override;
 };
 #endif //FPSPROJECTSERVER_CAPSULECOLLIDER_H

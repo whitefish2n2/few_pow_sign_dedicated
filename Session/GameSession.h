@@ -70,8 +70,8 @@ class GameSession {
     std::mutex queueMutex;
     std::condition_variable queueCV;
 
-    GameObjectManager* objectManager;
-    ComponentManager* componentManager;
+    std::unique_ptr<GameObjectManager> objectManager;
+    std::unique_ptr<ComponentManager> componentManager;
 
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
@@ -80,7 +80,7 @@ class GameSession {
     long long int tick;
 
     ~GameSession();
-    GameSession()=default;
+    GameSession();
 
     void RunAsync();
 
@@ -97,9 +97,11 @@ class GameSession {
     void BroadcastEvent(const std::shared_ptr<GameEvent>& event);
     void Start();
     void Stop();
-    void Init(std::string sessionId, GameSetupBoddari initInfo);
+    void Init(std::string sessionId, const GameSetupBoddari& initInfo);
     bool reset();
     void cleanUp();
+    ///SessionDXViewer에서 해당 세션을 lookup중이면 게임오브젝트들을 드로우하는 함수
+    void Draw();
 };
 
 
