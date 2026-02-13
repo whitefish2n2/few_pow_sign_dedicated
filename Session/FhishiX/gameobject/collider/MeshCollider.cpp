@@ -82,7 +82,10 @@ void MeshCollider::ParseFromString(const std::string& arg) {
             int i1, i2, i3;
             if (sscanf_s(line.c_str(), "%d,%d,%d", &i1, &i2, &i3) == 3) {
                 if (i1 < vertices.size() && i2 < vertices.size() && i3 < vertices.size()) {
-                    this->triangles.emplace_back(Triangle(i1, i2, i3));
+                    this->triangles.emplace_back(i1, i2, i3);
+                    trianglesIndices.push_back(i1);
+                    trianglesIndices.push_back(i2);
+                    trianglesIndices.push_back(i3);
                 }
             }
             countToRead--;
@@ -91,32 +94,34 @@ void MeshCollider::ParseFromString(const std::string& arg) {
     CalculateAABB();
 }
 
-#ifdef _WIN64
-#include "../../Renderer.h"
-#include "../../Mesh/MeshManager.h"
-Renderer MeshCollider::GetRenderer() {
-    Renderer r{};
+    #ifdef _WIN64
+    #include "../../Renderer.h"
+    #include "../../Mesh/MeshManager.h"
+    Renderer MeshCollider::GetRenderer() {
+        Renderer r{};
 
-    if (this->gameObject!=GameObject::NullPTR())
-        r.mesh = MeshManager::GetInstance()->GetMesh(this->gameObject->name);
-    else return r;
+        if (this->gameObject!=GameObject::NullPTR())
+            r.mesh = MeshManager::GetInstance()->GetMesh(this->gameObject->name);
+        else return r;
 
-    if (r.mesh == nullptr) {
-        std::vector<SimpleVertex> verts;
-        for (auto v: this->vertices) {
-            verts.push_back(SimpleVertex(v,));
+        if (r.mesh == nullptr) {
+            //등록된 메쉬 없으면
+            std::vector<SimpleVertex> verts;
+            for (auto v: this->vertices) {
+                verts.push_back(SimpleVertex(v,{0,0.5,0,1}));
+            }
+            //메쉬 생성
+            auto mesh = MeshManager::GetInstance()->GetOrCreateMesh(this->gameObject->name, verts, trianglesIndices);
+            r.mesh = mesh;
+            r.color = { 1.0f, 0.0f, 0.0f, 1.0f }; // 빨강
+            r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
         }
-        r = MeshManager::GetOrCreateMesh(this->gameObject->name, );
-        r.mesh = MeshManager::GetInstance()->GetUnitBox();
-        r.color = { 1.0f, 0.0f, 0.0f, 1.0f }; // 빨강
-        r.localScale = { 1.0f, 1.0f, 1.0f };
+        else {
+            // 정상적으로 찾음
+            r.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파랑 (메쉬 콜라이더 구분용)
+            r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
+        }
     }
-    else {
-        // 정상적으로 찾음
-        r.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파랑 (메쉬 콜라이더 구분용)
-        r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
-    }
-}
 #endif
 
 REGISTER_COMPONENT(MeshCollider)

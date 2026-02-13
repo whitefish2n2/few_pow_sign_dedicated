@@ -1,9 +1,8 @@
 #ifndef BOXCOLLIDER_H
 #define BOXCOLLIDER_H
-#include <memory>
 
 #include "Collider.h"
-#include "../../Renderer.h"
+
 #include "../../../Component/Definition/Component.h"
 
 class BoxCollider final : public Component<BoxCollider,Collider> {

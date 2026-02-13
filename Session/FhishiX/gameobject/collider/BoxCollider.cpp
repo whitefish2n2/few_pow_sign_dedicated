@@ -37,6 +37,32 @@ void BoxCollider::ParseFromString(const std::string& arg) {
 
     CalculateAABB();
 }
-
+#ifdef _WIN64
+#include "../../Renderer.h"
 Renderer BoxCollider::GetRenderer() {
+    Renderer r{};
+
+    if (this->gameObject == GameObject::NullPTR()) return r;
+
+    r.owner = this->gameObject;
+    r.transform = &this->gameObject->transform;
+
+
+    r.mesh = MeshManager::GetInstance()->GetUnitBox();
+
+    if (r.mesh) {
+        r.color = { 0.0f, 1.0f, 0.0f, 1.0f };
+        r.isWireframe = true;
+
+
+        r.localScale = reinterpret_cast<const DirectX::XMFLOAT3&>(this->size);
+
+        r.localOffset = reinterpret_cast<const DirectX::XMFLOAT3&>(this->center);
+    }
+    else {
+        r = Renderer::ErrorRenderer(this->gameObject,&this->gameObject->transform);
+    }
+
+    return r;
 }
+#endif

@@ -74,5 +74,41 @@ void CapsuleCollider::ParseFromString(const std::string &arg) {
 
     CalculateAABB();
 }
+#ifdef _WIN64
+#include "../../Renderer.h"
+Renderer CapsuleCollider::GetRenderer() {
+    Renderer r{};
+
+    if (this->gameObject == GameObject::NullPTR()) return r;
+
+    r.owner = this->gameObject;
+    r.transform = &this->gameObject->transform;
+
+    r.mesh = MeshManager::GetInstance()->GetUnitCapsule();
+
+    if (r.mesh) {
+        r.color = { 0.0f, 1.0f, 0.0f, 1.0f };
+        r.isWireframe = true;
+
+        // UnitCapsule: 반지름 0.5 (지름 1.0), 높이 2.0
+
+        // 1. 가로/세로(XZ) 스케일: 반지름(radius)을 맞추려면 * 2.0 필요
+        float diameterScale = this->radius * 2.0f;
+
+        // 2. 높이(Y) 스케일: Unit 높이가 2.0이므로, 원하는 높이(height)가 되려면 / 2.0 필요
+        float heightScale = this->height / 2.0f;
+
+        r.localScale = { diameterScale, heightScale, diameterScale };
+
+        // 오프셋
+        r.localOffset = reinterpret_cast<const DirectX::XMFLOAT3&>(this->center);
+    }
+    else {
+        r = Renderer::ErrorRenderer(this->gameObject,&this->gameObject->transform);
+    }
+
+    return r;
+}
+#endif
 
 REGISTER_COMPONENT(CapsuleCollider);

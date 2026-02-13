@@ -15,7 +15,9 @@
 #include "../vector/Vector3.h"
 
 struct SimpleVertex {
-    SimpleVertex(Vector3 v, )//다른 콜라이더들 GetRenderer 만드셈
+    SimpleVertex(Vector3 v, DirectX::XMFLOAT4 color):pos(reinterpret_cast<DirectX::XMFLOAT3&>(v)), color(color) {}
+    SimpleVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT4 color):pos(pos), color(color) {}
+    SimpleVertex() = default;
     DirectX::XMFLOAT3 pos;
     DirectX::XMFLOAT4 color;
 };
@@ -64,7 +66,7 @@ class MeshManager {
             { DirectX::XMFLOAT3( 0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0,0,0,1) },
             { DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(1,1,1,1) },
         };
-        std::vector<WORD> i = {
+        std::vector<uint32_t> i = {
             3,1,0, 2,1,3, // 윗면
             0,5,4, 1,5,0, // 앞면
             3,4,7, 0,4,3, // 왼쪽
@@ -80,7 +82,7 @@ class MeshManager {
         if (auto it = GetMesh("UnitSphere"); it != nullptr) return it;
 
         std::vector<SimpleVertex> v;
-        std::vector<WORD> i;
+        std::vector<uint32_t> i;
 
         float radius = 0.5f;
         int stackCount = 20; // 가로 줄
@@ -123,7 +125,7 @@ class MeshManager {
         if (auto it = GetMesh("UnitCapsule"); it != nullptr) return it;
 
         std::vector<SimpleVertex> v;
-        std::vector<WORD> i;
+        std::vector<uint32_t> i;
 
         float radius = 0.5f;
         float height = 1.0f; // 실린더 부분의 높이 (총 높이 2.0 - 위아래 캡 1.0)
@@ -189,7 +191,7 @@ class MeshManager {
         return GetMesh("UnitCapsule");
     }
 
-     Mesh* GetOrCreateMesh(const std::string& meshName, const std::vector<SimpleVertex>& vertices, const std::vector<WORD>& indices) {
+     Mesh* GetOrCreateMesh(const std::string& meshName, const std::vector<SimpleVertex>& vertices, const std::vector<uint32_t>& indices) {
         std::lock_guard<std::mutex> lock(meshCacheMutex);
         if (meshCache.find(meshName) != meshCache.end()) {
             return meshCache[meshName];
@@ -229,7 +231,7 @@ class MeshManager {
 
         // --- 메타 데이터 저장 ---
         newMesh->vertexStride = sizeof(SimpleVertex);
-        newMesh->indexCount = static_cast<UINT>(indices.size());
+        newMesh->indexCount = static_cast<uint32_t>(indices.size());
 
         //캐시에 등록
         meshCache[meshName] = newMesh;

@@ -25,6 +25,7 @@ public:
     GameObject owner = GameObject::NullPTR();
     Transform* transform = nullptr; // 위치 정보
     Mesh* mesh;
+    bool isWireframe = false;
 
     DirectX::XMFLOAT3 localScale = { 1.0f, 1.0f, 1.0f };
     DirectX::XMFLOAT3 localOffset = { 0.0f, 0.0f, 0.0f };
@@ -35,7 +36,7 @@ public:
 
         UINT offset = 0;
         context->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, &mesh->vertexStride, &offset);
-        context->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        context->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
         context->DrawIndexed(mesh->indexCount, 0, 0);
     }

@@ -15,14 +15,25 @@
 class MeshCollider final : public Component<MeshCollider,Collider>{
 public:
     mutable std::vector<Vector3> vertices;
-    mutable std::vector<int> trianglesIndices;
-    MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<int> &triangles) : Component(isStatic),vertices(vertices),trianglesIndices(triangles) {
+    mutable std::vector<uint32_t> trianglesIndices;
+    MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(isStatic),vertices(vertices),trianglesIndices(indices) {
+        this->triangles.clear();
+        this->triangles.reserve(indices.size() / 3);
+        for (int i = 0; i<indices.size(); i+=3) {
+            if (i + 2 >= indices.size()) break;
+
+            uint32_t v0 = indices[i];
+            uint32_t v1 = indices[i + 1];
+            uint32_t v2 = indices[i + 2];
+
+            this->triangles.emplace_back(v0, v1, v2);
+        }
     }
     MeshCollider() = default;
     const std::vector<Vector3>& GetVertices() const {
         return vertices;
     }
-    const std::vector<int>& GetTriangles() const {
+    const std::vector<uint32_t>& GetTriangles() const {
         return trianglesIndices;
     }
     AABB GetAABB() const override;

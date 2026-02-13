@@ -6,6 +6,7 @@
 #define FPSPROJECTSERVER_CAPSULECOLLIDER_H
 
 #include "Collider.h"
+#include "../../../Component/Definition/Component.h"
 
 class CapsuleCollider final : public Component<CapsuleCollider,Collider>{
 public:
@@ -50,5 +51,9 @@ public:
 
     }
     void ParseFromString(const std::string &arg) override;
+
+#ifdef _WIN64
+    Renderer GetRenderer() override;
+#endif
 };
 #endif //FPSPROJECTSERVER_CAPSULECOLLIDER_H
