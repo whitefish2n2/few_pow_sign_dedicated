@@ -51,9 +51,6 @@ Renderer SphereCollider::GetRenderer() {
         r.color = { 0.0f, 1.0f, 0.0f, 1.0f };
         r.isWireframe = true;
 
-        // UnitSphere는 반지름이 0.5 (지름 1.0)입니다.
-        // 우리가 원하는 반지름이 R이라면, 지름은 2R이 되어야 합니다.
-        // 따라서 스케일은 (R * 2)가 되어야 합니다.
         float scaleFactor = this->radius * 2.0f;
 
         r.localScale = { scaleFactor, scaleFactor, scaleFactor };

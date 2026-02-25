@@ -18,6 +18,7 @@ protected:
     public:
     ComponentEntityId entityId = -1;
     size_t typeId;
+    GameSession* gameSession = nullptr;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
     ComponentArgument(const ComponentArgument& other);
     ComponentArgument& operator=(const ComponentArgument& other) = default;
@@ -25,8 +26,10 @@ protected:
     ComponentArgument () = default;
 
     virtual ~ComponentArgument () noexcept = default ;
+protected:
     virtual void OnAttach() { };
     virtual void OnDetach() { };
+public:
     virtual void Update() { };
     virtual void Reset() { };
     virtual void Start() { };
@@ -36,11 +39,12 @@ protected:
 
     void SetOwner(const GameObject &owner) {
         this->gameObject = owner;
+        OnAttach();
     };
     [[nodiscard]] GameObject GetGameObject() const {
         return gameObject;
     }
     ///컴포넌트 매니저에 해당 컴포넌트를 편입하는 함수
-    virtual void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) = 0;
+    virtual void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) { };
 };
 #endif

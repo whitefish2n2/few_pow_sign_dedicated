@@ -10,11 +10,11 @@
 void KDTree::Insert(Collider* collider) {
     if (collider == nullptr) return;
     if (!root) return;
+    objectCount++;
     InsertRecursive(root,collider , 0);
 }
 void KDTree::DeleteNode(KDNode* node) {
-    if (!node) return;
-
+    if (!node) return;;
     DeleteNode(node->front);
     DeleteNode(node->back);
     delete node;

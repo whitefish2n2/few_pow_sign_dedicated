@@ -3,11 +3,9 @@
 //
 
 #pragma once
-#include <map>
 #include <memory>
 
 
-#include "PhysicsSystem.h"
 #include "../Dto/MapInfo.h"
 #include "Map/MapConstructer/PhysicsSystemConstructor.h"
 

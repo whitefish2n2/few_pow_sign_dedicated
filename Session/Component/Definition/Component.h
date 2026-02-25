@@ -22,7 +22,7 @@ public:
         this->typeId = GetTypeId<T>();
     }
     ///handleOut은 ComponentHandle<T>가 담겨 반환됩니다.
-    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) override {
+    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) override final {
         auto handle = manager->InsertOrphanageComponent<T>(static_cast<T*>(this));
         if (handleOut) {
             *handleOut = handle;

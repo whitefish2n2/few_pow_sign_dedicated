@@ -4,7 +4,10 @@
 
 #ifndef FPSPROJECTSERVER_STATICCOLLIDER_H
 #define FPSPROJECTSERVER_STATICCOLLIDER_H
+#include <iostream>
+
 #include "Collider.h"
+#include "../../../Component/Definition/Component.h"
 #include "../../../Game/KDTree.h"
 
 class StaticCollider final:public Component<StaticCollider,Collider> {
@@ -40,5 +43,22 @@ class StaticCollider final:public Component<StaticCollider,Collider> {
    void CalculateAABB() const override {
 
    };
+   void ParseFromString(const std::string &arg) override{ std::cout << "StaticCollider::ParseFromString is not implemented. 어디서 쓰고있으면 큰 인간버그임" << std::endl; };
+
+   ///OnAttach 삭제
+   void OnAttach() override {}
+
+
+#ifdef _WIN64
+   Renderer GetRenderer() override;
+   [[nodiscard]] std::vector<Renderer> GetRenderers() const {
+      std::vector<Renderer> renderers;
+      renderers.reserve(tree.objectCount);
+      for (auto v: tree) {
+         renderers.push_back(v->GetRenderer());
+      }
+      return renderers;
+   }
+#endif
 };
 #endif //FPSPROJECTSERVER_STATICCOLLIDER_H

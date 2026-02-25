@@ -16,7 +16,7 @@ class MeshCollider final : public Component<MeshCollider,Collider>{
 public:
     mutable std::vector<Vector3> vertices;
     mutable std::vector<uint32_t> trianglesIndices;
-    MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(isStatic),vertices(vertices),trianglesIndices(indices) {
+        MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(isStatic),vertices(vertices),trianglesIndices(indices) {
         this->triangles.clear();
         this->triangles.reserve(indices.size() / 3);
         for (int i = 0; i<indices.size(); i+=3) {

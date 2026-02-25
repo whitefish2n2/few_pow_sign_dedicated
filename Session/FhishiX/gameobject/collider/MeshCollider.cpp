@@ -121,6 +121,7 @@ void MeshCollider::ParseFromString(const std::string& arg) {
             r.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파랑 (메쉬 콜라이더 구분용)
             r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
         }
+    return r;
     }
 #endif
 

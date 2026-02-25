@@ -1,11 +1,13 @@
 #pragma once
 #ifndef FPS_SERVER_H
 #define FPS_SERVER_H
+#define WIN32_LEAN_AND_MEAN
 
 #include <condition_variable>
 #include <cstdint>
 #include <memory>
 #include <queue>
+#include <shared_mutex>
 #include <string>
 #include <variant>
 #include "../Socket/dto/AssignDto.h"
@@ -57,6 +59,10 @@ struct BroadCastEvent {
 };
 
 class GameSession {
+#ifdef _WIN64
+    std::vector<Renderer> renderers = {};
+    std::queue<int> usableRenderersIndex = {};
+#endif
     public:
     std::string sessionId;
     std::uint16_t sessionConnectKey;// 플레이어->세션 연결에 사용하는 ID
@@ -72,6 +78,8 @@ class GameSession {
 
     std::unique_ptr<GameObjectManager> objectManager;
     std::unique_ptr<ComponentManager> componentManager;
+
+
 
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
@@ -97,11 +105,16 @@ class GameSession {
     void BroadcastEvent(const std::shared_ptr<GameEvent>& event);
     void Start();
     void Stop();
-    void Init(std::string sessionId, const GameSetupBoddari& initInfo);
+    void Init(const std::string &sessionId, const GameSetupBoddari &initInfo);
     bool reset();
     void cleanUp();
-    ///SessionDXViewer에서 해당 세션을 lookup중이면 게임오브젝트들을 드로우하는 함수
-    void Draw();
+#ifdef _WIN64
+    ///Renderer를 사용하는 객체에서 여기에 렌더러를 등록하면 SessionDxViewer에서 렌더링할때 렌더링됨.렌더러가 저장된 인덱스를 반환함.
+    void InsertRenderer(Renderer renderer);
+    ///Renderer를 사용하는 객체에서 등록한 렌더러를 삭제할 때 렌더러가 저장된 인덱스(InsertRenderer호출시 반환)를 매개변수로 넣으면 해당 렌더러가 삭제됨.
+    void DeleteRenderer(int index);
+    const std::vector<Renderer>* GetRenderers() const { return &renderers;};
+#endif
 };
 
 

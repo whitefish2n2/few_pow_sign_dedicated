@@ -34,10 +34,6 @@ ID3D11Buffer* DirectXCore::constantBuffer = nullptr;
 ID3D11DepthStencilView* DirectXCore::dsv = nullptr;
 ID3D11Texture2D* DirectXCore::depthStencilBuffer = nullptr;
 Camera camera = Camera();
-struct SimpleVertex {
-    DirectX::XMFLOAT3 pos;
-    DirectX::XMFLOAT4 color;
-};
 void DirectXCore:: Cleanup()
 {
     if (constantBuffer) constantBuffer->Release();

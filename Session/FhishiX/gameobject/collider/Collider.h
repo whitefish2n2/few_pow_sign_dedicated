@@ -4,6 +4,7 @@
 
 #ifndef COLLIDER_H
 #define COLLIDER_H
+#define WIN32_LEAN_AND_MEAN
 #include <memory>
 #include <vector>
 
@@ -13,8 +14,8 @@
 #include "../../../FhishiX/Triangle.h"
 
 #ifdef _WIN64
+#include "../../Renderer.h"
 #endif
-class Renderer;
 struct Triangle;
 class GameObject;
 
@@ -59,6 +60,7 @@ public:
 
     #ifdef _WIN64
     virtual Renderer GetRenderer() = 0;
+    void OnAttach() override;
     #endif
 private:
     AABB aabb = AABB::Empty();

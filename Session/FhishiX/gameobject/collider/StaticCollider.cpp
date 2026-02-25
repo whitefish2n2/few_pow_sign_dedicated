@@ -3,3 +3,10 @@
 //
 
 #include "StaticCollider.h"
+
+#include <cpprest/asyncrt_utils.h>
+
+#include "../GameObjectArgument.h"
+#include "../Transform.h"
+#include "../../Renderer.h"
+Renderer StaticCollider::GetRenderer() {std::cout<<"StaticCollider는 Renderer가 없어용 GetRenderers를 사용해서 Vector<Renderer>를 받으셈" << std::endl; return Renderer::ErrorRenderer(GameObject::NullPTR(), &gameObject->transform);}

@@ -75,7 +75,7 @@ GameObject CreateCapsuleGameObject(const std::string& name, const std::string& t
 }
 GameObject CreateMeshGameObject(const std::string& name, const std::string& tagStr,
                                 const std::vector<Vector3>& vertices,
-                                const std::vector<int>& triangleIndices) {
+                                const std::vector<uint32_t>& triangleIndices) {
     GameObject obj = gameObjectManagerInstance->CreateGameObject();
     obj->name = name;
     obj->tag = TagManager::GetObjectTagFromString(tagStr);

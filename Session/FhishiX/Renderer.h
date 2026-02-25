@@ -22,6 +22,9 @@ public:
     Renderer() = default;
     ~Renderer() = default;
 
+
+    ///false일시 렌더링하지않음
+    bool enable = true;
     GameObject owner = GameObject::NullPTR();
     Transform* transform = nullptr; // 위치 정보
     Mesh* mesh;
@@ -56,6 +59,7 @@ public:
         r.owner = owner;
         return r;
     }
+
 };
 #endif //FPSPROJECTSERVER_RENDERER_H
 #endif

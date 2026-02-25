@@ -19,7 +19,6 @@
 #include "FhishiX/gameobject/GameObjectManager.h"
 #include "Game/MapManager.h"
 #include "Game/Map/MapConstructer/PhysicsSystemConstructor.h"
-;
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
@@ -157,7 +156,7 @@ void GameSession::Stop() {
     isStopped = true;
 }
 
-void GameSession::Init(std::string sessionId, const GameSetupBoddari& initInfo) {
+void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& initInfo) {
     this->players = std::make_shared<std::map<uint64_t, Player>>();
     this->sessionId = std::move(sessionId);
     this->initInfo = initInfo;
@@ -191,9 +190,25 @@ bool GameSession::reset() {
 void GameSession::cleanUp() {
     Stop();
 }
-
-void GameSession::Draw() {
+#ifdef _WIN64
+#include "./FhishiX/Renderer.h"
+void GameSession::InsertRenderer(Renderer renderer) {
+    if (renderers.empty()) {
+        renderers.push_back(renderer);
+    }
+    else if (!usableRenderersIndex.empty()) {
+        renderers[usableRenderersIndex.back()] = renderer;
+        usableRenderersIndex.pop();
+    }
 }
+
+
+
+void GameSession::DeleteRenderer(int index) {
+    renderers[index].~Renderer();
+    usableRenderersIndex.push(index);
+}
+#endif
 
 std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENetPeer *peer) const {
     if (!isRunning.load() and running) return nullptr;
