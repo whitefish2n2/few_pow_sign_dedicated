@@ -58,10 +58,34 @@ struct BroadCastEvent {
         : type(type), payload(payload), target(target) {}
 };
 
+///<summary>
+///렌더링 스레드에 전달하기 위한 패킷 구조체에요
+///</summary>
+#ifdef _WIN64
+#include <DirectXMath.h>
+struct RenderPacket {
+    Mesh* mesh;
+    DirectX::XMFLOAT4X4 worldMatrix;
+    DirectX::XMFLOAT4 color;
+    bool isWireframe;
+};
+#endif
+
+///게임 세션 구조체(게임 단위)
 class GameSession {
 #ifdef _WIN64
     std::vector<Renderer> renderers = {};
     std::queue<int> usableRenderersIndex = {};
+
+    //버퍼링 배열
+    std::vector<RenderPacket> buffers[3];
+
+    // 각 스레드가 사용할 버퍼의 인덱스
+    int writeIdx = 0; // 로직 스레드가 쓰는 용도
+    int readIdx = 1;  // 렌더 스레드가 읽는 용도
+    int nextIdx = 2;  // 완성된 데이터가 대기하는 용도
+
+    std::mutex renderBufferMutex;
 #endif
     public:
     std::string sessionId;
@@ -96,6 +120,8 @@ class GameSession {
 
     void Tick();
 
+    void UpdateComponents() const;
+
     void SetCharacter(const CharacterSetDto &dto) const;
 
     std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer) const;
@@ -109,14 +135,17 @@ class GameSession {
     bool reset();
     void cleanUp();
 #ifdef _WIN64
+
+    void UpdateRenderBuffer();
+
     ///Renderer를 사용하는 객체에서 여기에 렌더러를 등록하면 SessionDxViewer에서 렌더링할때 렌더링됨.렌더러가 저장된 인덱스를 반환함.
-    void InsertRenderer(Renderer renderer);
+    int InsertRenderer(const Renderer &renderer);
     ///Renderer를 사용하는 객체에서 등록한 렌더러를 삭제할 때 렌더러가 저장된 인덱스(InsertRenderer호출시 반환)를 매개변수로 넣으면 해당 렌더러가 삭제됨.
     void DeleteRenderer(int index);
-    const std::vector<Renderer>* GetRenderers() const { return &renderers;};
+
+    const std::vector<RenderPacket> *GetRenderPackets();
 #endif
 };
-
 
 #endif // FPS_SERVER_H
 

@@ -6,12 +6,12 @@
   },
   {
     "id": 2,
-    "name": "haven",
-    "path": "/Maps/Forest_Dark.umap"
+    "name": "test",
+    "path": "Assets/Map/test.mapfile"
   },
   {
     "id": 101,
-    "name": "Dragon Dungeon",
-    "path": "/Maps/Dungeon_Fire.umap"
+    "name": "default map",
+    "path": "Assets/DefaultMap.mapfile"
   }
 ]

@@ -4,15 +4,16 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENTHANDLEBASE_H
 #define FPSPROJECTSERVER_COMPONENTHANDLEBASE_H
-#include "ComponentTypeCounter.h"
 #include "../../FhishiX/gameobject/EntityTypes.h"
-class GameSession;
+
+class ComponentManager;
 
 class ComponentHandleBase {
     public:
     size_t typeId = -1;
+    ComponentManager* componentManager;
     ComponentHandleBase() = default;
-    ComponentHandleBase(size_t typeId, ComponentEntityId entityId):typeId(typeId),entityId(entityId){}
+    ComponentHandleBase(size_t typeId, ComponentEntityId entityId, ComponentManager* gameSession = nullptr):typeId(typeId),entityId(entityId),componentManager(gameSession){}
     virtual ~ComponentHandleBase() = default;
     ComponentEntityId entityId = -1;
     virtual ComponentHandleBase Clone() {

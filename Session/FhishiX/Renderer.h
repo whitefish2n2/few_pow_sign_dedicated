@@ -11,7 +11,7 @@
 #endif
 #include <d3d11.h>
 #include <dxgiformat.h>
-
+#include "../GameObject.h"
 #include "Mesh/Mesh.h"
 
 
@@ -26,23 +26,13 @@ public:
     ///false일시 렌더링하지않음
     bool enable = true;
     GameObject owner = GameObject::NullPTR();
-    Transform* transform = nullptr; // 위치 정보
     Mesh* mesh;
     bool isWireframe = false;
 
     DirectX::XMFLOAT3 localScale = { 1.0f, 1.0f, 1.0f };
     DirectX::XMFLOAT3 localOffset = { 0.0f, 0.0f, 0.0f };
-    DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };
+    DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    void Draw(ID3D11DeviceContext* context) {
-        if (!mesh || !mesh->vertexBuffer) return;
-
-        UINT offset = 0;
-        context->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, &mesh->vertexStride, &offset);
-        context->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-        context->DrawIndexed(mesh->indexCount, 0, 0);
-    }
     static Renderer ErrorRenderer(GameObject owner, Transform* transform) {
         Renderer r;
 
@@ -55,7 +45,6 @@ public:
         // 3. 크기: 잘 보이게 기본 1배
         r.localScale = { 1.0f, 1.0f, 1.0f };
         r.localOffset = { 0.0f, 0.0f, 0.0f };
-        r.transform = transform;
         r.owner = owner;
         return r;
     }

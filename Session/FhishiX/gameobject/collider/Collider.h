@@ -59,6 +59,7 @@ public:
     virtual void MergeAABB(const AABB &other) const=0;
 
     #ifdef _WIN64
+    int rendererIndex = -1;
     virtual Renderer GetRenderer() = 0;
     void OnAttach() override;
     #endif

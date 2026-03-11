@@ -2,16 +2,18 @@
 #include "../../SessionContext.h"
 
 GameObjectArgument *GameObject::operator->() const {
-
-    return gameObjectManagerInstance->GetGameObject(*this);
+    if (IsNull(*this)) return GameObjectArgument::Empty();
+    return session->objectManager->GetGameObject(*this);
 }
-GameObject::GameObject(GameObjectId targetId, GameObjectGenerationId gen ):targetId(targetId),generationId(gen){}
+GameObject::GameObject(GameObjectId targetId, GameObjectGenerationId gen, GameSession* ownerSession ):targetId(targetId),generationId(gen), session(ownerSession){}
 
 GameObject &GameObject::operator=(const GameObject &target)  {
     if (this == &target)
         return *this;
     targetId = target.targetId;
+    session = target.session;
     generationId = target.generationId;
+
     return *this;
 }
 
@@ -20,12 +22,13 @@ bool GameObject::operator==(const GameObject &target) const {
 }
 
 GameObject::operator bool() const {
+    if (IsNull(*this)) return false;
     return operator->() != nullptr;
 }
 
-bool GameObject::IsNull(const GameObject &target) {
-    if (target.GetId() == -1 || target.GetGenerationId() == -1) return true;
-    if (gameObjectManagerInstance->GetGameObject(target) == nullptr) return true;
+bool GameObject::IsNull(const GameObject &target) const {
+    if (target.GetId() == -1 || target.GetGenerationId() == -1 || session == nullptr) return true;
+    if (session->objectManager->GetGameObject(target) == nullptr) return true;
     return false;
 }
 

@@ -19,16 +19,18 @@ class GameObject {
     [[nodiscard]] GameObjectGenerationId GetGenerationId() const {return generationId;}
     GameObjectArgument* operator->() const;
 
-    GameObject(GameObjectId targetId, GameObjectGenerationId gen);
+    GameObject(GameObjectId targetId, GameObjectGenerationId gen, GameSession *ownerSession);
+
     GameObject()=default;
     GameObject& operator=(const GameObject & target);
     GameObject(const GameObject & other):targetId(other.targetId),generationId(other.generationId){};
     bool operator==(const GameObject & target) const;
     explicit operator bool() const;
 
+    bool IsNull(const GameObject &target) const;
+
     static GameObject NullPTR() {
-        return GameObject(-1,-1);
+        return GameObject(-1,-1, nullptr);
     }
-    static bool IsNull(const GameObject &target);
 };
 #endif //OBJECT_H

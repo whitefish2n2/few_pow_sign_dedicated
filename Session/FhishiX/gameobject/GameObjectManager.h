@@ -31,17 +31,16 @@ class GameObjectManager {
     GameObject CreateGameObject() {
         if (freeIndices.empty()) {
             uint32_t idx = objects.size();
-            auto obj = GameObjectArgument(idx, 1);
-            obj.gameSession = ownerSession;
+            auto obj = GameObjectArgument(idx, 1,ownerSession);
             objects.push_back(obj);
-            GameObject handle = GameObject(idx,1);
+            GameObject handle = GameObject(idx,1, ownerSession);
             return handle;
         }
         else {
             uint32_t index = freeIndices.front();
             freeIndices.pop();
-            uint32_t gen = objects[index].generationId++;
-            GameObject handle = GameObject(index,gen);
+            uint32_t gen = ++objects[index].generationId;
+            GameObject handle = GameObject(index,gen, ownerSession);
             return handle;
         }
     };

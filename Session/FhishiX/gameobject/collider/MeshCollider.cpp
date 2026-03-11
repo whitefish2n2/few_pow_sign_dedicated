@@ -14,9 +14,9 @@ AABB MeshCollider::GetAABB() const {
     AABB aabb = AABB::Empty();
     aabb.min = verts[0];
     aabb.max = verts[0];
-    const Vector3 pos   =  gameObject-> transform.position;
-    const Vector3 scale = gameObject->transform.scale;
-    const Quaternion rot = gameObject->transform.rotation;
+    const Vector3 pos   =  gameObject-> transform.GetPosition();
+    const Vector3 scale = gameObject->transform.GetScale();
+    const Quaternion rot = gameObject->transform.GetRotation();
 
 
     for (size_t i = 1; i < verts.size(); ++i) {
@@ -103,6 +103,7 @@ void MeshCollider::ParseFromString(const std::string& arg) {
         if (this->gameObject!=GameObject::NullPTR())
             r.mesh = MeshManager::GetInstance()->GetMesh(this->gameObject->name);
         else return r;
+        std::cout<<"GetRenderer Call: "<<this->gameObject->name<<std::endl;
 
         if (r.mesh == nullptr) {
             //등록된 메쉬 없으면
@@ -114,12 +115,14 @@ void MeshCollider::ParseFromString(const std::string& arg) {
             auto mesh = MeshManager::GetInstance()->GetOrCreateMesh(this->gameObject->name, verts, trianglesIndices);
             r.mesh = mesh;
             r.color = { 1.0f, 0.0f, 0.0f, 1.0f }; // 빨강
-            r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
+            const Vector3& scale = this->gameObject->transform.GetScale();
+            r.localScale = { scale.x, scale.y, scale.z };
         }
         else {
             // 정상적으로 찾음
             r.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 파랑 (메쉬 콜라이더 구분용)
-            r.localScale = reinterpret_cast<DirectX::XMFLOAT3&>(this->gameObject->transform.scale);
+            const Vector3& scale = this->gameObject->transform.GetScale();
+            r.localScale = { scale.x, scale.y, scale.z };
         }
     return r;
     }

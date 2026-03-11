@@ -1,0 +1,20 @@
+[SECTION: LAYERS]
+LAYER_DEF: 0,Default,-257
+LAYER_DEF: 1,TransparentFX,-257
+LAYER_DEF: 2,Ignore Raycast,-257
+LAYER_DEF: 4,Water,-257
+LAYER_DEF: 5,UI,-257
+LAYER_DEF: 6,dont_load_on_FP,-1281
+LAYER_DEF: 7,Ground,-257
+LAYER_DEF: 8,gun_ui,-1016
+LAYER_DEF: 9,Interactable,-257
+LAYER_DEF: 10,gun,-65
+[SECTION: OBJECTS]
+-
+Name: Main Camera
+Tag: MainCamera
+LayerIndex: 0
+LayerName: Default
+Position: 0.0000,1.0000,-10.0000
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000

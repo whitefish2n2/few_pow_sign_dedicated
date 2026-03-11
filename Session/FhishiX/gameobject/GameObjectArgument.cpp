@@ -7,10 +7,11 @@
 //
 
 GameObject GameObjectArgument::MakeHandle() const {
-    return {id,generationId};
+    return {id,generationId, gameSession};
 }
 
 void GameObjectArgument::AddComponentFromString(const std::string &typeName, const std::string &arg) const {
+    std::cout<<"MakeHandle"<< std::endl;
     ComponentFactory::Instance().Create(typeName,MakeHandle(),arg,gameSession->componentManager.get());
 }
 

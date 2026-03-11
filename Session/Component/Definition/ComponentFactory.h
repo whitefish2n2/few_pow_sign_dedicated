@@ -43,6 +43,16 @@ private:
 static struct Register##TYPE { \
 Register##TYPE() { \
 ComponentFactory::Instance().Register(#TYPE, [](const GameObject& obj) -> ComponentArgument* { \
+return new TYPE(); \
+}); \
+} \
+} global_register_##TYPE;
+/*
+ *legacy
+#define REGISTER_COMPONENT(TYPE) \
+static struct Register##TYPE { \
+Register##TYPE() { \
+ComponentFactory::Instance().Register(#TYPE, [](const GameObject& obj) -> ComponentArgument* { \
 auto handle = obj->AddComponent<TYPE>(); \
 \
 if (handle.entityId == static_cast<ComponentEntityId>(-1)) { \
@@ -55,3 +65,4 @@ return rawPtr; \
 }); \
 } \
 } global_register_##TYPE;
+*/

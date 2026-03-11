@@ -22,7 +22,9 @@
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
+    objectManager->ownerSession = this;
     componentManager = std::make_unique<ComponentManager>();
+    componentManager->ownerSession = this;
 }
 GameSession::~GameSession() {
     Log("server destroyed");
@@ -51,8 +53,10 @@ void GameSession::ProcessEventQueue() {
             switch (e->type)
             {
                 case SocketEventType::Assign: {
-                    auto dto = *(std::get_if<std::shared_ptr<AssignRequestDto>>(&e->payload));
-                        for (const auto& val: *players | std::views::values) {
+                    auto v = (std::get_if<std::shared_ptr<AssignRequestDto>>(&e->payload));
+                    if (v==nullptr) break;
+                    auto dto = *v;
+                    for (const auto& val: *players | std::views::values) {
                         if (val.assignKey == dto->Key){
                             //val.peer = dto->
 
@@ -67,7 +71,7 @@ void GameSession::ProcessEventQueue() {
                 case SocketEventType::Move:
                 {
                     auto dto = (std::get_if<std::shared_ptr<MoveDto>>(&e->payload));
-                    if (dto==nullptr) continue;
+                    if (dto==nullptr) break;
                     auto secretKey = (*dto)->UserSecretKey;
                     auto inputVector = (*dto)->InputVector;
                     SessionUtil::GetPlayerFromPeer(e->peer)->Move(inputVector);
@@ -97,6 +101,13 @@ void GameSession::ProcessEventQueue() {
 void GameSession::Tick() {
     tick++;
     ProcessEventQueue();
+    UpdateComponents();
+#ifdef _WIN64
+    UpdateRenderBuffer();
+#endif
+}
+void GameSession::UpdateComponents() const {
+    componentManager->UpdateComponents();
 }
 void GameSession::SetCharacter(const CharacterSetDto& dto) const {
     for (auto v : dto.elements) {
@@ -163,7 +174,9 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
     uint64_t privateKey;
     uint8_t publicKey=0;
     auto res = MapManager::GetInstance()->GetPhysicsMapConstructor(MapInfo(initInfo.mapId))->Construct(this) ;
+
     if (!res){/*todo: 매칭 취소 로직*/ return; }
+    std::cout<<"게임 ID "<<sessionId<<"에서 맵 생성중. 맵 아이디:"<<initInfo.mapId<< std::endl;
     std::cout<<"New Session Enqueue Players:"<< std::endl;
     for (auto p : initInfo.players)
     {
@@ -171,7 +184,7 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
 
         // TODO 이좀 처리해봐
         static std::mt19937 rng(std::random_device{}());
-        std::uniform_int_distribution<uint64_t> dist(1, (std::numeric_limits<uint64_t>::max_digits10));
+        std::uniform_int_distribution<uint64_t> dist(1, (std::numeric_limits<uint64_t>::max)());
 
         do {
             privateKey = dist(rng);
@@ -190,23 +203,75 @@ bool GameSession::reset() {
 void GameSession::cleanUp() {
     Stop();
 }
+
 #ifdef _WIN64
 #include "./FhishiX/Renderer.h"
-void GameSession::InsertRenderer(Renderer renderer) {
+
+int GameSession::InsertRenderer(const Renderer &renderer) {
+    std::cout<<"InsertRenderer Started:"<<renderer.owner->name<< std::endl;
     if (renderers.empty()) {
         renderers.push_back(renderer);
     }
     else if (!usableRenderersIndex.empty()) {
-        renderers[usableRenderersIndex.back()] = renderer;
+        auto idx = usableRenderersIndex.front();
+        renderers[idx] = renderer;
         usableRenderersIndex.pop();
+        return idx;
     }
+    else {
+        renderers.push_back(renderer);
+    }
+    return renderers.size()-1;
+    std::stack<int> st;
 }
+
 
 
 
 void GameSession::DeleteRenderer(int index) {
     renderers[index].~Renderer();
     usableRenderersIndex.push(index);
+}
+
+void GameSession::UpdateRenderBuffer() {
+    std::vector<RenderPacket>& writeBuffer = buffers[writeIdx];
+    writeBuffer.clear();
+
+
+    for (const auto& renderer : renderers) {
+        if (!renderer.enable || renderer.owner == GameObject::NullPTR()) continue;
+        GameObjectArgument* rawObj = renderer.owner.operator->();
+        if (rawObj == nullptr) continue;
+        Transform* safeTransform = &rawObj->transform;
+        RenderPacket packet;
+        packet.mesh = renderer.mesh;
+        packet.color = renderer.color;
+        packet.isWireframe = renderer.isWireframe;
+
+        std::cout<<renderer.owner->name<< std::endl;
+        if (safeTransform) {
+            Matrix4 myMat = safeTransform->GetWorldMatrix().Transpose();
+            DirectX::XMMATRIX baseTransform = DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(myMat.m.data()));
+            DirectX::XMMATRIX mat = DirectX::XMMatrixMultiply(DirectX::XMMatrixTranslation(renderer.localOffset.x, renderer.localOffset.y, renderer.localOffset.z),baseTransform);
+            DirectX::XMStoreFloat4x4(&packet.worldMatrix, mat);
+            std::cout<<"그렸석" << renderer.owner->name << safeTransform->GetPosition().x<<",  "<<safeTransform->GetPosition().y<<",  "<<safeTransform->GetPosition().z<<std::endl;
+        }
+
+        writeBuffer.push_back(packet);
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(renderBufferMutex);
+        std::swap(writeIdx, nextIdx);
+    }
+}
+
+const std::vector<RenderPacket> *GameSession::GetRenderPackets() {
+    {
+        std::lock_guard<std::mutex> lock(renderBufferMutex);
+        std::swap(readIdx, nextIdx);
+    }
+    return &buffers[readIdx];
 }
 #endif
 

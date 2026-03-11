@@ -18,16 +18,16 @@ AABB CapsuleCollider::GetAABB() const {
     const float halfH_local = height * 0.5f;
 
     // 2) 스케일 적용
-    const float scaledRadius = radius * max(tr.scale.x, tr.scale.z);
-    const float scaledHalfH  = halfH_local * tr.scale.y;
+    const float scaledRadius = radius * max(tr.GetScale().x, tr.GetScale().z);
+    const float scaledHalfH  = halfH_local * tr.GetScale().y;
 
     // 3) 로컬 top / bottom
     Vector3 localTop    = center + Vector3(0, +scaledHalfH, 0);
     Vector3 localBottom = center + Vector3(0, -scaledHalfH, 0);
 
     // 4) 회전 및 위치 적용
-    Vector3 worldTop    = tr.rotation * localTop    + tr.position;
-    Vector3 worldBottom = tr.rotation * localBottom + tr.position;
+    Vector3 worldTop    = tr.GetRotation() * localTop    + tr.GetPosition();
+    Vector3 worldBottom = tr.GetRotation() * localBottom + tr.GetPosition();
 
     // 5) 두 점으로 AABB 만들고 radius 확장
     aabb.min.x = min(worldTop.x, worldBottom.x) - scaledRadius;
@@ -82,7 +82,6 @@ Renderer CapsuleCollider::GetRenderer() {
     if (this->gameObject == GameObject::NullPTR()) return r;
 
     r.owner = this->gameObject;
-    r.transform = &this->gameObject->transform;
 
     r.mesh = MeshManager::GetInstance()->GetUnitCapsule();
 

@@ -14,7 +14,7 @@ inline LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
             PostQuitMessage(0);
             return 0;
         default:
-            std::cout<<msg<< std::endl;
+            break;
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }

@@ -8,6 +8,7 @@
 
 struct CBufferData {
     DirectX::XMMATRIX wvpMatrix;
+    DirectX::XMFLOAT4 color;
 };
 class DirectXCore {
 public:

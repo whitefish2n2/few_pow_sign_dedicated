@@ -7,13 +7,15 @@
 #include "../GameSession.h"
 #include "../sessionPool/SessionManager.h"
 #ifdef _WIN64
-#include "../FhishiX/Renderer.h"
 class DebugViewStatic {
     public:
     inline static std::weak_ptr<GameSession> lookUpSession;
     inline static std::vector<std::weak_ptr<GameSession>> sessions;
     inline static int cIdx = 0;
-    inline static std::vector<Renderer> renderers;
+
+    inline static ID3D11RasterizerState* wireframeState = nullptr;
+    inline static ID3D11RasterizerState* solidState = nullptr;
+    inline static bool isWireframe = true; ///기본값: wireFrame
     static void ChangeUpLookUpSession() {
         UpdateSessionList();
         if (sessions.empty()) {
@@ -46,8 +48,7 @@ class DebugViewStatic {
             cIdx = static_cast<int>( sessions.size()-1);
         }
     }
-    inline static ID3D11RasterizerState* wireframeState = nullptr;
-    inline static ID3D11RasterizerState* solidState = nullptr;
+
     private:
 
 };

@@ -8,6 +8,7 @@
 #include "DirectXCore.h"
 
 #include <d3dcompiler.h>
+#include <iostream>
 #include <thread>
 
 #include "Camera.h"
@@ -160,7 +161,7 @@ bool DirectXCore::InitPipeline() {
     wfDesc.CullMode = D3D11_CULL_BACK; // 뒷면은 가려라 (기본값)
     device->CreateRasterizerState(&wfDesc, &DebugViewStatic::solidState);
 
-    context->RSSetState(DebugViewStatic::wireframeState);
+    context->RSSetState(DebugViewStatic::isWireframe ? DebugViewStatic::wireframeState : DebugViewStatic::solidState);
     return true;
 }
 bool DirectXCore::InitD3D(HWND hWnd, int width, int height){
@@ -228,7 +229,39 @@ void DirectXCore::RunDirectXLoop() {
     std::thread renderThread([&](){
         POINT clickPos = {0, 0};
         bool isRightPressed = false;
-        while (isRunningViewer.load()) {
+
+        bool prevUpArrow = false;
+        bool prevDownArrow = false;
+        bool prevMKey = false;
+        DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.01f, 100.0f);
+
+        while (isRunning.load()) {
+
+            ///세션 올리기(위 방향키)
+            bool currentUpArrow = (GetAsyncKeyState(VK_UP) & 0x8000) != 0;
+            if (currentUpArrow && !prevUpArrow) {
+                DebugViewStatic::ChangeUpLookUpSession();
+                OutputDebugStringA("ChangeUpLookUpSession Called\n");
+            }
+            prevUpArrow = currentUpArrow;
+
+            ///세션 내리기(아래 방향키)
+            bool currentDownArrow = (GetAsyncKeyState(VK_DOWN) & 0x8000) != 0;
+            if (currentDownArrow && !prevDownArrow) {
+                DebugViewStatic::ChangeDownLookUpSession();
+                OutputDebugStringA("ChangeDownLookUpSession Called\n");
+            }
+            prevDownArrow = currentDownArrow;
+
+            ///와이어프레임 모드 토글(M)
+            bool currentMKey = (GetAsyncKeyState('M') & 0x8000) != 0;
+            if (currentMKey && !prevMKey) {
+                DebugViewStatic::isWireframe = !DebugViewStatic::isWireframe;
+                context->RSSetState(DebugViewStatic::isWireframe ? DebugViewStatic::wireframeState : DebugViewStatic::solidState);
+            }
+            prevMKey = currentMKey;
+
+            //우클릭
             bool currentRightDown = (GetAsyncKeyState(VK_RBUTTON) & 0x8000) != 0;
             if (currentRightDown) {
                 POINT currentPos;
@@ -248,7 +281,6 @@ void DirectXCore::RunDirectXLoop() {
 
                     if (dx != 0 || dy != 0) {
                         camera.OnMouseInput(dx, dy);
-
                         SetCursorPos(clickPos.x, clickPos.y);
                     }
                 }
@@ -276,33 +308,41 @@ void DirectXCore::RunDirectXLoop() {
 
 
 
-            constexpr float clearColor[4] = { 0.0f, 0.1f, 0.2f, 1.0f }; // 남색
-            context->ClearRenderTargetView(rtv, clearColor);
-            context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0); // 깊이를 1.0(가장 뒤)으로 초기화
 
-            DirectX::XMMATRIX world =  DirectX::XMMatrixRotationY(0) * DirectX::XMMatrixRotationX(0);
 
-            DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.01f, 100.0f);
-            DirectX::XMMATRIX wvp = world * camera.view * proj;
-            wvp = DirectX::XMMatrixTranspose(wvp);
-
-            D3D11_MAPPED_SUBRESOURCE mapped;
-            context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
-            const auto dataPtr = static_cast<CBufferData *>(mapped.pData);
-            dataPtr->wvpMatrix = wvp;
-            context->Unmap(constantBuffer, 0);
-
-            UINT stride = sizeof(SimpleVertex);
-            UINT offset = 0;
-            context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
             context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R16_UINT, 0);
             context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             context->IASetInputLayout(inputLayout);
-
             context->VSSetShader(vertexShader, nullptr, 0);
-            context->VSSetConstantBuffers(0, 1, &constantBuffer);
             context->PSSetShader(pixelShader, nullptr, 0);
-            context->DrawIndexed(36, 0, 0);
+            float clearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+            context->ClearRenderTargetView(rtv, clearColor);
+            context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+            if (auto session = DebugViewStatic::lookUpSession.lock()) {
+                const std::vector<RenderPacket>* packets = session->GetRenderPackets();
+                for (const auto& r : *packets) {
+                    DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&r.worldMatrix);
+
+                    DirectX::XMMATRIX wvp = world * camera.view * proj;
+                    wvp = DirectX::XMMatrixTranspose(wvp);
+
+                    D3D11_MAPPED_SUBRESOURCE mapped;
+                    context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+                    const auto dataPtr = static_cast<CBufferData *>(mapped.pData);
+                    dataPtr->color = r.color;
+                    dataPtr->wvpMatrix = wvp;
+                    context->Unmap(constantBuffer, 0);
+                    context->VSSetConstantBuffers(0, 1, &constantBuffer);
+                    context->PSSetConstantBuffers(0, 1, &constantBuffer);
+                    UINT stride = r.mesh->vertexStride;
+                    UINT offset = 0;
+                    context->IASetVertexBuffers(0, 1, &r.mesh->vertexBuffer, &stride, &offset);
+                    context->IASetIndexBuffer(r.mesh->indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+                    context->DrawIndexed(r.mesh->indexCount, 0, 0);
+                }
+            }
+            else {
+            }
 
             swapChain->Present(1, 0);
         }

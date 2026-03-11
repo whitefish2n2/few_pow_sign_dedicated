@@ -11,11 +11,35 @@ LAYER_DEF: 9,Interactable,-257
 LAYER_DEF: 10,gun,-65
 [SECTION: OBJECTS]
 -
+Name: WeaponEditor
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 16.1622,30.2801,-48.8106
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: GameUtil
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -124.8400,-178.5000,42.6200
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: Gun Camera
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.9571,30.5998,-49.6000
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
 Name: Cube
 Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 213.5680,213.3729,-51.0318
+Position: 9.0000,31.4000,-38.2000
 Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 4.1185,3.7429,1.0798
 COMPONENT: BoxCollider
@@ -23,11 +47,35 @@ IsTrigger: 0
 Center: 0.0000,0.0000,0.0000
 Size: 1.0000,1.0000,1.0000
 -
+Name: debugP
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 14.5607,30.9078,-48.7236
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: EnetClient
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 16.7244,30.1650,-50.8390
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: EventSystem
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -201.0669,-182.2922,4.1063
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
 Name: Plane
 Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 209.3361,210.3856,-35.4900
+Position: 8.2692,28.0934,-31.3837
 Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 14.2190,1.5951,11.4179
 COMPONENT: MeshCollider
@@ -356,10 +404,18 @@ TriangleCount: 200
 13,25,14
 14,25,26
 -
-Name: Main Camera
-Tag: MainCamera
+Name: Directional Light
+Tag: Untagged
 LayerIndex: 0
 LayerName: Default
-Position: 217.0240,212.8920,-53.7063
+Position: -201.0669,-179.2922,4.1063
+Rotation: 0.4082,-0.2346,0.1094,0.8754
+Scale: 1.0000,1.0000,1.0000
+-
+Name: gun
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.9571,30.5998,-49.6000
 Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 1.0000,1.0000,1.0000

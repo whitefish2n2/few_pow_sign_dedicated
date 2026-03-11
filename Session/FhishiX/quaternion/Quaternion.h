@@ -117,7 +117,6 @@ public:
         float x2 = x + x;
         float y2 = y + y;
         float z2 = z + z;
-
         float xx = x * x2;
         float xy = x * y2;
         float xz = x * z2;
@@ -148,10 +147,10 @@ public:
         result.m[11] = 0.0f;            // m[2][3] (위치 z)
 
         // 네 번째 행 (m[12] ~ m[15]) - (0, 0, 0, 1)로 유지됨
-        // result.m[12] = 0.0f;
-        // result.m[13] = 0.0f;
-        // result.m[14] = 0.0f;
-        // result.m[15] = 1.0f;
+        result.m[12] = 0.0f;
+        result.m[13] = 0.0f;
+        result.m[14] = 0.0f;
+        result.m[15] = 1.0f;
 
         return result;
     }

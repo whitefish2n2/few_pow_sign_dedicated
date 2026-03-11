@@ -6,32 +6,28 @@
 
 const std::string & MapRegister::GetPath(uint32_t id) {
     if (!idToInfo.contains(id)) {
-        static const std::string empty;
-        return empty;
+        return idToInfo[101].path;
     }
-    return idToInfo[id].path;
+    return idToInfo[id].path;///에러 맵
 }
 
 const std::string &MapRegister::GetPath(const MapInfo* Info) {
     if (!idToInfo.contains(Info->GetID())) {
-        static const std::string empty;
-        return empty;
+        return idToInfo[101].path;
     }
-    return idToInfo[Info->GetID()].path;
+    return idToInfo[Info->GetID()].path;///에러 맵
 }
 
 const std::string & MapRegister::GetName(uint32_t id) {
     if (!idToInfo.contains(id)) {
-        static const std::string empty;
-        return empty;
+        return idToInfo[101].name;///에러 맵
     }
     return idToInfo[id].name;
 }
 
 const std::string &MapRegister::GetName(const MapInfo *Info)  {
     if (!idToInfo.contains(Info->GetID())) {
-        static const std::string empty;
-        return empty;
+        return idToInfo[101].name;
     }
     return idToInfo[Info->GetID()].name;
 }

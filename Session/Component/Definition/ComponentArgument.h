@@ -18,6 +18,7 @@ protected:
     public:
     ComponentEntityId entityId = -1;
     size_t typeId;
+    bool isActive = true;
     GameSession* gameSession = nullptr;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
     ComponentArgument(const ComponentArgument& other);

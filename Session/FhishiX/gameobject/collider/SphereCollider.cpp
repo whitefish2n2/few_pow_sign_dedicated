@@ -43,7 +43,6 @@ Renderer SphereCollider::GetRenderer() {
     if (this->gameObject == GameObject::NullPTR()) return r;
 
     r.owner = this->gameObject;
-    r.transform = &this->gameObject->transform;
 
     r.mesh = MeshManager::GetInstance()->GetUnitSphere();
 

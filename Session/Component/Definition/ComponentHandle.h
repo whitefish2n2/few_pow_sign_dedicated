@@ -13,6 +13,7 @@ class GameSession;
 template<typename T>
 class ComponentHandle: public ComponentHandleBase {
     public:
+
     [[nodiscard]] size_t getTypeId() const {
         return typeId;
     }

@@ -30,7 +30,7 @@ protected:
     //gameobjectManager CreatObject시점에서 초기화됨
     GameSession *gameSession = nullptr;
     GameObjectArgument()=default;
-    GameObjectArgument(const uint32_t id, uint32_t generationId):id(id),generationId(generationId){};
+    GameObjectArgument(const uint32_t id, uint32_t generationId, GameSession* session = nullptr):id(id),generationId(generationId),gameSession(session){};
 
     uint32_t id = -1;
     uint32_t generationId = -1;
@@ -46,7 +46,7 @@ protected:
     requires std::constructible_from<T, Args...>
     ComponentHandle<T> AddComponent(Args &&... args) {
         static_assert(std::is_base_of_v<ComponentArgument, T>, "T must derive from Component");
-        ComponentHandle<T> handleT = componentManagerInstance->CreateComponentAtPool<T>(std::forward<Args>(args)...);
+        ComponentHandle<T> handleT = gameSession->componentManager->CreateComponentAtPool<T>(std::forward<Args>(args)...);
         handleT->SetOwner(MakeHandle());
         ComponentHandleBase componentBase = handleT;
         componentBase.typeId = handleT.getTypeId();
@@ -71,7 +71,7 @@ protected:
             if (comp.typeId == typeId) {
                 return static_cast<ComponentHandle<T>&>(comp);
             }
-            ComponentArgument* rawPtr = componentManagerInstance->GetRawPtr(comp.typeId, comp.entityId);
+            ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
             if (rawPtr == nullptr) continue;
             if ( dynamic_cast<T*>(rawPtr)) {
                 return ComponentHandle<T>(comp.entityId,typeId);
@@ -85,6 +85,10 @@ void DetachComponent() {
     }
 
     GameObjectArgument& operator=(const GameObjectArgument & target) = delete;
+    static GameObjectArgument *Empty() {
+        static GameObjectArgument empty = {};
+        return &empty;
+    }
 
 };
 #endif
