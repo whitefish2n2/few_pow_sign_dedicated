@@ -20,7 +20,7 @@ class GameObjectManager {
         bool isActive = false;
         GameObjectArgument argument;
     };
-    std::vector<GameObjectArgument> objects;
+    std::deque<GameObjectArgument> objects;
 
     ///삭제된 GameObject들의 인덱스 위치들
     std::queue<uint32_t>freeIndices;
@@ -32,6 +32,7 @@ class GameObjectManager {
         if (freeIndices.empty()) {
             uint32_t idx = objects.size();
             auto obj = GameObjectArgument(idx, 1,ownerSession);
+            obj.id = idx;
             objects.push_back(obj);
             GameObject handle = GameObject(idx,1, ownerSession);
             return handle;
@@ -45,13 +46,22 @@ class GameObjectManager {
         }
     };
     GameObjectArgument* GetGameObject(const GameObject ref) {
-        if (ref.GetId() < objects.size()) {
-            auto* obj = &objects[ref.GetId()];
-            if (obj->generationId != ref.GetGenerationId()) return nullptr;
-            return obj;
-        }
-        else
+        if (ref.GetId() >= objects.size()) {
+            std::cout << "[GetGameObject FAIL] ID가 배열 크기를 벗어났습니다! "
+                      << "요청 ID: " << ref.GetId()
+                      << ", 현재 매니저의 Objects Size: " << objects.size() << "\n";
             return nullptr;
+        }
+
+        auto* obj = &objects[ref.GetId()];
+        if (obj->generationId != ref.GetGenerationId()) {
+            std::cout << "[GetGameObject FAIL] 세대(Generation) 불일치! "
+                      << "요청 Gen: " << ref.GetGenerationId()
+                      << ", 실제 객체 Gen: " << obj->generationId << "\n";
+            return nullptr;
+        }
+
+        return obj;
     }
 };
 #endif //FPSPROJECTSERVER_GAMEOBJECTMANAGER_H

@@ -18,34 +18,44 @@ class DebugViewStatic {
     inline static bool isWireframe = true; ///기본값: wireFrame
     static void ChangeUpLookUpSession() {
         UpdateSessionList();
+
         if (sessions.empty()) {
             cIdx = 0;
             lookUpSession.reset();
             return;
         }
+
         cIdx++;
-        if (cIdx>=sessions.size()) {
+        if (cIdx >= static_cast<int>(sessions.size())) {
             cIdx = 0;
         }
         lookUpSession = sessions[cIdx];
     }
     static void ChangeDownLookUpSession() {
         UpdateSessionList();
+
         if (sessions.empty()) {
             cIdx = 0;
             lookUpSession.reset();
             return;
         }
         cIdx--;
-        if (cIdx<0) {
-            cIdx = static_cast<int>(sessions.size()-1);
+        if (cIdx < 0) {
+            cIdx = static_cast<int>(sessions.size()) - 1;
         }
         lookUpSession = sessions[cIdx];
     }
     static void UpdateSessionList() {
         sessions = SessionManager::getInstance().getSessionListWeak();
-        if (cIdx>=sessions.size()) {
-            cIdx = static_cast<int>( sessions.size()-1);
+
+        int currentSize = static_cast<int>(sessions.size());
+
+        if (currentSize == 0) {
+            cIdx = -1;
+        } else if (cIdx >= currentSize) {
+            cIdx = currentSize - 1;
+        } else if (cIdx < 0) {
+            cIdx = 0;
         }
     }
 

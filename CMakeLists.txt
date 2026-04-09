@@ -109,6 +109,13 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/SphereCollider.cpp
         Session/FhishiX/gameobject/collider/SphereCollider.h
         Session/FhishiX/Mesh/StaticMeshMaker.cpp
+        Session/Component/Implementation/DebugLogger.h
+        Session/Component/Implementation/DebugLogger.cpp
+        Session/Time.cpp
+        Session/Time.h
+        Session/FhishiX/PhysicsManager.h
+        Session/FhishiX/PhysicsManager.cpp
+        util/Log.h
 )
 
 add_custom_command(TARGET fpsProjectServer POST_BUILD

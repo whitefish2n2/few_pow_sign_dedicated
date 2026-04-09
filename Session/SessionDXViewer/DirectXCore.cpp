@@ -29,26 +29,24 @@ std::atomic<bool> DirectXCore::isRunningViewer(true);
 ID3D11VertexShader* DirectXCore::vertexShader = nullptr;
 ID3D11PixelShader* DirectXCore::pixelShader = nullptr;
 ID3D11InputLayout* DirectXCore::inputLayout = nullptr;
-ID3D11Buffer* DirectXCore::vertexBuffer = nullptr;
-ID3D11Buffer* DirectXCore::indexBuffer = nullptr;
 ID3D11Buffer* DirectXCore::constantBuffer = nullptr;
 ID3D11DepthStencilView* DirectXCore::dsv = nullptr;
 ID3D11Texture2D* DirectXCore::depthStencilBuffer = nullptr;
 Camera camera = Camera();
-void DirectXCore:: Cleanup()
+#define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p) = nullptr; } }
+void DirectXCore::Cleanup()
 {
-    if (constantBuffer) constantBuffer->Release();
-    if (indexBuffer) indexBuffer->Release();
-    if (vertexBuffer) vertexBuffer->Release();
-    if (inputLayout) inputLayout->Release();
-    if (vertexShader) vertexShader->Release();
-    if (pixelShader) pixelShader->Release();
-    if (dsv) dsv->Release();
-    if (depthStencilBuffer) depthStencilBuffer->Release();
-    if (rtv) rtv->Release();
-    if (swapChain) swapChain->Release();
-    if (context) context->Release();
-    if (device) device->Release();
+    SAFE_RELEASE(constantBuffer);
+    SAFE_RELEASE(inputLayout);
+    SAFE_RELEASE(vertexShader);
+    SAFE_RELEASE(pixelShader);
+    SAFE_RELEASE(dsv);
+    SAFE_RELEASE(depthStencilBuffer);
+    SAFE_RELEASE(rtv);
+    SAFE_RELEASE(swapChain);
+    SAFE_RELEASE(context);
+    SAFE_RELEASE(device);
+
     if (window) window = nullptr;
 }
 bool DirectXCore::InitPipeline() {
@@ -107,42 +105,6 @@ bool DirectXCore::InitPipeline() {
     if (psBlob) psBlob->Release();
     if (errorBlob) errorBlob->Release();
 
-    SimpleVertex vertices[] = {
-        { DirectX::XMFLOAT3(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) }, // 0
-        { DirectX::XMFLOAT3( 1.0f,  1.0f, -1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) }, // 1
-        { DirectX::XMFLOAT3( 1.0f,  1.0f,  1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) }, // 2
-        { DirectX::XMFLOAT3(-1.0f,  1.0f,  1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) }, // 3
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) }, // 4
-        { DirectX::XMFLOAT3( 1.0f, -1.0f, -1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) }, // 5
-        { DirectX::XMFLOAT3( 1.0f, -1.0f,  1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }, // 6
-        { DirectX::XMFLOAT3(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) }, // 7
-    };
-    WORD indices[] = {
-        3,1,0, 2,1,3, // 윗면
-        0,5,4, 1,5,0, // 앞면
-        3,4,7, 0,4,3, // 왼쪽
-        1,6,5, 2,6,1, // 오른쪽
-        2,7,6, 3,7,2, // 뒷면
-        6,4,5, 7,4,6  // 아랫면
-    };
-
-    D3D11_BUFFER_DESC bd = {};
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 8;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA initData = {};
-    initData.pSysMem = vertices;
-
-    hr = device->CreateBuffer(&bd, &initData, &vertexBuffer);
-    if (FAILED(hr)) return false;
-
-    bd.ByteWidth = sizeof(WORD) * 36;
-    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    initData.pSysMem = indices;
-    hr = device->CreateBuffer(&bd, &initData, &indexBuffer);
-    if (FAILED(hr)) return false;
-
     D3D11_BUFFER_DESC cbd = {};
     cbd.Usage = D3D11_USAGE_DYNAMIC;            // 중요: 매 프레임 CPU가 값을 바꿀 거니까 DYNAMIC
     cbd.ByteWidth = sizeof(CBufferData);        // 크기는 구조체 크기만큼
@@ -158,7 +120,7 @@ bool DirectXCore::InitPipeline() {
 
     // 원래대로 돌릴 솔리드 모드도 만들어둠
     wfDesc.FillMode = D3D11_FILL_SOLID;
-    wfDesc.CullMode = D3D11_CULL_BACK; // 뒷면은 가려라 (기본값)
+    wfDesc.CullMode = D3D11_CULL_NONE; // 뒷면은 가려라 (기본값)
     device->CreateRasterizerState(&wfDesc, &DebugViewStatic::solidState);
 
     context->RSSetState(DebugViewStatic::isWireframe ? DebugViewStatic::wireframeState : DebugViewStatic::solidState);
@@ -233,7 +195,7 @@ void DirectXCore::RunDirectXLoop() {
         bool prevUpArrow = false;
         bool prevDownArrow = false;
         bool prevMKey = false;
-        DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.01f, 100.0f);
+        DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.01f, 2000.0f);
 
         while (isRunning.load()) {
 
@@ -306,11 +268,6 @@ void DirectXCore::RunDirectXLoop() {
             if (GetAsyncKeyState('E') & 0x8000) camera.MoveDown();
             camera.UpdateView();
 
-
-
-
-
-            context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R16_UINT, 0);
             context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             context->IASetInputLayout(inputLayout);
             context->VSSetShader(vertexShader, nullptr, 0);
@@ -321,6 +278,9 @@ void DirectXCore::RunDirectXLoop() {
             if (auto session = DebugViewStatic::lookUpSession.lock()) {
                 const std::vector<RenderPacket>* packets = session->GetRenderPackets();
                 for (const auto& r : *packets) {
+                    if (r.mesh == nullptr) {
+                        continue; // 메쉬가 없는 빈 껍데기 렌더러는 그리지 않고 무시합니다
+                    }
                     DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&r.worldMatrix);
 
                     DirectX::XMMATRIX wvp = world * camera.view * proj;
@@ -337,7 +297,7 @@ void DirectXCore::RunDirectXLoop() {
                     UINT stride = r.mesh->vertexStride;
                     UINT offset = 0;
                     context->IASetVertexBuffers(0, 1, &r.mesh->vertexBuffer, &stride, &offset);
-                    context->IASetIndexBuffer(r.mesh->indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+                    context->IASetIndexBuffer(r.mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
                     context->DrawIndexed(r.mesh->indexCount, 0, 0);
                 }
             }

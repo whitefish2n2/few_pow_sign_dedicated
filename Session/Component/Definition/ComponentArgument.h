@@ -14,14 +14,20 @@ class ComponentManager;
 class GameSession;
 class ComponentArgument {
 protected:
-    GameObject gameObject = GameObject::NullPTR();
     public:
+
+    /// Update 우선순위(자식에서 해당 변수 재선언으로 값 변경 가능. 큰 양수일수록 먼저 실행됨)
+    static constexpr int UPDATE_PRIORITY = 0;
+
+    GameObject gameObject = GameObject::NullPTR();
     ComponentEntityId entityId = -1;
     size_t typeId;
     bool isActive = true;
+    bool willDead = false;
     GameSession* gameSession = nullptr;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
-    ComponentArgument(const ComponentArgument& other);
+    ComponentArgument(ComponentArgument&& other) = default;
+    ComponentArgument(const ComponentArgument& other) = default;
     ComponentArgument& operator=(const ComponentArgument& other) = default;
     ComponentArgument& operator=(ComponentArgument&& other) = default;
     ComponentArgument () = default;

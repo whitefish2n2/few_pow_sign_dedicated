@@ -3,5 +3,4 @@
 //
 
 #pragma once
-#include "gameobject/GameObject.h"
-#include "vector/Vector2.h"
+# define Gravity 9.81f;

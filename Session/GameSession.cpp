@@ -19,6 +19,8 @@
 #include "FhishiX/gameobject/GameObjectManager.h"
 #include "Game/MapManager.h"
 #include "Game/Map/MapConstructer/PhysicsSystemConstructor.h"
+#include "../Socket/BroadcastMoveDto.h"
+#include "../util/Log.h"
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
@@ -27,7 +29,7 @@ GameSession::GameSession() {
     componentManager->ownerSession = this;
 }
 GameSession::~GameSession() {
-    Log("server destroyed");
+    LOG_INFO("server destroyed");
     Stop();
 }
 
@@ -108,6 +110,7 @@ void GameSession::Tick() {
 }
 void GameSession::UpdateComponents() const {
     componentManager->UpdateComponents();
+    //Log("컴포넌트업데이트성공했어요");
 }
 void GameSession::SetCharacter(const CharacterSetDto& dto) const {
     for (auto v : dto.elements) {
@@ -118,10 +121,12 @@ void GameSession::SetCharacter(const CharacterSetDto& dto) const {
             }
         }
     }
+
 }
 constexpr std::chrono::nanoseconds TIME_STEP(33333334);
 void GameSession::Start() {
-    Log("session is running on port " + std::to_string(Consts::port));
+    LOG_INFO("session is running on port " + std::to_string(Consts::port));
+    Log("으아아악돌아가요");
     // Run server loop
 
     // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성
@@ -138,13 +143,18 @@ void GameSession::Start() {
     std::chrono::nanoseconds lag(0);
     while (isRunning.load() and running) {
         auto now = std::chrono::steady_clock::now();
+
         auto elapsed = now - previousTime;
         previousTime = now;
+
+        time.DeltaTime = std::chrono::duration<float>(elapsed).count();
+
         if (elapsed > std::chrono::milliseconds(250)) {
             elapsed = std::chrono::milliseconds(250);
         }
         lag += elapsed;
         while (lag >= TIME_STEP) {
+            time.FixedDeltaTime = std::chrono::duration<float>(TIME_STEP).count();
             Tick();
             lag -= TIME_STEP;
         }
@@ -159,7 +169,7 @@ void GameSession::Start() {
     }
 }
 void GameSession::Stop() {
-    Log("session stopped id: " + initInfo.gameId);
+    LOG_INFO("session stopped id: " + initInfo.gameId);
     running = false;
     if (gameThread.joinable()) {
         gameThread.join();
@@ -208,21 +218,18 @@ void GameSession::cleanUp() {
 #include "./FhishiX/Renderer.h"
 
 int GameSession::InsertRenderer(const Renderer &renderer) {
-    std::cout<<"InsertRenderer Started:"<<renderer.owner->name<< std::endl;
-    if (renderers.empty()) {
-        renderers.push_back(renderer);
-    }
-    else if (!usableRenderersIndex.empty()) {
-        auto idx = usableRenderersIndex.front();
-        renderers[idx] = renderer;
+    std::cout <<"OWNER: "<<renderer.owner->gameSession<<" and handle:  "<<renderer.owner.handleSession<< "InsertRenderer Started: " << renderer.owner->name << std::endl;
+    if (!usableRenderersIndex.empty()) {
+        std::cout<<"RenderIndex resycle"<<std::endl;
+        int idx = usableRenderersIndex.front();
         usableRenderersIndex.pop();
+        renderers[idx] = renderer;
         return idx;
     }
-    else {
-        renderers.push_back(renderer);
-    }
-    return renderers.size()-1;
-    std::stack<int> st;
+
+    renderers.push_back(renderer);
+
+    return renderers.size() - 1;
 }
 
 
@@ -239,7 +246,10 @@ void GameSession::UpdateRenderBuffer() {
 
 
     for (const auto& renderer : renderers) {
-        if (!renderer.enable || renderer.owner == GameObject::NullPTR()) continue;
+        if (!renderer.enable || renderer.owner == GameObject::NullPTR() || renderer.owner.targetId == -1){
+            std::cout << "불량 renderer 발생"<<std::endl;
+            continue;
+        };
         GameObjectArgument* rawObj = renderer.owner.operator->();
         if (rawObj == nullptr) continue;
         Transform* safeTransform = &rawObj->transform;
@@ -248,13 +258,11 @@ void GameSession::UpdateRenderBuffer() {
         packet.color = renderer.color;
         packet.isWireframe = renderer.isWireframe;
 
-        std::cout<<renderer.owner->name<< std::endl;
         if (safeTransform) {
             Matrix4 myMat = safeTransform->GetWorldMatrix().Transpose();
             DirectX::XMMATRIX baseTransform = DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(myMat.m.data()));
             DirectX::XMMATRIX mat = DirectX::XMMatrixMultiply(DirectX::XMMatrixTranslation(renderer.localOffset.x, renderer.localOffset.y, renderer.localOffset.z),baseTransform);
             DirectX::XMStoreFloat4x4(&packet.worldMatrix, mat);
-            std::cout<<"그렸석" << renderer.owner->name << safeTransform->GetPosition().x<<",  "<<safeTransform->GetPosition().y<<",  "<<safeTransform->GetPosition().z<<std::endl;
         }
 
         writeBuffer.push_back(packet);
@@ -263,13 +271,16 @@ void GameSession::UpdateRenderBuffer() {
     {
         std::lock_guard<std::mutex> lock(renderBufferMutex);
         std::swap(writeIdx, nextIdx);
+        isRenderDataReady = true;
     }
 }
 
 const std::vector<RenderPacket> *GameSession::GetRenderPackets() {
     {
-        std::lock_guard<std::mutex> lock(renderBufferMutex);
-        std::swap(readIdx, nextIdx);
+        if (isRenderDataReady.load()) { // ✨ 새 데이터가 있을 때만 스왑!
+            std::swap(readIdx, nextIdx);
+            isRenderDataReady = false;
+        }
     }
     return &buffers[readIdx];
 }
@@ -296,7 +307,56 @@ void GameSession::ProcessEvent(std::shared_ptr<GameEvent>& event)
     queueCV.notify_one();
 }
 
-void GameSession::BroadcastEvent(const std::shared_ptr<GameEvent> &event) {
+#include <type_traits> // std::decay_t, std::is_same_v 등을 위해 필요
 
+void GameSession::BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event) {
+    if (!players || players->empty()) return;
+
+    enet_uint32 packetFlags = (event->type == SocketEventType::Move)
+                                ? ENET_PACKET_FLAG_UNSEQUENCED
+                                : ENET_PACKET_FLAG_RELIABLE;
+
+    ENetPacket* packet = nullptr;
+
+    std::visit([&packet, packetFlags](auto&& arg) {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_same_v<T, std::nullptr_t>) {
+            // 페이로드가 없는 경우 처리
+        }
+        else {
+            if (arg) {
+                // 과거에 만들어둔 GetDtoBinaryLength와 ToBinary를 200% 활용!
+                size_t size = arg->GetDtoBinaryLength();
+                std::vector<uint8_t> buffer(size);
+
+                // 버퍼의 시작 주소를 넘겨주어 직렬화 수행
+                arg->ToBinary(buffer.data());
+
+                packet = enet_packet_create(buffer.data(), size, packetFlags);
+            }
+        }
+    }, event->payload);
+
+    if (!packet) return;
+
+    // 타겟이 지정되어 있다면 타겟에게만, 아니면 전체에게 브로드캐스트
+    bool broadcastToAll = event->target.empty();
+
+    int sentCount = 0;
+    for (const auto& [privateKey, player] : *players) {
+        if (player.peer != nullptr && player.peer->state == ENET_PEER_STATE_CONNECTED) {
+
+            // 전체 브로드캐스트이거나, 현재 플레이어의 peer가 target 리스트에 있는 경우에만 전송
+            if (broadcastToAll || std::find(event->target.begin(), event->target.end(), player.peer) != event->target.end()) {
+                enet_peer_send(player.peer, 0, packet);
+                sentCount++;
+            }
+        }
+    }
+
+    if (sentCount == 0 && packet->referenceCount == 0) {
+        enet_packet_destroy(packet);
+    }
 }
 

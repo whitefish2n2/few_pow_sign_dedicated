@@ -72,13 +72,14 @@ void CapsuleCollider::ParseFromString(const std::string &arg) {
         }
     }
 
-    CalculateAABB();
 }
 #ifdef _WIN64
 #include "../../Renderer.h"
 Renderer CapsuleCollider::GetRenderer() {
     Renderer r{};
-
+    if (this->gameObject == GameObject::NullPTR() || this->gameObject->id == (uint64_t)-1) {
+        return r;
+    }
     if (this->gameObject == GameObject::NullPTR()) return r;
 
     r.owner = this->gameObject;

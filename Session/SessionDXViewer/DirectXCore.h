@@ -40,8 +40,6 @@ private:
     static ID3D11PixelShader* pixelShader;
     static ID3D11InputLayout* inputLayout;
 
-    static ID3D11Buffer* vertexBuffer;
-    static ID3D11Buffer* indexBuffer;
     static ID3D11Buffer* constantBuffer;
 
 };

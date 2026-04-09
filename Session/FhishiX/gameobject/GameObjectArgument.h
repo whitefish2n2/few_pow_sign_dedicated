@@ -81,7 +81,17 @@ protected:
     }
 template <typename T>
 void DetachComponent() {
-        
+        const size_t typeId = GetTypeId<T>();
+        for (auto& comp : components) {
+            if (comp.typeId == typeId) {
+                gameSession->componentManager.get()->DeleteComponentFromPool(static_cast<ComponentHandle<T>&>(comp));
+            }
+            ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
+            if (rawPtr == nullptr) continue;
+            if ( dynamic_cast<T*>(rawPtr)) {
+                gameSession->componentManager.get()->DeleteComponentFromPool(ComponentHandle<T>(comp.entityId,typeId));
+            }
+        }
     }
 
     GameObjectArgument& operator=(const GameObjectArgument & target) = delete;

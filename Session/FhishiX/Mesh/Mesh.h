@@ -12,7 +12,7 @@
 struct Mesh {
 
     std::vector<DirectX::XMFLOAT3> vertices{};
-    std::vector<uint16_t> indices{};
+    std::vector<uint32_t> indices{};
 
     ID3D11Buffer* vertexBuffer = nullptr;
     ID3D11Buffer* indexBuffer = nullptr;

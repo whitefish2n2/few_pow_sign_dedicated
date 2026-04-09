@@ -10,10 +10,10 @@ class GameSession;
 class GameObjectManager;
 
 class GameObject {
-    protected:
+    public:
     GameObjectId targetId = -1;
     GameObjectGenerationId generationId = -1;
-    GameSession *session = nullptr;
+    GameSession *handleSession = nullptr;
     public:
     [[nodiscard]] GameObjectId GetId() const {return targetId;}
     [[nodiscard]] GameObjectGenerationId GetGenerationId() const {return generationId;}
@@ -23,7 +23,7 @@ class GameObject {
 
     GameObject()=default;
     GameObject& operator=(const GameObject & target);
-    GameObject(const GameObject & other):targetId(other.targetId),generationId(other.generationId){};
+    GameObject(const GameObject & other):handleSession(other.handleSession), targetId(other.targetId),generationId(other.generationId){};
     bool operator==(const GameObject & target) const;
     explicit operator bool() const;
 

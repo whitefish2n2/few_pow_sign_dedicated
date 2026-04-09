@@ -17,4 +17,5 @@ void Collider::OnAttach() {
     rendererIndex = rawObj->gameSession->InsertRenderer(this->GetRenderer());
     std::cout << "렌더러 Insert:"<<this->gameObject->name << std::endl;
 #endif
+    CalculateAABB();
 }

@@ -67,12 +67,18 @@ class MeshManager {
             { DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(1,1,1,1) },
         };
         std::vector<uint32_t> i = {
-            3,1,0, 2,1,3, // 윗면
-            0,5,4, 1,5,0, // 앞면
-            3,4,7, 0,4,3, // 왼쪽
-            1,6,5, 2,6,1, // 오른쪽
-            2,7,6, 3,7,2, // 뒷면
-            6,4,5, 7,4,6  // 아랫면
+
+            3, 2, 1,   3, 1, 0,
+
+            0, 1, 5,   0, 5, 4,
+
+            3, 0, 4,   3, 4, 7,
+
+            1, 2, 6,   1, 6, 5,
+
+            2, 3, 7,   2, 7, 6,
+
+            4, 5, 6,   4, 6, 7
         };
 
         GetOrCreateMesh("UnitCube", v, i);
@@ -216,7 +222,7 @@ class MeshManager {
 
         // --- 인덱스 버퍼 생성 ---
         bd.Usage = D3D11_USAGE_DEFAULT;
-        bd.ByteWidth = sizeof(WORD) * indices.size();
+        bd.ByteWidth = sizeof(uint32_t) * indices.size();
         bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         bd.CPUAccessFlags = 0;
 

@@ -10,6 +10,8 @@
 #include <shared_mutex>
 #include <string>
 #include <variant>
+
+#include "Time.h"
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/DefaultDto.h"
 #include "../Socket/dto/MoveDto.h"
@@ -19,6 +21,7 @@
 #include "Dto/SessionStatus.h"
 #include "Game/PhysicsSystem.h"
 #include "netcode/SessionNetworkDto.h"
+class BroadcastMoveDto;
 struct _EnetPeer;
 class GameObjectManager;
 class ComponentManager;
@@ -32,7 +35,8 @@ using EventPayloadVariant = std::variant<
     // TODO 이 마더퍼커 처리해봐
 >;
 using BroadCastPayloadVariant = std::variant<
-    std::nullptr_t
+    std::nullptr_t,
+std::shared_ptr<BroadcastMoveDto>
 >;
 
 
@@ -50,8 +54,12 @@ struct GameEvent {
 struct BroadCastEvent {
     SocketEventType type = SocketEventType::Update;
     BroadCastPayloadVariant payload = nullptr;
+
     std::vector<ENetPeer*> target;
 
+    uint8_t* Serialize() {
+
+    }
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload)
         :type(type), payload(payload){}
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*>& target)
@@ -76,7 +84,7 @@ class GameSession {
 #ifdef _WIN64
     std::vector<Renderer> renderers = {};
     std::queue<int> usableRenderersIndex = {};
-
+    std::atomic<bool> isRenderDataReady = false;
     //버퍼링 배열
     std::vector<RenderPacket> buffers[3];
 
@@ -89,12 +97,16 @@ class GameSession {
 #endif
     public:
     std::string sessionId;
+
+    std::string& getSessionId(){return sessionId;};
     std::uint16_t sessionConnectKey;// 플레이어->세션 연결에 사용하는 ID
     GameSetupBoddari initInfo;
     SESSIONSTATUS status = idle; // 세션 상태
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
     MapInfo mapType;
     PhysicsSystem map;
+
+    Time time;
 
     std::queue<std::shared_ptr<GameEvent>> eventQueue;
     std::mutex queueMutex;
@@ -128,7 +140,7 @@ class GameSession {
 
     void ProcessEvent(std::shared_ptr<GameEvent> &event);
 
-    void BroadcastEvent(const std::shared_ptr<GameEvent>& event);
+    void BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event);
     void Start();
     void Stop();
     void Init(const std::string &sessionId, const GameSetupBoddari &initInfo);

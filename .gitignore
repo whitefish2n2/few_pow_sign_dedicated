@@ -32,3 +32,5 @@
 *.app
 cmake-build-debug/fpsProjectServer.dir/Debug
 cmake-build-debug
+cmake-build-debug/
+cmake-build-debug/

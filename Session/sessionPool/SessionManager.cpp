@@ -55,7 +55,7 @@ uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
 std::shared_ptr<GameSession> SessionManager::getSessionById(const std::string &sessionId) {
     std::shared_lock lock(_sessionsLock);
     for (auto val: sessions | std::views::values) {
-        if (val->sessionId == sessionId) {
+        if (val->getSessionId() == sessionId) {
             return val;
         }
     }

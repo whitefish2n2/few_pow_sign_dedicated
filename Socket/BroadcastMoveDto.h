@@ -9,9 +9,9 @@
 
 class BroadcastMoveDto {
     public:
-    int GetDtoBinaryLength();
+    int GetDtoBinaryLength(){return 0;};
 
-    void ToBinary(uint8_t) {
+    void ToBinary(uint8_t* buffer) {
 
     }
 };

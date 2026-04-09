@@ -89,6 +89,18 @@ struct Vector3 {
         return from + (to - from) * t;
     }
 
+    // 1. "문자열" + Vector3
+    friend std::string operator+(const std::string& str, const Vector3& v) {
+        return str + "(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")";
+    }
+
+    // 2. Vector3 + "문자열"
+    friend std::string operator+(const Vector3& v, const std::string& str) {
+        return "(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")" + str;
+    }
+    [[nodiscard]] std::string ToString() const {
+        return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
+    }
 
     //오퍼레이터들
     #pragma region Vector3 operators

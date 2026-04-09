@@ -30,7 +30,6 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
         event->type = type;
         event->payload = dto;
         event->peer = peer;
-        peer->data = payload;
 
         session->ProcessEvent(event);
     }
@@ -39,7 +38,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
         const char* errorMsg = "404";
         ENetPacket* packet = enet_packet_create(errorMsg, strlen(errorMsg), ENET_PACKET_FLAG_RELIABLE);
         enet_peer_send(peer,0,packet);
-        enet_packet_destroy(packet);
+        //enet_packet_destroy(packet);
     }
 
 
@@ -47,7 +46,7 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
 }
 
 void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
-    if (length < 2) {
+    if (length < 11) {
         std::cerr << "Invalid packet length\n";
         return;
     }
@@ -157,7 +156,7 @@ void EnetClient::HandleClientEvent(ENetEvent& event) {
 void EnetClient::SendPacket(const uint8_t *payload, const size_t length, ENetPeer *peer, const bool isReliable = true) {
     ENetPacket* packet = enet_packet_create(payload, length, 0);
     enet_peer_send(peer,isReliable ? 1 : 0, packet);
-    enet_packet_destroy(packet);
+    //enet_packet_destroy(packet);
 }
 
 void EnetClient::RunClient(int port) {

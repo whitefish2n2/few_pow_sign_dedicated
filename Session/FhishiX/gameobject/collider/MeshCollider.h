@@ -8,6 +8,7 @@
 #include <vector>
 #include <cpprest/asyncrt_utils.h>
 #include "Collider.h"
+#include "../../../../util/util.h"
 #include "../../../Component/Definition/Component.h"
 #include "../../quaternion/Quaternion.h"
 
@@ -65,7 +66,9 @@ public:
     void CalculateAABB() const override {
 
     };
-
+    void Update() override {
+        //Log("메쉬콜라이더업데이트해요");
+    };
     void ParseFromString(const std::string &arg) override;
 
 #ifdef _WIN64

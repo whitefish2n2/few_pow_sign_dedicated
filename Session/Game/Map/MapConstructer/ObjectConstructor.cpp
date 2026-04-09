@@ -28,9 +28,11 @@ GameObject ObjectConstructor::Construct(GameSession *gameSession) {
 
     std::cout << "[Debug] GameObject 기본 할당 완료." << std::endl;
 
+    obj->id = obj.targetId;
     obj->name = this->name;
     obj->layer = this->layer;
     obj->tag = this->tag;
+    obj->transform = this->transform;
 
     // 3. gameSession이 제대로 연결되어 있는지 확인
     if (!obj->gameSession) {
@@ -43,6 +45,7 @@ GameObject ObjectConstructor::Construct(GameSession *gameSession) {
         std::cout << "[Debug] 부착 시도 중: " << v.ComponentName << std::endl;
         v.ConstructAndAttachTo(obj); // 이 안에서 터진다면 1번이나 2번 원인
         std::cout << v.ComponentName << " 컴포넌트 부착 완료" << std::endl;
+
     }
 
     std::cout << "[Debug] " << this->name << " 생성 완전 종료." << std::endl;

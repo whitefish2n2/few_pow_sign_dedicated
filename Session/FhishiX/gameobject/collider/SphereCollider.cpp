@@ -4,10 +4,35 @@
 
 #include "SphereCollider.h"
 
+#include <complex>
 #include <sstream>
 
 #include "../GameObjectArgument.h"
+#include "../../../Component/Definition/ComponentFactory.h"
+AABB SphereCollider::GetAABB() const {
+    AABB aabb = AABB::Empty();
+    if (gameObject == GameObject::NullPTR()) return aabb;
 
+    const auto& tr = gameObject->transform;
+
+    // 1. 구의 스케일은 X, Y, Z 중 가장 큰 값을 기준으로 잡습니다.
+    float maxScale = (std::max)({tr.GetScale().x, tr.GetScale().y, tr.GetScale().z});
+    float scaledRadius = this->radius * maxScale;
+
+    // 2. 월드 좌표 기준 중심점 계산 (Transform 위치 + 로컬 Center 오프셋)
+    Vector3 worldCenter = tr.GetPosition() + this->center;
+
+    // 3. 중심점을 기준으로 반지름만큼 빼고 더해서 박스(AABB)를 만듭니다.
+    aabb.min.x = worldCenter.x - scaledRadius;
+    aabb.min.y = worldCenter.y - scaledRadius;
+    aabb.min.z = worldCenter.z - scaledRadius;
+
+    aabb.max.x = worldCenter.x + scaledRadius;
+    aabb.max.y = worldCenter.y + scaledRadius;
+    aabb.max.z = worldCenter.z + scaledRadius;
+
+    return aabb;
+}
 void SphereCollider::ParseFromString(const std::string &arg) {
     std::stringstream ss(arg);
     std::string line;
@@ -32,8 +57,6 @@ void SphereCollider::ParseFromString(const std::string &arg) {
             this->radius = std::stof(val);
         }
     }
-
-    CalculateAABB();
 }
 #ifdef _WIN64
 #include "../../Renderer.h"
@@ -64,3 +87,5 @@ Renderer SphereCollider::GetRenderer() {
     return r;
 }
 #endif
+
+REGISTER_COMPONENT(SphereCollider);

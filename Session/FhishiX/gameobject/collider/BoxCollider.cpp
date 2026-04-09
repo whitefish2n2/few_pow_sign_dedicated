@@ -34,18 +34,18 @@ void BoxCollider::ParseFromString(const std::string& arg) {
             this->size =Vector3::ParseVector3(val);
         }
     }
-
-    CalculateAABB();
 }
 #ifdef _WIN64
 #include "../../Renderer.h"
 Renderer BoxCollider::GetRenderer() {
     Renderer r{};
 
-    if (this->gameObject == GameObject::NullPTR()) return r;
+    if (this->gameObject == GameObject::NullPTR() || this->gameObject->id == (uint64_t)-1) {
+        return r; // 유령 객체면 렌더러 생성 중지!
+    }
 
     r.owner = this->gameObject;
-
+    std::cout << "owner setting: " << this->gameObject->name << std::endl;
 
     r.mesh = MeshManager::GetInstance()->GetUnitBox();
 
