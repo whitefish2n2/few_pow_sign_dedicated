@@ -13,7 +13,7 @@ class ComponentHandleBase {
     size_t typeId = -1;
     ComponentManager* componentManager;
     ComponentHandleBase() = default;
-    ComponentHandleBase(size_t typeId, ComponentEntityId entityId, ComponentManager* gameSession = nullptr):typeId(typeId),entityId(entityId),componentManager(gameSession){}
+    ComponentHandleBase(size_t typeId, ComponentEntityId entityId, ComponentManager* componentManager = nullptr):typeId(typeId),entityId(entityId),componentManager(componentManager){}
     virtual ~ComponentHandleBase() = default;
     ComponentEntityId entityId = -1;
     virtual ComponentHandleBase Clone() {
@@ -28,6 +28,9 @@ class ComponentHandleBase {
     }
     bool isNull() const {
         return typeId == -1 || entityId == -1;
+    }
+    bool operator==(const ComponentHandleBase& other) const {
+        return entityId == other.entityId && typeId == other.typeId;
     }
 };
 #endif //FPSPROJECTSERVER_COMPONENTHANDLEBASE_H

@@ -26,7 +26,7 @@ GameObject::operator bool() const {
     return operator->() != nullptr;
 }
 
-bool GameObject::IsNull(const GameObject &target) const {
+bool GameObject::IsNull(const GameObject &target) const{
     if (target.GetId() == -1) {
         std::cout << "[IsNull FAIL] Target ID가 -1 입니다.\n";
         return true;
@@ -41,6 +41,27 @@ bool GameObject::IsNull(const GameObject &target) const {
     }
 
     auto* obj = handleSession->objectManager->GetGameObject(target);
+    if (obj == nullptr) {
+        std::cout << "[IsNull FAIL] 매니저가 객체를 찾지 못했습니다! (GetGameObject 반환값 null)\n";
+        return true;
+    }
+    return false;
+}
+bool GameObject::IsNull() const{
+    if (this->GetId() == -1) {
+        std::cout << "[IsNull FAIL] Target ID가 -1 입니다.\n";
+        return true;
+    }
+    if (this->GetGenerationId() == -1) {
+        std::cout << "[IsNull FAIL] Generation ID가 -1 입니다.\n";
+        return true;
+    }
+    if (handleSession == nullptr) {
+        std::cout << "[IsNull FAIL] Session 포인터가 nullptr 입니다.\n";
+        return true;
+    }
+
+    auto* obj = handleSession->objectManager->GetGameObject(*this);
     if (obj == nullptr) {
         std::cout << "[IsNull FAIL] 매니저가 객체를 찾지 못했습니다! (GetGameObject 반환값 null)\n";
         return true;

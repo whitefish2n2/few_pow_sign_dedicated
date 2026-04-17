@@ -2,86 +2,97 @@
 // Created by white on 25. 5. 20.
 //
 #include "KDTree.h"
-
 #include "../FhishiX/gameobject/GameObjectArgument.h"
 #include "../FhishiX/gameobject/collider/BoxCollider.h"
 #include "../FhishiX/gameobject/collider/Collider.h"
 
-void KDTree::Insert(Collider* collider) {
-    if (collider == nullptr) return;
-    if (!root) return;
+void KDTree::Insert(ComponentHandle<Collider> collider) {
+    if (collider == ComponentHandle<Collider>::NULLPTR()) return;
+    if (nodes.empty()) return; // 배열이 비어있으면 루트가 없는 것
     objectCount++;
-    InsertRecursive(root,collider , 0);
-}
-void KDTree::DeleteNode(KDNode* node) {
-    if (!node) return;;
-    DeleteNode(node->front);
-    DeleteNode(node->back);
-    delete node;
+
+    InsertRecursive(0, collider, 0);
 }
 
-void KDTree::InsertRecursive(KDNode*& node, Collider* collider, int depth) {
+KDTree::~KDTree() {
+    nodes.clear();
+    objectCount = 0;
+}
 
-    if (node->isLeaf()) {
-        if ((node->objects.size() < maxObjectsPerNode || depth >= maxDepth)) {
-            node->objects.push_back(collider);
+void KDTree::InsertRecursive(int nodeIndex, ComponentHandle<Collider> collider, int depth) {
+
+    if (nodes[nodeIndex].isLeaf()) {
+        if (nodes[nodeIndex].objects.size() < maxObjectsPerNode || depth >= maxDepth) {
+            nodes[nodeIndex].objects.push_back(collider);
             return;
         }
-        SplitNode(node, depth);
+        SplitNode(nodeIndex, depth);
     }
 
-    if (ShouldGoMultipleInsert(collider,node,depth)) {
-        InsertRecursive(node->front, collider, depth + 1);
-        InsertRecursive(node->back, collider, depth + 1);
+    if (ShouldGoMultipleInsert(collider, nodeIndex, depth)) {
+        InsertRecursive(nodes[nodeIndex].front, collider, depth + 1);
+        InsertRecursive(nodes[nodeIndex].back, collider, depth + 1);
     }
-    else if (IsInFront(collider, node, depth)) InsertRecursive(node->front, collider, depth + 1);
-    else InsertRecursive(node->back, collider, depth + 1);
+    else if (IsInFront(collider, nodeIndex, depth)) {
+        InsertRecursive(nodes[nodeIndex].front, collider, depth + 1);
+    }
+    else {
+        InsertRecursive(nodes[nodeIndex].back, collider, depth + 1);
+    }
 }
 
-void KDTree::SplitNode(KDNode*& node, int depth) {
-    if (!node) return;
+void KDTree::SplitNode(int nodeIndex, int depth) {
+    // 자식 노드 공간 할당 (이때 nodes 벡터가 이사 갈 수도 있음!)
+    int fIdx = AllocateNode();
+    int bIdx = AllocateNode();
 
-    node->front = new KDNode();
-    node->back = new KDNode();
-    AABB original = node->bounds;
+    // 이사 갔을 수도 있으므로, 인덱스를 통해 부모 노드에 다시 접근
+    nodes[nodeIndex].front = fIdx;
+    nodes[nodeIndex].back = bIdx;
+
+    AABB original = nodes[nodeIndex].bounds;
     AABB FrontBound = original;
     AABB BackBound = original;
-    int axis = depth % 3; //x:0, y:1, z=2
+
+    int axis = depth % 3; // x:0, y:1, z:2
     float mid;
+
     switch (axis) {
         case 0: // X
-            FrontBound.min.x = node->mid.x;
-            BackBound.max.x = node->mid.x;
-            mid = node->mid.x;
+            FrontBound.min.x = nodes[nodeIndex].mid.x;
+            BackBound.max.x  = nodes[nodeIndex].mid.x;
+            mid = nodes[nodeIndex].mid.x;
             break;
         case 1: // Y
-            FrontBound.min.y = node->mid.y;
-            BackBound.max.y = node->mid.y;
-            mid = node->mid.y;
+            FrontBound.min.y = nodes[nodeIndex].mid.y;
+            BackBound.max.y  = nodes[nodeIndex].mid.y;
+            mid = nodes[nodeIndex].mid.y;
             break;
         case 2: // Z
-            FrontBound.min.z = node->mid.z;
-            BackBound.max.z = node->mid.z;
-            mid = node->mid.z;
+            FrontBound.min.z = nodes[nodeIndex].mid.z;
+            BackBound.max.z  = nodes[nodeIndex].mid.z;
+            mid = nodes[nodeIndex].mid.z;
             break;
         default:
-            FrontBound.min.z = node->mid.z;
-            BackBound.max.z = node->mid.z;
-            mid = node->mid.z;
+            FrontBound.min.z = nodes[nodeIndex].mid.z;
+            BackBound.max.z  = nodes[nodeIndex].mid.z;
+            mid = nodes[nodeIndex].mid.z;
             break;
     }
-    node->front->bounds = FrontBound;
-    node->front->updateMid();
 
-    node->back->bounds = BackBound;
-    node->back->updateMid();
+    nodes[fIdx].bounds = FrontBound;
+    nodes[fIdx].updateMid();
 
-    for (Collider* collider : node->objects) {
+    nodes[bIdx].bounds = BackBound;
+    nodes[bIdx].updateMid();
+
+    // 기존 객체들을 자식들에게 분배
+    for (ComponentHandle<Collider>& collider : nodes[nodeIndex].objects) {
         float value;
 
-        if (ShouldGoMultipleInsert(collider, node, depth)) {
-            node->front->objects.push_back(collider);
-            node->back->objects.push_back(collider);
+        if (ShouldGoMultipleInsert(collider, nodeIndex, depth)) {
+            nodes[fIdx].objects.push_back(collider);
+            nodes[bIdx].objects.push_back(collider);
         }
         else {
             switch (axis) {
@@ -91,58 +102,45 @@ void KDTree::SplitNode(KDNode*& node, int depth) {
                 default: value = collider->boundBox.max.x; break;
             }
             if (value >= mid) {
-                node->front->objects.push_back(collider);
+                nodes[fIdx].objects.push_back(collider);
             }
             else {
-                node->back->objects.push_back(collider);
+                nodes[bIdx].objects.push_back(collider);
             }
         }
     }
-    node->front->updateMid();
-    node->back->updateMid();
-    node->objects.clear();
+
+    nodes[nodeIndex].objects.clear();
 }
 
-bool KDTree::ShouldGoMultipleInsert(Collider* collider, KDNode* node, int depth) {
+bool KDTree::ShouldGoMultipleInsert(ComponentHandle<Collider> collider, int nodeIndex, int depth) {
     int axis = depth % 3;
+    const KDNode& node = nodes[nodeIndex];
+
     switch (axis) {
         case 0:
-            if (collider-> boundBox.min.x <= node->mid.x && collider->boundBox.max.x >= node->mid.x) {
-                return true;
-            }
+            if (collider->boundBox.min.x <= node.mid.x && collider->boundBox.max.x >= node.mid.x) return true;
             break;
         case 1:
-            if (collider->boundBox.min.y <= node->mid.y && collider->boundBox.max.y >= node->mid.y) {
-                return true;
-            }
+            if (collider->boundBox.min.y <= node.mid.y && collider->boundBox.max.y >= node.mid.y) return true;
             break;
         case 2:
-            if (collider->boundBox.min.z <= node->mid.z && collider->boundBox.max.z >= node->mid.z) {
-                return true;
-            }
+            if (collider->boundBox.min.z <= node.mid.z && collider->boundBox.max.z >= node.mid.z) return true;
             break;
-        default:break;
+        default:
+            break;
     }
     return false;
 }
-bool KDTree::IsInFront(Collider* collider, KDNode* node, int depth) {
+
+bool KDTree::IsInFront(ComponentHandle<Collider> collider, int nodeIndex, int depth) {
     int axis = depth % 3;
+    const KDNode& node = nodes[nodeIndex];
+
     switch (axis) {
-        case 0:
-            return collider->boundBox.min.x>=node->mid.x;
-            break;
-        case 1:
-            return collider->boundBox.min.y>=node->mid.y;
-            break;
-        case 2:
-            return collider->boundBox.min.z>=node->mid.z;
-            break;
-        default: return collider->boundBox.min.x>=node->mid.x;
+        case 0: return collider->boundBox.min.x >= node.mid.x;
+        case 1: return collider->boundBox.min.y >= node.mid.y;
+        case 2: return collider->boundBox.min.z >= node.mid.z;
+        default: return collider->boundBox.min.x >= node.mid.x;
     }
 }
-
-KDTree::~KDTree() {
-    DeleteNode(root);
-}
-
-

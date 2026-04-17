@@ -24,6 +24,7 @@ public:
 
 
     ///false일시 렌더링하지않음
+    bool isAlive = true;
     bool enable = true;
     GameObject owner = GameObject::NullPTR();
     Mesh* mesh;

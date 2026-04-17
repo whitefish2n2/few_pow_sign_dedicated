@@ -19,6 +19,7 @@ class PhysicsSystemConstructor {
     [[nodiscard]] bool Construct(GameSession* target) {
         std::cout<<"construct start!!!"<< std::endl;
         std::cout << "Target Address: " << target << std::endl;
+        target.
         try {
             for (auto o: objects) {
                 o.Construct(target);

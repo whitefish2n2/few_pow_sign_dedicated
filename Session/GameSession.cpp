@@ -8,7 +8,6 @@
 #include <ranges>
 #include <utility>
 
-#include "SessionContext.h"
 #include "Game/Player.h"
 #include "SessionUtil.h"
 #include "../Constants.h"
@@ -19,8 +18,17 @@
 #include "FhishiX/gameobject/GameObjectManager.h"
 #include "Game/MapManager.h"
 #include "Game/Map/MapConstructer/PhysicsSystemConstructor.h"
-#include "../Socket/BroadcastMoveDto.h"
 #include "../util/Log.h"
+#include "FhishiX/gameobject/collider/BoxCollider.h"
+#include "FhishiX/gameobject/collider/SphereCollider.h"
+#include "FhishiX/gameobject/collider/CapsuleCollider.h"
+#include "FhishiX/gameobject/collider/MeshCollider.h"
+#include "FhishiX/gameobject/collider/SphereCollider.h"
+#include "FhishiX/gameobject/collider/StaticCollider.h"
+#include "FhishiX/gameobject/rigidBody/Rigidbody.h"
+#include "../Socket/BroadcastMoveDto.h"
+
+class CapsuleCollider;
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
@@ -104,6 +112,7 @@ void GameSession::Tick() {
     tick++;
     ProcessEventQueue();
     UpdateComponents();
+    FlushGameObject();
 #ifdef _WIN64
     UpdateRenderBuffer();
 #endif
@@ -111,6 +120,9 @@ void GameSession::Tick() {
 void GameSession::UpdateComponents() const {
     componentManager->UpdateComponents();
     //Log("컴포넌트업데이트성공했어요");
+}
+void GameSession::FlushGameObject() const {
+    objectManager->Flush();
 }
 void GameSession::SetCharacter(const CharacterSetDto& dto) const {
     for (auto v : dto.elements) {
@@ -129,12 +141,8 @@ void GameSession::Start() {
     Log("으아아악돌아가요");
     // Run server loop
 
-    // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성
-    gameSessionInstance = this;
-    gameObjectManagerInstance = objectManager.get();
-    componentManagerInstance = componentManager.get();
-    gameObjectManagerInstance->ownerSession  = this;
-    componentManagerInstance->ownerSession = this;
+    // 게임 내(스레드 내부) 전역 매니저 인스턴스 초기화, 생성은 하지 않기로 했어요
+    //gameSessionInstance = this;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -184,7 +192,31 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
     uint64_t privateKey;
     uint8_t publicKey=0;
     auto res = MapManager::GetInstance()->GetPhysicsMapConstructor(MapInfo(initInfo.mapId))->Construct(this) ;
+    ///StaticMap Bake
+    {
 
+        StaticCollider col;
+        std::vector<ComponentHandle<Collider> > colliders;
+        for (auto& o: *componentManager.get()->GetOrCreatePool<BoxCollider>()) {
+            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
+            colliders.push_back(o.MakeHandle());
+        }
+        for (auto& o : *componentManager.get()->GetOrCreatePool<SphereCollider>()) {
+            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
+            colliders.push_back(o.MakeHandle());
+        }
+        for (auto& o: *componentManager.get()->GetOrCreatePool<CapsuleCollider>()) {
+            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
+            colliders.push_back(o.MakeHandle());
+        }
+        for (auto& o: *componentManager.get()->GetOrCreatePool<MeshCollider>()) {
+            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
+            colliders.push_back(o.MakeHandle());
+        }
+        for (auto& o : *componentManager.get()->GetOrCreatePool<Rigidbody>()) {
+            //나중에 그리드 빌드할거면 여기에
+        }
+    }
     if (!res){/*todo: 매칭 취소 로직*/ return; }
     std::cout<<"게임 ID "<<sessionId<<"에서 맵 생성중. 맵 아이디:"<<initInfo.mapId<< std::endl;
     std::cout<<"New Session Enqueue Players:"<< std::endl;
@@ -236,7 +268,7 @@ int GameSession::InsertRenderer(const Renderer &renderer) {
 
 
 void GameSession::DeleteRenderer(int index) {
-    renderers[index].~Renderer();
+    renderers[index].isAlive = false;
     usableRenderersIndex.push(index);
 }
 
@@ -246,7 +278,7 @@ void GameSession::UpdateRenderBuffer() {
 
 
     for (const auto& renderer : renderers) {
-        if (!renderer.enable || renderer.owner == GameObject::NullPTR() || renderer.owner.targetId == -1){
+        if (!renderer.enable || !renderer.isAlive || renderer.owner == GameObject::NullPTR() || renderer.owner.targetId == -1){
             std::cout << "불량 renderer 발생"<<std::endl;
             continue;
         };

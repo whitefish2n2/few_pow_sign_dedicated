@@ -21,7 +21,14 @@ class GameObjectArgument {
 protected:
     public:
     void Clear() {
-
+        if (gameSession && gameSession->componentManager) {
+            for (auto& compBase : components) {
+                if (!compBase.isNull()) {
+                    gameSession->componentManager->DeleteComponentFromPoolById(compBase.typeId, compBase.entityId);
+                }
+            }
+        }
+        components.clear();
     }
     std::vector<ComponentHandleBase> components;
     Transform transform = Transform();
@@ -31,6 +38,8 @@ protected:
     GameSession *gameSession = nullptr;
     GameObjectArgument()=default;
     GameObjectArgument(const uint32_t id, uint32_t generationId, GameSession* session = nullptr):id(id),generationId(generationId),gameSession(session){};
+    GameObjectArgument(GameObjectArgument&&) noexcept = default;
+    GameObjectArgument& operator=(GameObjectArgument&&) noexcept = default;
 
     uint32_t id = -1;
     uint32_t generationId = -1;
@@ -69,12 +78,12 @@ protected:
         const size_t typeId = GetTypeId<T>();
         for (auto& comp : components) {
             if (comp.typeId == typeId) {
-                return static_cast<ComponentHandle<T>&>(comp);
+                return ComponentHandle<T>(comp.typeId, comp.entityId, comp.componentManager);
             }
             ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
             if (rawPtr == nullptr) continue;
             if ( dynamic_cast<T*>(rawPtr)) {
-                return ComponentHandle<T>(comp.entityId,typeId);
+                return ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get());
             }
         }
         return ComponentHandle<T>::NULLPTR();
@@ -84,17 +93,29 @@ void DetachComponent() {
         const size_t typeId = GetTypeId<T>();
         for (auto& comp : components) {
             if (comp.typeId == typeId) {
-                gameSession->componentManager.get()->DeleteComponentFromPool(static_cast<ComponentHandle<T>&>(comp));
+                gameSession->componentManager->DeleteComponentFromPool(static_cast<ComponentHandle<T>&>(comp));
             }
             ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
             if (rawPtr == nullptr) continue;
             if ( dynamic_cast<T*>(rawPtr)) {
-                gameSession->componentManager.get()->DeleteComponentFromPool(ComponentHandle<T>(comp.entityId,typeId));
+                gameSession->componentManager->DeleteComponentFromPool(ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager));
             }
         }
     }
 
+    template <typename T>
+    bool hasThisComponent() {
+        auto typeId = GetTypeId<T>();
+        for (auto& comp : components) {
+            if (comp.typeId == typeId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     GameObjectArgument& operator=(const GameObjectArgument & target) = delete;
+    GameObjectArgument(const GameObjectArgument&) = delete;
     static GameObjectArgument *Empty() {
         static GameObjectArgument empty = {};
         return &empty;

@@ -26,9 +26,10 @@
 class BasePool {
     protected:
     std::vector<size_t> indexArray;
+    std::queue<size_t> freeIndices;
     static constexpr size_t PENDING_MASK = (size_t)1 << (sizeof(size_t) * 8 - 1);
     //유효하지 않은 인덱스
-    static constexpr size_t INVALID_INDEX = std::numeric_limits<size_t>::max();
+    static constexpr size_t INVALID_INDEX = (std::numeric_limits<size_t>::max)();
 public:
     ComponentManager* componentManager;
     int poolPriority = 0;///Update 실행 우선순위
@@ -72,28 +73,7 @@ public:
     }
     ///새로운 Component 요소를 생성하는 함수, 해당 컴포넌트의 핸들을 반환한다.
     template<typename... Args>
-    ComponentHandle<T> CreateComponent(Args&&... args ) {
-        auto h = T(std::forward<Args>(args)...);
-        ComponentEntityId entityId = nextId++;
-        h.entityId = entityId;
-        h.gameSession = this->componentManager->ownerSession;
-        if (entityId >= indexArray.size()) {
-            indexArray.resize(entityId + 1, INVALID_INDEX);
-        }
-        // 메인 배열이 아닌 대기열(pendingAdds)에 밀어 넣습니다.
-        size_t pendingIndex = pendingAdds.size();
-
-        // 인덱스에 PENDING_MASK를 씌워서 맵에 저장합니다.
-        indexArray[entityId] = pendingIndex | PENDING_MASK;
-        pendingAdds.push_back(std::move(h));
-
-        ComponentHandle<T> handle;
-        handle.entityId = entityId;
-        handle.typeId = GetTypeId<T>();
-        handle.componentManager = componentManager;
-
-        return handle;
-    }
+    ComponentHandle<T> CreateComponent(Args&&... args );
     void DeleteComponent(const ComponentEntityId id) override {
         if (id >= indexArray.size()) return;
 
@@ -174,24 +154,27 @@ consteval int GetPoolPriority() {
 
 class ComponentManager {
 protected:
-    std::unordered_map<size_t, std::unique_ptr<BasePool>> componentPool;
+    std::vector<std::unique_ptr<BasePool>> pools;
     std::vector<BasePool*> updateOrder;
     bool isOrderDirty = false;
 public:
     template<typename T>
     DrivenPool<T>* GetOrCreatePool() {
         size_t typeId = GetTypeId<T>();
-        if (!componentPool.contains(typeId)) {
+
+        if (typeId >= pools.size()) {
+            pools.resize(typeId + 1);
+        }
+
+        if (!pools[typeId]) {
             auto newPool = std::make_unique<DrivenPool<T>>(this);
-
             newPool->poolPriority = GetPoolPriority<T>();
-
             updateOrder.push_back(newPool.get());
             isOrderDirty = true;
-
-            componentPool[typeId] = std::move(newPool);
+            pools[typeId] = std::move(newPool);
         }
-        return static_cast<DrivenPool<T>*>(componentPool[typeId].get());
+
+        return static_cast<DrivenPool<T>*>(pools[typeId].get());
     }
     GameSession *ownerSession;
 
@@ -214,19 +197,22 @@ public:
     template<typename T>
     T* GetComponentFromPool(ComponentHandle<T>* handle) {
         size_t typeId = handle->getTypeId();
-        const auto it = componentPool.find(typeId);
-        if (it == componentPool.end()) return nullptr;
-        return static_cast<T*>(it->second->GetArgument(handle->entityId));
+        if (pools.size()<=typeId || !pools[typeId] ) { return nullptr; };
+        auto it = pools[typeId].get();
+        return static_cast<T*>(it->GetArgument(handle->entityId));
     }
 
     template<typename T>
     void DeleteComponentFromPool(ComponentHandle<T>* handle) {
         size_t typeId = handle->getTypeId();
-        auto it = componentPool.find(typeId);
-        if (it == componentPool.end()) return;
-        it->second->DeleteComponent(handle->entityId);
+        if (pools.size()<=typeId || !pools[typeId]) { return; };
+        auto it = pools[typeId].get();
+        it->DeleteComponent(handle->entityId);
     }
-
+    void DeleteComponentFromPoolById(size_t typeId, ComponentEntityId entityId) {
+        if (pools.size() <= typeId || !pools[typeId]) { return; }
+        pools[typeId]->DeleteComponent(entityId);
+    }
     template<typename T, typename... Args>
     requires std::constructible_from<T, Args...>
     ComponentHandle<T> CreateComponentAtPool(Args&&... args) {
@@ -273,9 +259,10 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
     }
     ///해당 타입의 특정 엔티티 id를 가진 객체의 ComponentArgument*(Raw PTR) 객체를 반환합니다.
     /// !! ALERT !! 해당 함수로 얻은 데이터를 캐싱하여 사용하지 마세요. 한 프레임정도는 버틸지 모르는데... 댕글링 포인터 위헙이 있습니다.
-    ComponentArgument* GetRawPtr(size_t type_id, ComponentEntityId entity_id) {
-        if (!componentPool.contains(type_id)) return nullptr;
-        return componentPool[type_id]->GetArgument(entity_id);
+    ComponentArgument* GetRawPtr(size_t typeId, ComponentEntityId entity_id) {
+        if (pools.size()<=typeId || !pools[typeId]) { return nullptr; };
+        auto it = pools[typeId].get();
+        return it->GetArgument(entity_id);
     }
 };
 
@@ -286,6 +273,36 @@ T* ComponentHandle<T>::operator->() {
     if (ptr == nullptr) return nullptr;
     return static_cast<T*>(ptr);
 }
+
+template<typename T>
+template<typename... Args>
+ComponentHandle<T> DrivenPool<T>::CreateComponent(Args&&... args) {
+    auto h = T(std::forward<Args>(args)...);
+    ComponentEntityId entityId = nextId++;
+    h.entityId = entityId;
+
+    // 이제 ComponentManager가 완전히 정의된 상태이므로 에러가 나지 않습니다!
+    h.gameSession = this->componentManager->ownerSession;
+
+    if (entityId >= indexArray.size()) {
+        indexArray.resize(entityId + 1, INVALID_INDEX);
+    }
+    // 메인 배열이 아닌 대기열(pendingAdds)에 밀어 넣습니다.
+    size_t pendingIndex = pendingAdds.size();
+
+    // 인덱스에 PENDING_MASK를 씌워서 배열에 저장합니다.
+    indexArray[entityId] = pendingIndex | PENDING_MASK;
+    pendingAdds.push_back(std::move(h));
+
+    ComponentHandle<T> handle;
+    handle.entityId = entityId;
+    handle.typeId = GetTypeId<T>();
+    handle.componentManager = componentManager;
+
+    return handle;
+}
+
+
 template<typename T>
 ComponentHandleBase ComponentHandle<T>::Clone() {
     if constexpr (std::is_abstract_v<T>) {

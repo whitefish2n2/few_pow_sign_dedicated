@@ -29,6 +29,10 @@ public:
             *handleOut = handle;
         }
     }
+    ComponentHandle<T> MakeHandle() {
+        auto handle = ComponentHandle<T>();
+        handle.typeId = this->typeId;
+    }
 
 };
 

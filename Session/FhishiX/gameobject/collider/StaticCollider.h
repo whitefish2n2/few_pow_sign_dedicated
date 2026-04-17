@@ -54,9 +54,6 @@ class StaticCollider final:public Component<StaticCollider,Collider> {
    [[nodiscard]] std::vector<Renderer> GetRenderers() const {
       std::vector<Renderer> renderers;
       renderers.reserve(tree.objectCount);
-      for (auto v: tree) {
-         renderers.push_back(v->GetRenderer());
-      }
       return renderers;
    }
 #endif

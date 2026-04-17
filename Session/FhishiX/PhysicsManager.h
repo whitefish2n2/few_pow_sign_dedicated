@@ -8,6 +8,7 @@
 #include "../Component/Definition/Component.h"
 #include "../Component/Definition/ComponentArgument.h"
 
+///Physics Loop 돌리는애->컴포넌트에 속하며 Update에 따라서 알아서 루프 돌린다.
 class PhysicsManager:public Component<PhysicsManager> {
     public:
     PhysicsManager() = default;

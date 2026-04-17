@@ -29,6 +29,8 @@ class GameObject {
 
     bool IsNull(const GameObject &target) const;
 
+    bool IsNull() const;
+
     static GameObject NullPTR() {
         return GameObject(-1,-1, nullptr);
     }

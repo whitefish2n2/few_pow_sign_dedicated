@@ -30,6 +30,7 @@ GameObject ObjectConstructor::Construct(GameSession *gameSession) {
 
     obj->id = obj.targetId;
     obj->name = this->name;
+    gameSession->objectManager->SetObjectName(obj, obj->name);
     obj->layer = this->layer;
     obj->tag = this->tag;
     obj->transform = this->transform;

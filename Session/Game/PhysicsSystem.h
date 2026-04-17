@@ -11,7 +11,8 @@
 #include "../FhishiX/gameobject/GameObject.h"
 //loadmap으로 맵 버텍스,트라이앵글 정보를 불러와요
 //init으로 맵의 진행상황, 트리거같은걸 초기화해요
-
+//미사용, 추후 관심사 분리하면 여기 쓸듯->현재는 물리 로직 GameSession이 담당
+//Physics 관련한 정보(Static Collider, 동적객체 그리드,레이어 등) 저장하고 관리하는 객체
 class PhysicsSystem
 {
     public:
@@ -20,9 +21,6 @@ class PhysicsSystem
     void SetLayerManager(LayerManager&& layerManager) {
         this->layerManager = layerManager;
     }
-    std::unordered_map<uint32_t, GameObject> objects;
-    std::unordered_map<uint32_t,GameObject> MovableObjects;
-    std::unordered_map<uint32_t,GameObject> PlayerObjects;
 
 
     void Init();
@@ -40,9 +38,6 @@ class PhysicsSystem
         if (this == &target) return *this;
 
         type = target.type;
-        objects = target.objects;
-        MovableObjects = target.MovableObjects;
-        PlayerObjects = target.PlayerObjects;
 
         return *this;
     }

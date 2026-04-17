@@ -104,7 +104,7 @@ class GameSession {
     SESSIONSTATUS status = idle; // 세션 상태
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
     MapInfo mapType;
-    PhysicsSystem map;
+    PhysicsSystem physicsSystem;
 
     Time time;
 
@@ -133,6 +133,8 @@ class GameSession {
     void Tick();
 
     void UpdateComponents() const;
+
+    void FlushGameObject() const;
 
     void SetCharacter(const CharacterSetDto &dto) const;
 
