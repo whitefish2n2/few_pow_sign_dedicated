@@ -23,6 +23,7 @@ ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const 
             Log(((comp->gameSession) == nullptr? "응없어요" : "와있어요" ));
             ComponentHandleBase base(comp.get()->typeId, comp.get()->entityId,componentManager);
             componentManager->RegisterOrphan(comp, &base);
+            parent->AttachComponentBase(base);
 
             return base;
         }else {

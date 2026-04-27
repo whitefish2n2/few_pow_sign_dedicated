@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.15)
 #add_compile_options(/showIncludes)
 
 project(fpsProjectServer)
+set_property(GLOBAL PROPERTY RULE_MESSAGES OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Bt")
+add_compile_options(/showIncludes)
+
+if(MSVC)
+    add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+    add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -116,8 +124,14 @@ add_executable(fpsProjectServer
         Session/FhishiX/PhysicsManager.h
         Session/FhishiX/PhysicsManager.cpp
         util/Log.h
+        PCH.h
+        Session/FhishiX/gameobject/collider/CollisionSolver.h
+        Session/FhishiX/gameobject/collider/CollisionSover.cpp
+        Session/FhishiX/gameobject/collider/Raycast.h
+        Session/FhishiX/gameobject/collider/ColliderMaterial.h
+        util/StringUtil.h
 )
-
+target_precompile_headers(fpsProjectServer PUBLIC pch.h)
 add_custom_command(TARGET fpsProjectServer POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/Assets
@@ -143,3 +157,5 @@ target_link_libraries(fpsProjectServer PRIVATE cpprestsdk::cpprest cpprestsdk::c
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(fpsProjectServer PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(fpsProjectServer PRIVATE Rpcrt4)
+
+

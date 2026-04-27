@@ -15,10 +15,10 @@ public:
     float radius = 0;
     int direction;;//0:X,1:Y,2:Z
     mutable bool haveMesh = false;
-    CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(isStatic), center(center), height(height), radius(radius) {}
-    CapsuleCollider() = default;
+    CapsuleCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(ColliderType::Capsule, isStatic), center(center), height(height), radius(radius) {}
+    CapsuleCollider() : Component(ColliderType::Capsule, false) {}
     AABB GetAABB() const override;
-
+    Vector3 CalculateLocalInertia(float mass) const override;
 
 
     std::unique_ptr<Collider> clone() const override {

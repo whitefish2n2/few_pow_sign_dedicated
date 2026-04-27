@@ -15,12 +15,12 @@ public:
     float height = 0;
     float radius = 0;;
     mutable bool haveMesh = false;
-    SphereCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(isStatic), center(center), height(height), radius(radius) {}
-    SphereCollider() = default;
+    SphereCollider(const bool isStatic, const Vector3& center = {0,0,0}, const float height = 1, const float radius = 1 ) : Component(ColliderType::Sphere, isStatic), center(center), height(height), radius(radius) {}
+    SphereCollider() : Component(ColliderType::Sphere, false) {}
     AABB GetAABB() const override;
 
 
-
+    Vector3 CalculateLocalInertia(float mass) const override;
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<SphereCollider>(*this);
     }

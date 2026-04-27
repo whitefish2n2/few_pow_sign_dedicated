@@ -9,16 +9,16 @@
 #include "Collider.h"
 #include "../../../Component/Definition/Component.h"
 #include "../../../Game/KDTree.h"
-
-class StaticCollider final:public Component<StaticCollider,Collider> {
+///사용중지 - PhysicsSystem으로 이관(KDTree의 역할
+class StaticCollider {
+   /*
    KDTree tree = KDTree();
-   const std::vector<Vector3>& GetVertices() const {
-      return vertices;
+   public:
+   void Build(std::vector<ComponentHandle<Collider>>& colliders) {
+      tree.Build(colliders);
    }
-   AABB GetAABB() const override;
-   std::unique_ptr<Collider> clone() const override {
-      return std::make_unique<StaticCollider>(*this);
-   }
+   void GetOverlaps(const AABB& queryAABB, std::vector<ComponentHandle<Collider>>& outOverlaps) const;
+   AABB GetAABB() const override{ return AABB::Empty();};
    Vector3 GetAABBSize() const override {
       return Vector3::Zero();
    }
@@ -47,7 +47,7 @@ class StaticCollider final:public Component<StaticCollider,Collider> {
 
    ///OnAttach 삭제
    void OnAttach() override {}
-
+   Vector3 CalculateLocalInertia(float mass) const override{return Vector3::Zero();};
 
 #ifdef _WIN64
    Renderer GetRenderer() override;
@@ -56,6 +56,9 @@ class StaticCollider final:public Component<StaticCollider,Collider> {
       renderers.reserve(tree.objectCount);
       return renderers;
    }
+
+
 #endif
+*/
 };
 #endif //FPSPROJECTSERVER_STATICCOLLIDER_H

@@ -50,8 +50,8 @@ public:
     // 벡터 회전
     Vector3 operator*(const Vector3& v) const {
         Vector3 qv = XYZ();
-        const auto t = 2 * qv.cross(v);
-        return v + w * t + qv.cross(t);
+        const auto t = 2 * qv.Cross(v);
+        return v + w * t + qv.Cross(t);
 
         /*
         Quaternion qv(0, v.x, v.y, v.z);

@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "DebugViewStatic.h"
 #include "../../ServerStatics.h"
+#include "../../Session/FhishiX/Mesh/Mesh.h"
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 IDXGISwapChain* DirectXCore::swapChain = nullptr;

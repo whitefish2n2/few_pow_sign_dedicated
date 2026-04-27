@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "../SessionContext.h"
+#include "../../util/StringUtil.h"
 #include "../Component/Definition/ComponentFactory.h"
 #include "../FhishiX/Layer.h"
 #include "../FhishiX/TagManager.h"
@@ -22,15 +23,45 @@ void MapManager::Init() {
 
 PhysicsSystemConstructor *MapManager::GetPhysicsMapConstructor(MapInfo type)
 {
-    auto it = mapTemplates.find(type);
-    if (it == mapTemplates.end())
     {
-        auto loaded = LoadMap(type);
-        auto res = mapTemplates.emplace(type, std::move(loaded));
-        it = res.first;
+        std::shared_lock<std::shared_mutex> lock(mapMutex);
+        auto it = mapTemplates.find(type);
+        if (it != mapTemplates.end()) return it->second.get();
     }
 
-    return it->second.get();
+    std::unique_lock<std::mutex> loadLock(loadingMutex);
+
+    if (loadingMaps.count(type)) {
+        loadingCV.wait(loadLock, [&]{ return !loadingMaps.count(type); });
+
+        std::shared_lock<std::shared_mutex> lock(mapMutex);
+        auto it = mapTemplates.find(type);
+        return (it != mapTemplates.end()) ? it->second.get() : nullptr;
+    }
+
+    loadingMaps.insert(type);
+    loadLock.unlock();
+
+    struct LoadingGuard {
+        MapInfo type;
+        std::mutex& mtx;
+        std::set<MapInfo>& maps;
+        std::condition_variable_any& cv;
+
+        ~LoadingGuard() {
+            std::lock_guard<std::mutex> lock(mtx);
+            maps.erase(type);
+            cv.notify_all();
+        }
+    } guard{type, loadingMutex, loadingMaps, loadingCV};
+    auto loaded = LoadMap(type);
+
+    PhysicsSystemConstructor* resultPtr = loaded.get();
+    {
+        std::unique_lock<std::shared_mutex> lock(mapMutex);
+        mapTemplates[type] = std::move(loaded);
+    }
+    return resultPtr;
 }
 void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layer layer, const Vector3& pos, const Quaternion &rot) {
     obj->name = name;
@@ -96,7 +127,6 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
         }
 
         if (currentMode == ParseMode::Layers) {
-            // ... (기존 Layer 파싱 코드 동일 유지) ...
             if (line.rfind("LAYER_DEF: ", 0) == 0) {
                 std::string data = line.substr(11);
                 std::stringstream ss(data);
@@ -130,27 +160,23 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
 
             if (line.rfind("COMPONENT:", 0) == 0) {
                 FlushComponent();
-                if (line.length() > 11) {
-                    currentCompName = line.substr(11);
-                }
+                currentCompName = StringUtils::Trim(line.substr(10));
                 continue;
             }
 
             if (currentCompName.empty()) {
                 // GameObject 기본 속성 파싱
-                size_t delimPos = line.find(": ");
-                if (delimPos != std::string::npos) {
-                    std::string key = line.substr(0, delimPos);
-                    std::string val = line.substr(delimPos + 2);
-
-                    if (key == "Name") currentObj.name = val;
-                    else if (key == "Tag") currentObj.tag = TagManager::GetObjectTagFromString(val);
-                    else if (key == "LayerName") currentObj.layer = layerManager.toLayer(val);
-                    else if (key == "LayerIndex") currentObj.layer = Layer(std::stoi(val));
-                    else if (key == "Position") currentObj.transform.SetPosition(Vector3::ParseVector3(val));
-                    else if (key == "Rotation") currentObj.transform.SetRotation(Quaternion::ParseQuaternion(val));
-                    else if (key == "Scale") currentObj.transform.SetScale(Vector3::ParseVector3(val));
-                }
+                size_t delimPos = line.find(':');
+                if (delimPos == std::string::npos) continue;
+                std::string key = StringUtils::Trim(line.substr(0, delimPos));
+                std::string val = StringUtils::Trim(line.substr(delimPos + 1));
+                if (key == "Name") currentObj.name = val;
+                else if (key == "Tag") currentObj.tag = TagManager::GetObjectTagFromString(val);
+                else if (key == "LayerName") currentObj.layer = layerManager.toLayer(val);
+                else if (key == "LayerIndex") currentObj.layer = Layer(std::stoi(val));
+                else if (key == "Position") currentObj.transform.SetPosition(Vector3::ParseVector3(val));
+                else if (key == "Rotation") currentObj.transform.SetRotation(Quaternion::ParseQuaternion(val));
+                else if (key == "Scale") currentObj.transform.SetScale(Vector3::ParseVector3(val));
             } else {
                 // 컴포넌트 데이터 누적
                 currentCompData << line << "\n";

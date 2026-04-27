@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include <unordered_map>
 
 #include "KDTree.h"
 #include "../Dto/MapInfo.h"
@@ -16,28 +15,25 @@
 class PhysicsSystem
 {
     public:
-    MapInfo type;
+    MapInfo mapType;
     LayerManager layerManager;
+    GameSession* session;
+    KDTree tree = KDTree();
     void SetLayerManager(LayerManager&& layerManager) {
         this->layerManager = layerManager;
     }
 
 
-    void Init();
+    bool Init(MapInfo map_info, GameSession *target);
     PhysicsSystem() = default;
-    PhysicsSystem(MapInfo type) {
-        this->type = type;
-        //todo: 맵 타입에 대해 MapManager에서 constructer를 가져와서 여기에다가 생성.
-        //todo: 맵 타입에 대해 MapManager에서 staticPhysicsMap 포인터를 가져온다.
-    }
-    ~PhysicsSystem();
-    PhysicsSystem(const PhysicsSystem &);
-    PhysicsSystem(PhysicsSystem &&) noexcept;
+    ~PhysicsSystem() = default;
+    PhysicsSystem(const PhysicsSystem &) = delete;
+    PhysicsSystem(PhysicsSystem &&) noexcept = delete;
 
     PhysicsSystem &operator=(const PhysicsSystem& target) {
         if (this == &target) return *this;
 
-        type = target.type;
+        mapType = target.mapType;
 
         return *this;
     }

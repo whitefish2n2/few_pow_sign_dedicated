@@ -22,19 +22,29 @@ public:
         this->typeId = GetTypeId<T>();
     }
     ///handleOut은 ComponentHandle<T>가 담겨 반환됩니다.
-    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) override final {
-        std::cout << "MoveToManager" << std::endl;
-        auto handle = manager->InsertOrphanageComponent<T>(static_cast<T*>(this));
-        if (handleOut) {
-            *handleOut = handle;
-        }
-    }
+    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) override final;
+
     ComponentHandle<T> MakeHandle() {
-        auto handle = ComponentHandle<T>();
-        handle.typeId = this->typeId;
+        if (this->gameSession == nullptr) LOG_ERROR("gameSession이 NULL인 Component객체가 MakeHandle을 시도함.");
+        return ComponentHandle<T>(
+            this->typeId,
+            this->entityId,
+            this->gameSession ? this->gameSession->componentManager.get() : nullptr
+        );
     }
 
 };
+
+
+template<typename T, typename Parent> requires std::derived_from<Parent, ComponentArgument>
+void Component<T, Parent>::
+MoveToManager(ComponentManager *manager, ComponentHandleBase *handleOut) {
+    std::cout << "MoveToManager" << std::endl;
+    auto handle = manager-> template InsertOrphanageComponent<T>(static_cast<T*>(this));
+    if (handleOut) {
+        *handleOut = handle;
+    }
+}
 
 
 #endif //FPSPROJECTSERVER_COMPONENT_H

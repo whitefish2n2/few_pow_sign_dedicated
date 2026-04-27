@@ -10,21 +10,17 @@ public:
     Vector3 center = Vector3::Zero();
     Vector3 size = Vector3::Zero();
     mutable bool haveMesh = false;
-
     BoxCollider(const bool isStatic, const Vector3& center, const Vector3& size)
-        : Component(isStatic), center(center), size(size) {
+        : Component(ColliderType::Box, isStatic), center(center), size(size) {
     }
 
-    BoxCollider() = default;
+    BoxCollider() : Component(ColliderType::Box, false) {}
     std::unique_ptr<Collider> clone() const override {
         return std::make_unique<BoxCollider>(*this);
     }
 
-
-    AABB GetAABB() const override {
-        // 더미 AABB
-        return AABB::Empty();
-    }
+    Vector3 CalculateLocalInertia(float mass) const override;
+    AABB GetAABB() const override;
 
     Vector3 GetAABBSize() const override {
         // 박스 기준으로 그냥 size 반환

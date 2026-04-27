@@ -62,7 +62,9 @@ public:
     auto end() { return dataArray.end(); }
     auto cbegin() const { return dataArray.cbegin(); }
     auto cend() const { return dataArray.cend(); }
-
+    size_t size() {
+        return dataArray.size();
+    }
     void UpdateAll() override {
         size_t currentSize = dataArray.size();
         for (size_t i = 0; i < currentSize; ++i) {
@@ -268,7 +270,7 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
 
 //ComponentHandle 순환 참조 해결
 template<typename T>
-T* ComponentHandle<T>::operator->() {
+T* ComponentHandle<T>::operator->() const{
     void* ptr = componentManager->GetRawPtr(this->typeId, this->entityId);
     if (ptr == nullptr) return nullptr;
     return static_cast<T*>(ptr);

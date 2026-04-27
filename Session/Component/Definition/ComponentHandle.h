@@ -11,7 +11,7 @@
 
 class GameSession;
 template<typename T>
-class ComponentHandle: public ComponentHandleBase {
+class ComponentHandle final: public ComponentHandleBase {
     public:
 
     using ComponentHandleBase::ComponentHandleBase;
@@ -22,7 +22,7 @@ class ComponentHandle: public ComponentHandleBase {
     }
 
     ComponentHandleBase Clone() override;
-    T *operator->();
+    T *operator->() const;
 
 
     T& operator*() { return *operator->(); }

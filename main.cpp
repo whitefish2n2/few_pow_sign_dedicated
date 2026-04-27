@@ -131,6 +131,8 @@ int main() {
 
         MapRegister::Init("Assets/MapInfo.json");
         MapManager::GetInstance()->Init();
+
+        CollisionSolver::Initialize();
         /*Initialize Flow end*/
         for (auto& t : threads) {
             t.join();

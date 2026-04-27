@@ -9,30 +9,72 @@
 
 #include "../GameObjectArgument.h"
 #include "../../../Component/Definition/ComponentFactory.h"
+#include <algorithm>
+
+#include "../../../../util/StringUtil.h"
+
 AABB SphereCollider::GetAABB() const {
-    AABB aabb = AABB::Empty();
-    if (gameObject == GameObject::NullPTR()) return aabb;
+    if (gameObject == GameObject::NullPTR()) return AABB::Empty();
 
     const auto& tr = gameObject->transform;
+    uint32_t currentPosVer = tr.GetPosVersion();
+    uint32_t currentRotVer = tr.GetRotVersion();
+    uint32_t currentScaleVer = tr.GetScaleVersion();
 
-    // 1. 구의 스케일은 X, Y, Z 중 가장 큰 값을 기준으로 잡습니다.
-    float maxScale = (std::max)({tr.GetScale().x, tr.GetScale().y, tr.GetScale().z});
+    // 1. 크기(Scale)나 회전(Rotation)이 변경된 경우
+    // 구체 자체는 회전해도 크기가 같지만, 로컬 center가 (0,0,0)이 아닐 경우 위치가 변하므로 회전도 체크합니다.
+    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer) {
+
+        transformRotVersion = currentRotVer;
+        transformScaleVersion = currentScaleVer;
+        transformPosVersion = currentPosVer;
+        lastPosition = tr.GetPosition();
+
+        const Vector3 pos = tr.GetPosition();
+        const Vector3 scale = tr.GetScale();
+        const Quaternion rot = tr.GetRotation();
+
+        // 🌟 핵심 타협점: X, Y, Z 중 가장 큰 스케일을 찾아 완벽한 구의 반지름으로 사용
+        float maxScale = (std::max)({scale.x, scale.y, scale.z});
+        float scaledRadius = this->radius * maxScale;
+
+        // 로컬 Center의 월드 위치 계산 (Center 오프셋에 회전과 스케일 적용)
+        Vector3 scaledCenter = { center.x * scale.x, center.y * scale.y, center.z * scale.z };
+        Vector3 rotatedCenter = rot * scaledCenter;
+        Vector3 worldCenter = pos + rotatedCenter;
+
+        // 타원체 Extent 공식이 사라지고, 단순히 반지름을 빼고 더하는 것으로 끝납니다!
+        Vector3 extents = { scaledRadius, scaledRadius, scaledRadius };
+        cachedAABB.min = worldCenter - extents;
+        cachedAABB.max = worldCenter + extents;
+    }
+    // 2. 크기/회전은 그대로고 위치(Position)만 변경된 경우 (초고속 이동)
+    else if (transformPosVersion != currentPosVer) {
+        Vector3 currentPos = tr.GetPosition();
+        Vector3 delta = currentPos - lastPosition;
+
+        cachedAABB.min += delta;
+        cachedAABB.max += delta;
+
+        transformPosVersion = currentPosVer;
+        lastPosition = currentPos;
+    }
+
+    return cachedAABB;
+}
+
+Vector3 SphereCollider::CalculateLocalInertia(float mass) const {
+    if (gameObject == GameObject::NullPTR()) return Vector3::Zero();
+
+    const Vector3 scale = gameObject->transform.GetScale();
+    float maxScale = (std::max)({scale.x, scale.y, scale.z});
     float scaledRadius = this->radius * maxScale;
 
-    // 2. 월드 좌표 기준 중심점 계산 (Transform 위치 + 로컬 Center 오프셋)
-    Vector3 worldCenter = tr.GetPosition() + this->center;
-
-    // 3. 중심점을 기준으로 반지름만큼 빼고 더해서 박스(AABB)를 만듭니다.
-    aabb.min.x = worldCenter.x - scaledRadius;
-    aabb.min.y = worldCenter.y - scaledRadius;
-    aabb.min.z = worldCenter.z - scaledRadius;
-
-    aabb.max.x = worldCenter.x + scaledRadius;
-    aabb.max.y = worldCenter.y + scaledRadius;
-    aabb.max.z = worldCenter.z + scaledRadius;
-
-    return aabb;
+    float i = (2.0f / 5.0f) * mass * (scaledRadius * scaledRadius);
+    
+    return { i, i, i };
 }
+
 void SphereCollider::ParseFromString(const std::string &arg) {
     std::stringstream ss(arg);
     std::string line;
@@ -41,11 +83,10 @@ void SphereCollider::ParseFromString(const std::string &arg) {
         if (line.empty()) continue;
         if (line.back() == '\r') line.pop_back();
 
-        size_t delimPos = line.find(": ");
+        size_t delimPos = line.find(':');
         if (delimPos == std::string::npos) continue;
-
-        std::string key = line.substr(0, delimPos);
-        std::string val = line.substr(delimPos + 2);
+        std::string key = StringUtils::Trim(line.substr(0, delimPos));
+        std::string val = StringUtils::Trim(line.substr(delimPos + 1));
 
         if (key == "IsTrigger") {
             this->isTrigger = (val == "1");
@@ -55,6 +96,21 @@ void SphereCollider::ParseFromString(const std::string &arg) {
         }
         else if (key == "Radius") {
             this->radius = std::stof(val);
+        }
+        else if (key == "StaticFriction") {
+            this->material.staticFriction = std::stof(val);
+        }
+        else if (key == "DynamicFriction") {
+            this->material.dynamicFriction = std::stof(val);
+        }
+        else if (key == "Bounciness") {
+            this->material.bounciness = std::stof(val);
+        }
+        else if (key == "BounceCombine") {
+            this->material.bounceCombine = ColliderMaterial::ParseCombineMode(val);
+        }
+        else if (key == "FrictionCombine") {
+            this->material.frictionCombine = ColliderMaterial::ParseCombineMode(val);
         }
     }
 }

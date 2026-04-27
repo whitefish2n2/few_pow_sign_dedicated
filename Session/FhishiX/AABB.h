@@ -22,6 +22,29 @@ struct AABB {
         return result;
     };
 
+    AABB Merge(const AABB &other) {
+        AABB result = AABB();
+        result.min.x = this->min.x<other.min.x ? this->min.x : other.min.x;
+        result.min.y = this->min.y<other.min.y ? this->min.y : other.min.y;
+        result.min.z = this->min.z<other.min.z ? this->min.z : other.min.z;
+        result.max.x = this->max.x>other.max.x ? this->max.x : other.max.x;
+        result.max.y = this->max.y>other.max.y ? this->max.y : other.max.y;
+        result.max.z = this->max.z>other.max.z ? this->max.z : other.max.z;
+        return result;
+    }
+
+    static bool Intersects(const AABB &a, const AABB &b) {
+        return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+               (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+               (a.min.z <= b.max.z && a.max.z >= b.min.z);
+    }
+
+    bool Intersects(const AABB &other) const {
+        return (this->min.x <= other.max.x && this->max.x >= other.min.x) &&
+               (this->min.y <= other.max.y && this->max.y >= other.min.y) &&
+               (this->min.z <= other.max.z && this->max.z >= other.min.z);
+    }
+
     ///텅텅 AABB
     static AABB Empty() {
         const float float_max = (std::numeric_limits<float>::max)();

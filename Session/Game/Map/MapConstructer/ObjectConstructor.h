@@ -16,12 +16,14 @@ class ObjectConstructor {
     public:
     ObjectConstructor() =default;
     ~ObjectConstructor() =default;
+
+    GameObject Construct(GameSession *gameSession) const;
+
     std::string name;
     Layer layer;
     Transform transform;
     Tag tag;
     std::vector<ComponentConstructor> components;
-    GameObject Construct(GameSession* gameSession);
 };
 
 

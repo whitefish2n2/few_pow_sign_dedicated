@@ -66,11 +66,15 @@ protected:
     template<typename T>
    ComponentHandle<T> AttachComponent(ComponentHandle<T> handle) {
         if ( handle->GetGameObject() != GameObject::NullPTR())
-            handle->GetGameObject()->DetachComponent(handle);
+            handle->GetGameObject()->template DetachComponent<T>();
         components.push_back(std::move(handle));
         handle->SetOwner(MakeHandle());
         return handle;
    }
+    void AttachComponentBase(ComponentHandleBase handleBase) {
+        components.push_back(std::move(handleBase));
+        // Owner 세팅 등은 Factory나 Manager 쪽에서 처리하도록 위임
+    }
     void AddComponentFromString(const std::string &typeName, const std::string &arg) const;
 
     template <typename T>
@@ -80,26 +84,48 @@ protected:
             if (comp.typeId == typeId) {
                 return ComponentHandle<T>(comp.typeId, comp.entityId, comp.componentManager);
             }
-            ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
-            if (rawPtr == nullptr) continue;
-            if ( dynamic_cast<T*>(rawPtr)) {
-                return ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get());
+            if constexpr (!std::is_final_v<T>) {
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
+                if (rawPtr == nullptr) continue;
+
+                // (예: GetComponent<Collider>()를 불렀는데 현재 comp가 BoxCollider인 경우 여기서 잡힘)
+                if (dynamic_cast<T*>(rawPtr)) {
+                    return ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get());
+                }
             }
         }
         return ComponentHandle<T>::NULLPTR();
     }
-template <typename T>
-void DetachComponent() {
+    template <typename T>
+        void DetachComponent() {
         const size_t typeId = GetTypeId<T>();
-        for (auto& comp : components) {
-            if (comp.typeId == typeId) {
-                gameSession->componentManager->DeleteComponentFromPool(static_cast<ComponentHandle<T>&>(comp));
+        for (auto it = components.begin(); it != components.end(); ) {
+            if (it->typeId == typeId) {
+                ComponentHandle<T> handle(it->typeId, it->entityId, gameSession->componentManager.get());
+                gameSession->componentManager->DeleteComponentFromPool<T>(&handle);
+                it = components.erase(it);
+            } else {
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(it->typeId, it->entityId);
+                if (rawPtr && dynamic_cast<T*>(rawPtr)) {
+                    ComponentHandle<T> handle(it->typeId, it->entityId, gameSession->componentManager.get());
+                    gameSession->componentManager->DeleteComponentFromPool<T>(&handle);
+                    it = components.erase(it);
+                } else {
+                    ++it;
+                }
             }
-            ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
-            if (rawPtr == nullptr) continue;
-            if ( dynamic_cast<T*>(rawPtr)) {
-                gameSession->componentManager->DeleteComponentFromPool(ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager));
+        }
+    }
+    template <typename T>
+    void DetachComponent(ComponentHandle<T> component) {
+        const size_t typeId = GetTypeId<T>();
+        for (auto it = components.begin(); it != components.end(); ) {
+            if (it->typeId == typeId && it->entityId == component.entityId) {
+                gameSession->componentManager->DeleteComponentFromPool<T>(&component); // 포인터로 넘김
+                it = components.erase(it);
+                return; // 찾았으니 종료
             }
+            ++it;
         }
     }
 

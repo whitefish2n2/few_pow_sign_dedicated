@@ -4,6 +4,7 @@
 
 #ifndef KDTREE_H
 #define KDTREE_H
+#include <algorithm>
 #include <stack>
 #include <unordered_set>
 #include <vector>
@@ -40,20 +41,25 @@ struct KDNode {
  */
 class KDTree {
 public:
-    KDNode* root = nullptr;
+
     int objectCount = 0;
     std::vector<KDNode> nodes;
+    int rootIndex = -1;
     KDTree()=default;
-    KDTree(AABB worldSize) {
-        nodes.reserve(10000);
 
-        // 0번 인덱스 = 루트 노드
-        KDNode rootNode;
-        rootNode.bounds = worldSize;
-        rootNode.updateMid();
-        nodes.push_back(rootNode);
+    ///모든 정적 콜라이더를 모아서 한 번에 균형 트리로 굽습니다.
+    void Build(std::vector<ComponentHandle<Collider>>& colliders) {
+        this->objectCount = colliders.size();
+        nodes.clear();
+        rootIndex = -1;
+
+        if (colliders.empty()) return;
+
+        nodes.reserve(colliders.size() * 2);
+
+        rootIndex = BuildRecursive(colliders, 0, colliders.size() - 1, 0);
     }
-
+    void GetOverlaps(const AABB& queryAABB, std::vector<ComponentHandle<Collider>>& outOverlaps) const;
     int AllocateNode() {
         KDNode newNode;
         nodes.push_back(newNode);
@@ -67,6 +73,8 @@ public:
     ~KDTree();
 
 private:
+    int BuildRecursive(std::vector<ComponentHandle<Collider>>& colliders, int start, int end, int depth);
+
     void InsertRecursive(int nodeIndex, ComponentHandle<Collider> collider, int depth);
 
     void SplitNode(int nodeIndex, int depth);

@@ -14,10 +14,16 @@
 
 
 class MeshCollider final : public Component<MeshCollider,Collider>{
+private:
+
+protected:
+    mutable AABB localAABB;
+    // 로컬 AABB가 계산되었는지 확인하는 플래그
+    mutable bool isLocalAABBCalculated = false;
 public:
     mutable std::vector<Vector3> vertices;
     mutable std::vector<uint32_t> trianglesIndices;
-        MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(isStatic),vertices(vertices),trianglesIndices(indices) {
+        MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(ColliderType::Mesh, isStatic),vertices(vertices),trianglesIndices(indices) {
         this->triangles.clear();
         this->triangles.reserve(indices.size() / 3);
         for (int i = 0; i<indices.size(); i+=3) {
@@ -30,7 +36,8 @@ public:
             this->triangles.emplace_back(v0, v1, v2);
         }
     }
-    MeshCollider() = default;
+    Vector3 CalculateLocalInertia(float mass) const override;
+    MeshCollider() :Component(ColliderType::Mesh, false) {}
     const std::vector<Vector3>& GetVertices() const {
         return vertices;
     }
@@ -63,9 +70,7 @@ public:
     void MergeAABB(const AABB& other) const override {
         // 로직 비움
     }
-    void CalculateAABB() const override {
-
-    };
+    void CalculateAABB() const override;
     void Update() override {
         //Log("메쉬콜라이더업데이트해요");
     };
@@ -73,6 +78,6 @@ public:
 
 #ifdef _WIN64
     Renderer GetRenderer() override;
-    #endif
+#endif
 };
 #endif //MESHCOLLIDER_H

@@ -11,7 +11,7 @@
 #include "../../vector/Vector3.h"
 
 
-class Rigidbody:public Component<Rigidbody> {
+class Rigidbody final:public Component<Rigidbody> {
     public:
     static constexpr int UPDATE_PRIORITY = 100;
     Rigidbody() = default;
@@ -19,6 +19,7 @@ class Rigidbody:public Component<Rigidbody> {
     float inverseMass = 1.0f;
     bool useGravity = true;
     bool isKinematic = false;
+    bool isDirty = false;
 
     Vector3 linearVelocity = Vector3(0, 0, 0);
     Vector3 angularVelocity = Vector3(0, 0, 0);
@@ -26,21 +27,32 @@ class Rigidbody:public Component<Rigidbody> {
     float drag = 0.0f;
     float angularDrag = 0.0f;
 
-    int constraints;
-    int collisionDetectionMode;
+    int constraints = 0;
+    int collisionDetectionMode = 0;
     Vector3 centerOfMass = Vector3(0, 0, 0);
 
     void SetMass(float newMass) {
         mass = newMass;
         inverseMass = (mass > 0.0f) ? (1.0f / mass) : 0.0f;
+        isDirty = true;
     }
     void AddForce(const Vector3& appliedForce) {
         if (isKinematic || inverseMass == 0.0f) return;
 
         this->force += appliedForce;
+        isDirty = true;
+    }
+
+
+
+
+    // 인라인으로 선언해서 함수 호출 오버헤드(Call stack)를 없앱니다.
+    inline void SetVelocity(const Vector3& newVelocity) {
+        if (isKinematic) return;
+        linearVelocity = newVelocity;
+        isDirty = true;
     }
     void Update() override {
-        PhysicsUpdate();
     };
     void PhysicsUpdate();
     void ParseFromString(const std::string &arg) override;

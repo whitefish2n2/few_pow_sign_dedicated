@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+#include "ColliderMaterial.h"
+#include "CollisionSolver.h"
 #include "../../AABB.h"
 
 #include "../../../Component/Definition/ComponentArgument.h"
@@ -23,14 +25,31 @@ struct Collision {
 
 };
 
-class Collider: public ComponentArgument{
+class Collider : public ComponentArgument{
+protected:
+    mutable uint32_t transformRotVersion = -1;
+    mutable uint32_t transformScaleVersion = -1;
+    mutable uint32_t transformPosVersion = -1;
+    mutable Vector3 lastPosition = Vector3(0, 0, 0);
+
+    //rot과 scale이 적용된 AABB 캐싱
+    mutable AABB cachedAABB;
+
+    ColliderType shapeType = ColliderType::None;
 public:
     Collider() = default;
-    explicit Collider(bool isStatic):staticObject(isStatic){};
+    explicit Collider(ColliderType type,bool isStatic):shapeType(type),staticObject(isStatic){};
     virtual ~Collider() noexcept = default;
     bool staticObject = false;
     bool isTrigger = false;
+    ColliderMaterial material;
+    inline ColliderType GetShapeType() const { return shapeType; }
+    ///관성 텐서 계산 함수 - > 구현필
+    virtual Vector3 CalculateLocalInertia(float mass) const = 0;
+
+
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
+
 
     [[nodiscard]] virtual AABB GetAABB() const = 0;
     [[nodiscard]] virtual Vector3 GetAABBSize() const {
@@ -47,7 +66,6 @@ public:
     }
     std::vector<Vector3> vertices;
     std::vector<Triangle> triangles = std::vector<Triangle>();
-    AABB boundBox = AABB::Empty();
     virtual void CalculateAABB() const  = 0;
 
     [[nodiscard]]virtual bool ContainsPoint(const Vector3 &point) const=0;
@@ -63,9 +81,6 @@ public:
     virtual Renderer GetRenderer() = 0;
     void OnAttach() override;
     #endif
-private:
-    AABB aabb = AABB::Empty();
-    bool shouldUpdateAABB = true;
 };
 
 

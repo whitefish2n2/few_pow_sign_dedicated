@@ -52,34 +52,44 @@ struct Vector3 {
     }
 
     ///비교용 벡터 길이
-    float lengthSquared() const {
+    float LengthSquared() const {
         return x*x + y*y + z*z;
     }
 
     ///벡터 내적
-    float dot(const Vector3& v) const {
+    float Dot(const Vector3& v) const {
         return x * v.x + y * v.y + z * v.z;
+    }
+    static float Dot(const Vector3& v1, const Vector3& v2) {
+        return v1.Dot(v2);
     }
 
     ///벡터 외적
-    [[nodiscard]] Vector3 cross(const Vector3& v) const {
+    [[nodiscard]] Vector3 Cross(const Vector3& v) const {
         return {
             y * v.z - z * v.y,
             z * v.x - x * v.z,
             x * v.y - y * v.x
         };
+        }
+    static Vector3 Cross(const Vector3& v1, const Vector3& v2){
+        return {
+            v1.y * v2.z - v1.z * v2.y,
+            v1.z * v2.x - v1.x * v2.z,
+            v1.x * v2.y - v1.y * v2.x
+        };
     }
 
     ///반사 벡터
     Vector3 Reflect(const Vector3& normal) const {
-        return *this - normal * (2.0f * this->dot(normal));
+        return *this - normal * (2.0f * this->Dot(normal));
     }
 
     ///투영 벡터
     Vector3 Project(const Vector3& on) const {
         static constexpr float EPS = 1e-8f;
-        float d = dot(on);
-        float lenSq = on.lengthSquared();
+        float d = Dot(on);
+        float lenSq = on.LengthSquared();
         if (lenSq<EPS) return Vector3::Zero();
         return on * (d / lenSq);
     }

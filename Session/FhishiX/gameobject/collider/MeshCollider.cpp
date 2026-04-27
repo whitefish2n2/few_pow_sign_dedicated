@@ -3,35 +3,133 @@
 //
 #include "MeshCollider.h"
 
+#include "ColliderMaterial.h"
 #include "../GameObject.h"
 #include "../../quaternion/Quaternion.h"
 #include "../GameObjectArgument.h"
+#include "../../../../util/StringUtil.h"
 #include "../../../Component/Definition/ComponentFactory.h"
 
 
+Vector3 MeshCollider::CalculateLocalInertia(float mass) const {
+    if (this->staticObject) return Vector3::Zero();
+
+    // AABB를 구해옵니다.
+    AABB bounds = GetAABB();
+
+    // AABB의 가로, 세로, 깊이 길이를 구합니다 (max - min)
+    float width = bounds.max.x - bounds.min.x;
+    float height = bounds.max.y - bounds.min.y;
+    float depth = bounds.max.z - bounds.min.z;
+
+    // 직육면체(Box)의 관성 텐서 공식으로 근사하여 반환합니다.
+    return {
+        (1.0f / 12.0f) * mass * (height * height + depth * depth),
+        (1.0f / 12.0f) * mass * (width * width + depth * depth),
+        (1.0f / 12.0f) * mass * (width * width + height * height)
+    };
+}
+
 AABB MeshCollider::GetAABB() const {
+    // 1. 예외 처리: 로컬 AABB가 아직 계산되지 않았다면 (혹은 비어있다면) 다시 계산
+    if (!isLocalAABBCalculated) {
+        CalculateAABB();
+    }
+
+    // 정점이 아예 없는 메쉬라면 빈 AABB 반환
+    if (vertices.empty()) {
+        return localAABB;
+    }
+    auto transform = gameObject->transform;
+    if (transformScaleVersion != transform.GetScaleVersion() || transformRotVersion != transform.GetRotVersion()) {
+        transformRotVersion = transform.GetRotVersion();
+        transformScaleVersion = transform.GetScaleVersion();
+        transformPosVersion = transform.GetPosVersion();
+        lastPosition = transform.GetPosition();
+        const Vector3 pos = transform.GetPosition();
+        const Vector3 scale = transform.GetScale();
+        const Quaternion rot = transform.GetRotation();
+
+        // 2. 로컬 AABB의 8개 모서리(코너) 좌표 추출
+        Vector3 corners[8] = {
+            {localAABB.min.x, localAABB.min.y, localAABB.min.z},
+            {localAABB.max.x, localAABB.min.y, localAABB.min.z},
+            {localAABB.min.x, localAABB.max.y, localAABB.min.z},
+            {localAABB.max.x, localAABB.max.y, localAABB.min.z},
+            {localAABB.min.x, localAABB.min.y, localAABB.max.z},
+            {localAABB.max.x, localAABB.min.y, localAABB.max.z},
+            {localAABB.min.x, localAABB.max.y, localAABB.max.z},
+            {localAABB.max.x, localAABB.max.y, localAABB.max.z}
+        };
+
+        AABB worldAABB = AABB::Empty();
+
+        // 3. 8개의 코너에만 Transform(Scale -> Rotation -> Position) 적용하여 월드 AABB 도출
+        for (int i = 0; i < 8; ++i) {
+            Vector3 scaled = { corners[i].x * scale.x, corners[i].y * scale.y, corners[i].z * scale.z };
+            Vector3 rotated = rot * scaled;
+            Vector3 worldPos = rotated + pos;
+
+            // 첫 번째 코너로 월드 AABB 초기화
+            if (i == 0) {
+                worldAABB.min = worldPos;
+                worldAABB.max = worldPos;
+            } else {
+                // 나머지 7개 코너로 Min/Max 갱신
+                if (worldPos.x < worldAABB.min.x) worldAABB.min.x = worldPos.x;
+                if (worldPos.y < worldAABB.min.y) worldAABB.min.y = worldPos.y;
+                if (worldPos.z < worldAABB.min.z) worldAABB.min.z = worldPos.z;
+
+                if (worldPos.x > worldAABB.max.x) worldAABB.max.x = worldPos.x;
+                if (worldPos.y > worldAABB.max.y) worldAABB.max.y = worldPos.y;
+                if (worldPos.z > worldAABB.max.z) worldAABB.max.z = worldPos.z;
+            }
+        }
+        cachedAABB = worldAABB;
+    }
+    else if (transformPosVersion != transform.GetPosVersion()) {
+        Vector3 currentPos = transform.GetPosition();
+        Vector3 delta = currentPos - lastPosition;
+
+        // 단순히 이동량(Delta)만큼 AABB를 옮겨줌
+        cachedAABB.min += delta;
+        cachedAABB.max += delta;
+
+        transformPosVersion = transform.GetPosVersion();
+        lastPosition = currentPos;
+    }
+
+
+    return cachedAABB;
+}
+
+void MeshCollider::CalculateAABB() const {
     const auto& verts = GetVertices();
-    AABB aabb = AABB::Empty();
-    aabb.min = verts[0];
-    aabb.max = verts[0];
-    const Vector3 pos   =  gameObject-> transform.GetPosition();
-    const Vector3 scale = gameObject->transform.GetScale();
-    const Quaternion rot = gameObject->transform.GetRotation();
 
+    // 정점이 없는 경우 처리
+    if (verts.empty()) {
+        localAABB = AABB::Empty();
+        isLocalAABBCalculated = true;
+        return;
+    }
 
+    localAABB.min = verts[0];
+    localAABB.max = verts[0];
+
+    // 로컬 정점만으로 Min/Max 계산
     for (size_t i = 1; i < verts.size(); ++i) {
         const Vector3& v = verts[i];
 
-        if (v.x < aabb.min.x) aabb.min.x = v.x;
-        if (v.y < aabb.min.y) aabb.min.y = v.y;
-        if (v.z < aabb.min.z) aabb.min.z = v.z;
+        if (v.x < localAABB.min.x) localAABB.min.x = v.x;
+        if (v.y < localAABB.min.y) localAABB.min.y = v.y;
+        if (v.z < localAABB.min.z) localAABB.min.z = v.z;
 
-        if (v.x > aabb.max.x) aabb.max.x = v.x;
-        if (v.y > aabb.max.y) aabb.max.y = v.y;
-        if (v.z > aabb.max.z) aabb.max.z = v.z;
+        if (v.x > localAABB.max.x) localAABB.max.x = v.x;
+        if (v.y > localAABB.max.y) localAABB.max.y = v.y;
+        if (v.z > localAABB.max.z) localAABB.max.z = v.z;
     }
 
-    return aabb;
+    isLocalAABBCalculated = true; // 계산 완료 플래그 켜기
 }
 
 void MeshCollider::ParseFromString(const std::string& arg) {
@@ -53,29 +151,47 @@ void MeshCollider::ParseFromString(const std::string& arg) {
         if (line.empty()) continue;
         if (line.back() == '\r') line.pop_back();
 
-        size_t delimPos = line.find(": ");
-        if (delimPos != std::string::npos) {
-            std::string key = line.substr(0, delimPos);
-            std::string val = line.substr(delimPos + 2);
-
-            if (key == "IsTrigger") {
-                this->isTrigger = (val == "1");
-                mode = 0;
-            }
-            else if (key == "VertexCount") {
-                countToRead = std::stoi(val);
-                this->vertices.reserve(countToRead);
-                mode = 1;
-                std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 2. 모드 진입 확인
-            }
-            else if (key == "TriangleCount") {
-                countToRead = std::stoi(val);
-                this->triangles.reserve(countToRead);
-                mode = 2;
-                std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 3. 모드 진입 확인
-            }
-            continue;
+        size_t delimPos = line.find(':');
+        if (delimPos == std::string::npos) continue;
+        std::string key = StringUtils::Trim(line.substr(0, delimPos));
+        std::string val = StringUtils::Trim(line.substr(delimPos + 1));
+        if (key == "IsTrigger") {
+            this->isTrigger = (val == "1");
+            mode = 0;
         }
+        else if (key == "VertexCount") {
+            countToRead = std::stoi(val);
+            this->vertices.reserve(countToRead);
+            mode = 1;
+            std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 2. 모드 진입 확인
+        }
+        else if (key == "TriangleCount") {
+            countToRead = std::stoi(val);
+            this->triangles.reserve(countToRead);
+            mode = 2;
+            std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 3. 모드 진입 확인
+        }
+        else if (key == "StaticFriction") {
+            this->material.staticFriction = std::stof(val);
+            mode = 0;
+        }
+        else if (key == "DynamicFriction") {
+            this->material.dynamicFriction = std::stof(val);
+            mode = 0;
+        }
+        else if (key == "Bounciness") {
+            this->material.bounciness = std::stof(val);
+            mode = 0;
+        }
+        else if (key == "BounceCombine") {
+            this->material.bounceCombine = ColliderMaterial::ParseCombineMode(val);
+            mode = 0;
+        }
+        else if (key == "FrictionCombine") {
+            this->material.frictionCombine = ColliderMaterial::ParseCombineMode(val);
+            mode = 0;
+        }
+        continue;
 
         if (mode == 1 && countToRead > 0) {
             try {

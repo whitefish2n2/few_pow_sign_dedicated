@@ -8,7 +8,7 @@
 
 #include "ObjectConstructor.h"
 #include "../../../Dto/MapInfo.h"
-
+#include "PhysicsSystem.h"
 
 class PhysicsSystemConstructor {
     public:
@@ -19,9 +19,9 @@ class PhysicsSystemConstructor {
     [[nodiscard]] bool Construct(GameSession* target) {
         std::cout<<"construct start!!!"<< std::endl;
         std::cout << "Target Address: " << target << std::endl;
-        target.
+        target->physicsSystem->layerManager = layerManager;
         try {
-            for (auto o: objects) {
+            for (const auto& o: objects) {
                 o.Construct(target);
                 std::cout<<o.name<<" object 생성"<< std::endl;
             }
@@ -35,6 +35,7 @@ class PhysicsSystemConstructor {
     }
     void SetLayerManager(LayerManager&& lm) {
         layerManager = std::move(lm);
+
     }
     void InsertObject(std::unique_ptr<ObjectConstructor> o) {
         objects.push_back(std::move(*o));

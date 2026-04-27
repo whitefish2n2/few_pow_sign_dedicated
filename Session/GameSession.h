@@ -19,12 +19,14 @@
 #include "Dto/MapInfo.h"
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
-#include "Game/PhysicsSystem.h"
 #include "netcode/SessionNetworkDto.h"
+class Renderer;
+struct Mesh;
 class BroadcastMoveDto;
 struct _EnetPeer;
 class GameObjectManager;
 class ComponentManager;
+class PhysicsSystem;
 using EventPayloadVariant = std::variant<
     std::nullptr_t,
     std::shared_ptr<AssignRequestDto>,
@@ -104,7 +106,7 @@ class GameSession {
     SESSIONSTATUS status = idle; // 세션 상태
     std::shared_ptr<std::map<uint64_t, Player>> players; // 플레이어 리스트
     MapInfo mapType;
-    PhysicsSystem physicsSystem;
+    std::unique_ptr<PhysicsSystem> physicsSystem;
 
     Time time;
 

@@ -3,4 +3,4 @@
 //
 
 #pragma once
-# define Gravity 9.81f;
+# define Gravity 1;

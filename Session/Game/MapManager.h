@@ -4,6 +4,7 @@
 
 #pragma once
 #include <memory>
+#include <set>
 
 
 #include "../Dto/MapInfo.h"
@@ -29,6 +30,10 @@ protected:
     MapManager(MapManager&&) = delete;
     MapManager& operator=(MapManager&&) = delete;
 private:
+    std::shared_mutex mapMutex;
+    std::mutex loadingMutex;
+    std::condition_variable_any loadingCV;
+    std::set<MapInfo> loadingMaps;
     std::unordered_map<MapInfo, std::unique_ptr<PhysicsSystemConstructor>> mapTemplates;
     static std::unique_ptr<PhysicsSystemConstructor> LoadMap(MapInfo type);
 

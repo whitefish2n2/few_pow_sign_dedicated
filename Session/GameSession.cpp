@@ -19,14 +19,8 @@
 #include "Game/MapManager.h"
 #include "Game/Map/MapConstructer/PhysicsSystemConstructor.h"
 #include "../util/Log.h"
-#include "FhishiX/gameobject/collider/BoxCollider.h"
-#include "FhishiX/gameobject/collider/SphereCollider.h"
-#include "FhishiX/gameobject/collider/CapsuleCollider.h"
-#include "FhishiX/gameobject/collider/MeshCollider.h"
-#include "FhishiX/gameobject/collider/SphereCollider.h"
-#include "FhishiX/gameobject/collider/StaticCollider.h"
-#include "FhishiX/gameobject/rigidBody/Rigidbody.h"
 #include "../Socket/BroadcastMoveDto.h"
+#include "Game/PhysicsSystem.h"
 
 class CapsuleCollider;
 
@@ -35,6 +29,7 @@ GameSession::GameSession() {
     objectManager->ownerSession = this;
     componentManager = std::make_unique<ComponentManager>();
     componentManager->ownerSession = this;
+    physicsSystem = std::make_unique<PhysicsSystem>();
 }
 GameSession::~GameSession() {
     LOG_INFO("server destroyed");
@@ -191,32 +186,7 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
     this->initInfo = initInfo;
     uint64_t privateKey;
     uint8_t publicKey=0;
-    auto res = MapManager::GetInstance()->GetPhysicsMapConstructor(MapInfo(initInfo.mapId))->Construct(this) ;
-    ///StaticMap Bake
-    {
-
-        StaticCollider col;
-        std::vector<ComponentHandle<Collider> > colliders;
-        for (auto& o: *componentManager.get()->GetOrCreatePool<BoxCollider>()) {
-            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
-            colliders.push_back(o.MakeHandle());
-        }
-        for (auto& o : *componentManager.get()->GetOrCreatePool<SphereCollider>()) {
-            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
-            colliders.push_back(o.MakeHandle());
-        }
-        for (auto& o: *componentManager.get()->GetOrCreatePool<CapsuleCollider>()) {
-            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
-            colliders.push_back(o.MakeHandle());
-        }
-        for (auto& o: *componentManager.get()->GetOrCreatePool<MeshCollider>()) {
-            if (!o.gameObject || o.gameObject->hasThisComponent<Rigidbody>()) continue;
-            colliders.push_back(o.MakeHandle());
-        }
-        for (auto& o : *componentManager.get()->GetOrCreatePool<Rigidbody>()) {
-            //나중에 그리드 빌드할거면 여기에
-        }
-    }
+    auto res = physicsSystem->Init(MapInfo(initInfo.mapId), this) ;
     if (!res){/*todo: 매칭 취소 로직*/ return; }
     std::cout<<"게임 ID "<<sessionId<<"에서 맵 생성중. 맵 아이디:"<<initInfo.mapId<< std::endl;
     std::cout<<"New Session Enqueue Players:"<< std::endl;
