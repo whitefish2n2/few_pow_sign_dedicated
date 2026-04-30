@@ -9,7 +9,7 @@
 #include "../../../Component/Definition/ComponentFactory.h"
 
 
-// Intergrate로 이관
+// Integrate로 이관
 /*
 void Rigidbody::PhysicsUpdate() {
     if (!gameObject) {
@@ -53,8 +53,7 @@ void Rigidbody::ParseFromString(const std::string& arg) {
         std::string val = StringUtils::Trim(line.substr(delimPos + 1));
 
         if (key == "Mass") {
-            this->mass = std::stof(val);
-            this->inverseMass = 1.0f / this->mass;
+            this->SetMass(std::stof(val));
         }
         else if (key == "Drag") {
             this->drag = std::stof(val);
@@ -106,19 +105,14 @@ void Rigidbody::Integrate() {
     }
 
     Vector3 acceleration = force * inverseMass;
+
     linearVelocity = linearVelocity + (acceleration * dt);
 
-    float linearDragFactor = 1.0f - (drag * dt);
-    if (linearDragFactor < 0.0f) linearDragFactor = 0.0f;
-    linearVelocity = linearVelocity * linearDragFactor;
-
-    float angularDragFactor = 1.0f - (angularDrag * dt);
-    if (angularDragFactor < 0.0f) angularDragFactor = 0.0f;
-    angularVelocity = angularVelocity * angularDragFactor;
+    linearVelocity = linearVelocity * (std::max)(0.0f, 1.0f - (drag * dt));
+    angularVelocity = angularVelocity * (std::max)(0.0f, 1.0f - (angularDrag * dt));
 
     // ----------------------------------------------------
     // 2. 제약 조건(Constraints) 적용
-    // (속도를 구한 직후, 위치를 이동시키기 전에 축을 잠가야 합니다)
     // ----------------------------------------------------
     if (constraints & 2) linearVelocity.x = 0.0f;
     if (constraints & 4) linearVelocity.y = 0.0f;
@@ -127,6 +121,10 @@ void Rigidbody::Integrate() {
     if (constraints & 16) angularVelocity.x = 0.0f;
     if (constraints & 32) angularVelocity.y = 0.0f;
     if (constraints & 64) angularVelocity.z = 0.0f;
+
+    ///미세 떨림 방지
+    if (linearVelocity.LengthSquared() < 0.0001f) linearVelocity = Vector3(0, 0, 0);
+    if (angularVelocity.LengthSquared() < 0.0001f) angularVelocity = Vector3(0, 0, 0);
 
     // ----------------------------------------------------
     // 3. 누적된 힘(Force) 초기화

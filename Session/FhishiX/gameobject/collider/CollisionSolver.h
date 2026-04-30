@@ -48,6 +48,8 @@ private:
     static CollisionFunc dispatchTable[(int)ColliderType::MaxCount][(int)ColliderType::MaxCount];
 
 public:
+    static float CombineMaterial(float a, float b, CombineMode modeA, CombineMode modeB);
+
     // 엔진 초기화 시점에 테이블 세팅
     static void Initialize();
 

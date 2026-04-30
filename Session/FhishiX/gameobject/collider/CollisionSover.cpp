@@ -13,7 +13,19 @@
 #include "../rigidBody/Rigidbody.h"
 constexpr float EPSILON = 1e-4f;
 CollisionFunc CollisionSolver::dispatchTable[(int)ColliderType::MaxCount][(int)ColliderType::MaxCount] = {};
+float CollisionSolver::CombineMaterial(float a, float b,CombineMode modeA, CombineMode modeB) {
+    // 두 객체의 CombineMode 중 우선순위가 높은 쪽을 따름
+    // 우선순위: Maximum > Multiply > Minimum > Average
+    CombineMode mode = (static_cast<int>(modeA) > static_cast<int>(modeB)) ? modeA : modeB;
 
+    switch (mode) {
+        case CombineMode::Average:  return (a + b) * 0.5f;
+        case CombineMode::Minimum:  return (std::min)(a, b);
+        case CombineMode::Multiply: return a * b;
+        case CombineMode::Maximum:  return (std::max)(a, b);
+        default:                    return (a + b) * 0.5f;
+    }
+}
 // region Init & Use
 /*
  *    S  B  C  M
@@ -76,6 +88,22 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
     float invMassB = (rbB && !rbB->isKinematic) ? (1.0f / rbB->mass) : 0.0f;
 
     float totalInvMass = invMassA + invMassB;
+    if (totalInvMass <= 0.0f) return;
+
+    const ColliderMaterial& matA = contact.colA->material;
+    const ColliderMaterial& matB = contact.colB->material;
+
+    // 반발계수 조합
+    float restitution = CombineMaterial(
+        matA.bounciness, matB.bounciness,
+        matA.bounceCombine, matB.bounceCombine
+    );
+
+    // 마찰계수 조합 (동적)
+    float friction = CombineMaterial(
+        matA.dynamicFriction, matB.dynamicFriction,
+        matA.frictionCombine, matB.frictionCombine
+    );
 
     // 3. 위치 보정 (Position Resolution) - 파고든 만큼 질량비로 밀어냄
     float separation = contact.penetration / totalInvMass;
@@ -90,22 +118,50 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
         trB.SetPosition(trB.GetPosition() - (moveVector * invMassB));
     }
 
-    // 4. 속도 보정 (Impulse - Sliding)
+    ///충격량 계산
+
     Vector3 velA = rbA ? rbA->linearVelocity : Vector3::Zero();
-    Vector3 velB = rbB ? rbB->linearVelocity: Vector3::Zero();
+    Vector3 velB = rbB ? rbB->linearVelocity : Vector3::Zero();
     Vector3 relativeVelocity = velA - velB;
 
     float velAlongNormal = Vector3::Dot(relativeVelocity, contact.normal);
-    if (velAlongNormal > 0) return; // 이미 멀어지고 있으면 무시
+    if (velAlongNormal > 0) return; // 이미 멀어지는 중
 
-    // 반발 계수 e=0 (FPS 기본값: 튕기지 않고 미끄러짐)
-    float j = -(1.0f) * velAlongNormal;
+    float j = -(1.0f + restitution) * velAlongNormal;
     j /= totalInvMass;
 
-    Vector3 impulse = contact.normal * j;
+    Vector3 normalImpulse = contact.normal * j;
 
-    if (rbA && invMassA > 0) rbA->SetVelocity(velA + (impulse * invMassA));
-    if (rbB && invMassB > 0) rbB->SetVelocity(velB - (impulse * invMassB));
+    if (rbA && invMassA > 0) rbA->SetVelocity(velA + normalImpulse * invMassA);
+    if (rbB && invMassB > 0) rbB->SetVelocity(velB - normalImpulse * invMassB);
+
+
+    ///마찰 충격량
+
+    // 충돌 후 갱신된 속도로 재계산
+    velA = rbA ? rbA->linearVelocity : Vector3::Zero();
+    velB = rbB ? rbB->linearVelocity : Vector3::Zero();
+    relativeVelocity = velA - velB;
+
+    // 접선 방향 (normal 성분 제거)
+    Vector3 tangent = relativeVelocity - contact.normal * Vector3::Dot(relativeVelocity, contact.normal);
+    float tangentLen = tangent.length();
+    if (tangentLen < 0.0001f) return; // 접선 속도 없으면 마찰 없음
+    tangent = tangent * (1.0f / tangentLen);
+
+    float velAlongTangent = Vector3::Dot(relativeVelocity, tangent);
+    float jt = -velAlongTangent / totalInvMass;
+
+    // 쿨롱 마찰: |jt| <= friction * |j| 이면 정지 마찰, 초과하면 동적 마찰
+    Vector3 frictionImpulse;
+    if (std::abs(jt) <= j * friction) {
+        frictionImpulse = tangent * jt;           // 정지 마찰 (완전히 멈춤)
+    } else {
+        frictionImpulse = tangent * (-j * friction); // 동적 마찰 (미끄러짐)
+    }
+
+    if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + frictionImpulse * invMassA);
+    if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - frictionImpulse * invMassB);
 }
 bool CollisionSolver::Raycast(const Ray& ray, Collider* collider, float maxDistance, RaycastHit& outHit) {
     if (!collider) return false;
