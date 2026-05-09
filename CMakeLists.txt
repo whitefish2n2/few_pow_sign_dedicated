@@ -130,6 +130,7 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/Raycast.h
         Session/FhishiX/gameobject/collider/ColliderMaterial.h
         util/StringUtil.h
+        MonitorUtil.h
 )
 target_precompile_headers(fpsProjectServer PUBLIC pch.h)
 add_custom_command(TARGET fpsProjectServer POST_BUILD
@@ -152,6 +153,9 @@ target_link_libraries(fpsProjectServer
         dxgi
         dxguid
 )
+if(WIN32)
+    target_link_libraries(fpsProjectServer PRIVATE psapi)
+endif()
 find_package(cpprestsdk CONFIG REQUIRED)
 target_link_libraries(fpsProjectServer PRIVATE cpprestsdk::cpprest cpprestsdk::cpprestsdk_zlib_internal cpprestsdk::cpprestsdk_brotli_internal)
 find_package(nlohmann_json CONFIG REQUIRED)

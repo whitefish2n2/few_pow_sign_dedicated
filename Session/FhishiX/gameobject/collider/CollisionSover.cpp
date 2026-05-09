@@ -106,7 +106,10 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
     );
 
     // 3. 위치 보정 (Position Resolution) - 파고든 만큼 질량비로 밀어냄
-    float separation = contact.penetration / totalInvMass;
+    const float SLOP = 0.01f;
+    float effectivePenetration = (std::max)(contact.penetration - SLOP, 0.0f);
+
+    float separation = effectivePenetration / totalInvMass;
     Vector3 moveVector = contact.normal * separation;
 
     if (invMassA > 0) {
@@ -201,22 +204,28 @@ namespace {
 
         Vector3 dirVector = Vector3::Zero();
         float scaledHeight = cap->height;
+        float rScale = 1.0f;
 
         if (cap->direction == 0) {
             dirVector = Vector3(1, 0, 0);
             scaledHeight *= scale.x;
+            rScale = (std::max)(scale.y, scale.z);
         } else if (cap->direction == 1) {
             dirVector = Vector3(0, 1, 0);
             scaledHeight *= scale.y;
+            rScale = (std::max)(scale.x, scale.z);
         } else if (cap->direction == 2) {
             dirVector = Vector3(0, 0, 1);
             scaledHeight *= scale.z;
+            rScale = (std::max)(scale.x, scale.y);
         }
         dirVector = rot * dirVector;
-        float halfHeight = scaledHeight * 0.5f;
+        float scaledRadius = cap->radius * rScale;
+        float distanceBetweenCenters = (std::max)(0.0f, scaledHeight - (scaledRadius * 2.0f));
+        float halfDist = distanceBetweenCenters * 0.5f;
 
-        outTop = pos + (dirVector * halfHeight);
-        outBottom = pos - (dirVector * halfHeight);
+        outTop = pos + (dirVector * halfDist);
+        outBottom = pos - (dirVector * halfDist);
     }
 
     // 두 선분(p1~q1, p2~q2) 사이의 가장 가까운 두 점(c1, c2)을 찾는 수학 함수
@@ -803,17 +812,48 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
         if (capAABB.max.y < triMin.y || capAABB.min.y > triMax.y) continue;
         if (capAABB.max.z < triMin.z || capAABB.min.z > triMax.z) continue;
 
+        // 💡 1. 삼각형의 실제 법선(앞면 방향)을 구합니다.
+        Vector3 triNormal = Vector3::Cross(v2 - v0, v1 - v0);
+        float nLen = triNormal.length();
+        if (nLen > EPSILON) triNormal = triNormal / nLen;
+        else continue;
+
         float distSq;
         Vector3 closestSeg, closestTri;
         ClosestPtSegmentTriangle(capTop, capBottom, v0, v1, v2, distSq, closestSeg, closestTri);
 
         if (distSq < radiusSq) {
             float dist = std::sqrt(distSq);
-            float penetration = cRadius - dist;
+            float penetration = 0.0f;
+            Vector3 normal = Vector3::Zero();
+
+            if (dist > EPSILON) {
+                // 선분이 메쉬를 완전히 뚫지는 않은 일반적인 상태
+                normal = (closestSeg - closestTri) / dist;
+
+                // 💡 2. 법선이 삼각형 뒷면을 향하고 있다면 앞면으로 강제 보정
+                if (Vector3::Dot(normal, triNormal) < 0.0f) {
+                    normal = normal * -1.0f;
+                }
+                penetration = cRadius - dist;
+            } else {
+                // 🚨 3. [관통 버그 해결] 선분 자체가 메쉬를 뚫어버린 심각한 상태 (dist == 0)
+                normal = triNormal; // 무조건 삼각형 앞면 방향으로 밀어내기
+
+                // 캡슐의 위(Top) 아래(Bottom) 중 바닥을 얼마나 깊이 파고들었는지 계산
+                float dTop = Vector3::Dot(capTop - v0, triNormal);
+                float dBot = Vector3::Dot(capBottom - v0, triNormal);
+
+                // minD가 음수일수록 삼각형 뒷면으로 깊게 관통한 것
+                float minD = (std::min)(dTop, dBot);
+
+                // 실제 밀어내야 할 깊이 = 뚫린 깊이(-minD) + 캡슐 반지름
+                penetration = cRadius - minD;
+            }
 
             if (penetration > maxPenetration) {
                 maxPenetration = penetration;
-                bestNormal = (dist > EPSILON) ? (closestSeg - closestTri) / dist : Vector3(0, 1, 0);
+                bestNormal = normal;
                 hasCollision = true;
             }
         }
@@ -829,6 +869,7 @@ outContact.rbB = GetSafeRigidbody(b);
     }
     return false;
 }
+
 bool CollisionSolver::SphereVsBox(Collider *a, Collider *b, Contact &outContact) {
     auto* sphere = static_cast<SphereCollider*>(a);
     auto* box = static_cast<BoxCollider*>(b);
@@ -893,6 +934,7 @@ outContact.rbB = GetSafeRigidbody(b);
     }
     return false;
 }
+
 bool CollisionSolver::BoxVsCapsule(Collider *a, Collider *b, Contact &outContact) {
     auto* box = static_cast<BoxCollider*>(a);
     auto* cap = static_cast<CapsuleCollider*>(b);
@@ -972,6 +1014,7 @@ outContact.rbB = GetSafeRigidbody(b);
 
     return false;
 }
+
 bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
     auto* boxA = static_cast<BoxCollider*>(a);
     auto* boxB = static_cast<BoxCollider*>(b);
@@ -1065,9 +1108,11 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
     outContact.normal = bestAxis;
     return true;
 }
+
 bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
     auto* box = static_cast<BoxCollider*>(a);
     auto* mesh = static_cast<MeshCollider*>(b);
+
 
     Vector3 scaleB = box->gameObject->transform.GetScale();
     Vector3 boxPos = box->gameObject->transform.GetPosition() + (box->gameObject->transform.GetRotation() * Vector3(box->center.x * scaleB.x, box->center.y * scaleB.y, box->center.z * scaleB.z));
@@ -1108,6 +1153,10 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         Vector3 w0 = (mRot * Vector3(verts[indices[i]].x * mScale.x, verts[indices[i]].y * mScale.y, verts[indices[i]].z * mScale.z)) + mPos;
         Vector3 w1 = (mRot * Vector3(verts[indices[i+1]].x * mScale.x, verts[indices[i+1]].y * mScale.y, verts[indices[i+1]].z * mScale.z)) + mPos;
         Vector3 w2 = (mRot * Vector3(verts[indices[i+2]].x * mScale.x, verts[indices[i+2]].y * mScale.y, verts[indices[i+2]].z * mScale.z)) + mPos;
+        Vector3 triWorldNormal = Vector3::Cross(w2 - w0, w1 - w0);
+        float triNormLen = triWorldNormal.length();
+        if (triNormLen > EPSILON) triWorldNormal = triWorldNormal / triNormLen;
+        else triWorldNormal = Vector3(0, 1, 0);
 
         Vector3 triMin = { (std::min)({w0.x, w1.x, w2.x}), (std::min)({w0.y, w1.y, w2.y}), (std::min)({w0.z, w1.z, w2.z}) };
         Vector3 triMax = { (std::max)({w0.x, w1.x, w2.x}), (std::max)({w0.y, w1.y, w2.y}), (std::max)({w0.z, w1.z, w2.z}) };
@@ -1174,8 +1223,10 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
 
         if (isIntersecting && minPenetration > maxPenetration) {
             maxPenetration = minPenetration;
-            // 로컬 노멀을 다시 월드 회전으로 돌려놓기!
             bestWorldNormal = boxRot * bestLocalAxis;
+            if (Vector3::Dot(bestWorldNormal, triWorldNormal) < 0.0f) {
+                bestWorldNormal = bestWorldNormal * -1.0f;
+            }
             hasCollision = true;
         }
     }

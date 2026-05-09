@@ -62,6 +62,11 @@ std::shared_ptr<GameSession> SessionManager::getSessionById(const std::string &s
     return nullptr;
 }
 
+int SessionManager::getSessionCount() {
+    std::shared_lock lock(_sessionsLock); // 읽기 락
+    return static_cast<int>(sessions.size());
+}
+
 
 void SessionManager::cleanupSessions() {
     std::unique_lock lock(_sessionsLock);

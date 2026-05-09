@@ -143,7 +143,6 @@ void MeshCollider::ParseFromString(const std::string& arg) {
     this->triangles.clear();
     this->trianglesIndices.clear();
 
-    // ⬇️ 1. 데이터가 통째로 잘 넘어왔는지 확인!
     std::cout << "\n--- [MeshCollider 파싱 시작: " << this->gameObject->name << "] ---\n";
     std::cout << "받은 전체 문자열 길이: " << arg.length() << " bytes\n";
 
@@ -151,59 +150,21 @@ void MeshCollider::ParseFromString(const std::string& arg) {
         if (line.empty()) continue;
         if (line.back() == '\r') line.pop_back();
 
-        size_t delimPos = line.find(':');
-        if (delimPos == std::string::npos) continue;
-        std::string key = StringUtils::Trim(line.substr(0, delimPos));
-        std::string val = StringUtils::Trim(line.substr(delimPos + 1));
-        if (key == "IsTrigger") {
-            this->isTrigger = (val == "1");
-            mode = 0;
-        }
-        else if (key == "VertexCount") {
-            countToRead = std::stoi(val);
-            this->vertices.reserve(countToRead);
-            mode = 1;
-            std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 2. 모드 진입 확인
-        }
-        else if (key == "TriangleCount") {
-            countToRead = std::stoi(val);
-            this->triangles.reserve(countToRead);
-            mode = 2;
-            std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n"; // ⬇️ 3. 모드 진입 확인
-        }
-        else if (key == "StaticFriction") {
-            this->material.staticFriction = std::stof(val);
-            mode = 0;
-        }
-        else if (key == "DynamicFriction") {
-            this->material.dynamicFriction = std::stof(val);
-            mode = 0;
-        }
-        else if (key == "Bounciness") {
-            this->material.bounciness = std::stof(val);
-            mode = 0;
-        }
-        else if (key == "BounceCombine") {
-            this->material.bounceCombine = ColliderMaterial::ParseCombineMode(val);
-            mode = 0;
-        }
-        else if (key == "FrictionCombine") {
-            this->material.frictionCombine = ColliderMaterial::ParseCombineMode(val);
-            mode = 0;
-        }
-        continue;
-
+        // 1. 데이터 모드(정점 or 인덱스)일 경우 우선 처리
         if (mode == 1 && countToRead > 0) {
             try {
                 this->vertices.push_back(Vector3::ParseVector3(line));
                 countToRead--;
+                if (countToRead == 0) mode = 0; // 다 읽었으면 모드 해제
             } catch (...) {
                 std::cout << "💥 정점 파싱 에러 발생 라인: " << line << "\n";
             }
+            continue; // 처리가 끝났으니 다음 줄로
         }
         else if (mode == 2 && countToRead > 0) {
             uint32_t i1, i2, i3;
             if (sscanf_s(line.c_str(), "%u,%u,%u", &i1, &i2, &i3) == 3) {
+                // 주의: vertices.size()가 제대로 찼는지 확인 후 인덱스 추가
                 if (i1 < vertices.size() && i2 < vertices.size() && i3 < vertices.size()) {
                     this->triangles.emplace_back(i1, i2, i3);
                     trianglesIndices.push_back(i1);
@@ -216,10 +177,49 @@ void MeshCollider::ParseFromString(const std::string& arg) {
                 std::cout << "💥 인덱스 스캔 실패 라인: " << line << "\n";
             }
             countToRead--;
+            if (countToRead == 0) mode = 0; // 다 읽었으면 모드 해제
+            continue; // 처리가 끝났으니 다음 줄로
+        }
+
+        // 2. 위에서 걸러지지 않았다면 Key:Value 속성 파싱
+        size_t delimPos = line.find(':');
+        if (delimPos == std::string::npos) continue; // 콜론이 없으면 스킵
+
+        std::string key = StringUtils::Trim(line.substr(0, delimPos));
+        std::string val = StringUtils::Trim(line.substr(delimPos + 1));
+
+        if (key == "IsTrigger") {
+            this->isTrigger = (val == "1");
+        }
+        else if (key == "VertexCount") {
+            countToRead = std::stoi(val);
+            this->vertices.reserve(countToRead);
+            mode = 1;
+            std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n";
+        }
+        else if (key == "TriangleCount") {
+            countToRead = std::stoi(val);
+            this->triangles.reserve(countToRead);
+            mode = 2;
+            std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n";
+        }
+        else if (key == "StaticFriction") {
+            this->material.staticFriction = std::stof(val);
+        }
+        else if (key == "DynamicFriction") {
+            this->material.dynamicFriction = std::stof(val);
+        }
+        else if (key == "Bounciness") {
+            this->material.bounciness = std::stof(val);
+        }
+        else if (key == "BounceCombine") {
+            this->material.bounceCombine = ColliderMaterial::ParseCombineMode(val);
+        }
+        else if (key == "FrictionCombine") {
+            this->material.frictionCombine = ColliderMaterial::ParseCombineMode(val);
         }
     }
 
-    // ⬇️ 4. 최종 결과 확인
     std::cout << "최종 파싱 완료 -> 정점: " << this->vertices.size()
               << "개, 인덱스: " << this->trianglesIndices.size() << "개\n";
     std::cout << "--------------------------------------\n\n";

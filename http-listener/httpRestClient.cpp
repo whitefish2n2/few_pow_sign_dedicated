@@ -11,6 +11,8 @@
 #include <queue>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
+
+#include "../MonitorUtil.h"
 #include "../Session/GameSession.h"
 
 using namespace nlohmann;
@@ -58,8 +60,33 @@ void HttpRestClient::start_http_server(){
             res.set_content(e.what(), "text/plain");
             return false;
         }
-
     });
 
+    svr.Get("/health", [this](const httplib::Request& req, httplib::Response& res)->bool {
+        res.status = 200;
+        res.set_content("OK", "text/plain");
+        return true;
+    });
+
+    svr.Get("/status", [this](const httplib::Request& req, httplib::Response& res)->bool {
+        try {
+            ServerStatusDto status{};
+            status.cpuUsagePercent = GetProcessCpuUsage();
+            status.memoryUsageMB = GetProcessMemoryUsageMB();
+            status.currentSessionCount = SessionManager::getInstance().getSessionCount();
+            status.maxSessionCount = 100; // 임시:100개 허용
+
+            json j = status;
+
+            res.status = 200;
+            res.set_content(j.dump(), "application/json");
+            return true;
+        }
+        catch (std::exception& e) {
+            res.status = 500;
+            res.set_content(e.what(), "text/plain");
+            return false;
+        }
+    });
     svr.listen("0.0.0.0", 8888);
 };

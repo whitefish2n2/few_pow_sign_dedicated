@@ -7,8 +7,8 @@
 #include <iostream>
 
 #include "ObjectConstructor.h"
-#include "../../../Dto/MapInfo.h"
 #include "PhysicsSystem.h"
+#include "../../../Dto/MapInfo.h"
 
 class PhysicsSystemConstructor {
     public:
