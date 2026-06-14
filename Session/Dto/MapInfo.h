@@ -23,9 +23,9 @@ public:
 
     }
     static const std::string& GetPath(uint32_t id);
-    static const std::string& GetPath(const MapInfo* Info) ;
+    static const std::string& GetPath(const MapInfo &Info) ;
     static const std::string& GetName(uint32_t id);
-    static const std::string& GetName(const MapInfo* Info);
+    static const std::string& GetName(const MapInfo &Info);
 private:
     inline static std::unordered_map<uint32_t, MapInfoArgument> idToInfo;
 };

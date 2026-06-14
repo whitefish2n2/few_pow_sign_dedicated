@@ -5,6 +5,12 @@
 #include "Collider.h"
 
 #include "../GameObjectArgument.h"
+
+void Collider::Start() {
+    ComponentArgument::Start();
+
+}
+
 ///WIN64환경이면  세션에 InsertRenderer를 자동 호출함
 void Collider::OnAttach() {
     ComponentArgument::OnAttach();
@@ -17,5 +23,6 @@ void Collider::OnAttach() {
     rendererIndex = rawObj->gameSession->InsertRenderer(this->GetRenderer());
     std::cout << "렌더러 Insert:"<<this->gameObject->name << std::endl;
 #endif
+    cachedLayer = gameObject->layer;
     CalculateAABB();
 }

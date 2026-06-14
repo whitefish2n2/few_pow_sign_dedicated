@@ -7,6 +7,12 @@
 #include <mutex>
 #include <enet/enet.h>
 
+struct SendTask {
+    ENetPeer* peer;
+    std::vector<uint8_t> payload;
+    enet_uint32 flags;
+};
+
 class EnetClient {
     public:
     bool running = true;
@@ -16,10 +22,15 @@ class EnetClient {
         });
         return instance;
     }
+    void EnqueueSend(ENetPeer* peer, std::vector<uint8_t> payload, enet_uint32 flags);
 
     private:
-    static EnetClient* instance;
-    static std::once_flag flag;
+    inline static EnetClient* instance = nullptr;
+    inline static std::once_flag flag;
+
+    std::queue<SendTask> sendQueue;
+    std::mutex sendMutex;
+    void ProcessSendQueue();
 
 
     EnetClient()= default;
@@ -33,7 +44,5 @@ class EnetClient {
     void RunClient(int port);
 };
 
-EnetClient* EnetClient::instance = nullptr;
-std::once_flag EnetClient::flag;
 
 #endif //ENETCLIENT_H

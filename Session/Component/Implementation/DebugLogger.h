@@ -7,9 +7,10 @@
 #include <iostream>
 #include <ostream>
 
+#include "../Definition/Component.h"
 #include "../Definition/ComponentArgument.h"
 
-class  DebugLogger final:public ComponentArgument {
+class  DebugLogger final:public Component<DebugLogger> {
     public:
     void Update() override {
         std::cout << "Debug logger updated" << std::endl;

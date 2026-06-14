@@ -13,7 +13,7 @@
 #include "../FhishiX/gameobject/collider/SphereCollider.h"
 #include "../FhishiX/gameobject/collider/StaticCollider.h"
 #include "../FhishiX/gameobject/rigidBody/Rigidbody.h"
-#include "../../Socket/BroadcastMoveDto.h"
+#include "../../Socket/dto/BroadcastMoveDto.h"
 
 
 ///MapInfo를 기반으로 target인자로 전달된 GameSession에 맵을 Construct합니다. 성공 결과를 반환합니다.
@@ -29,9 +29,7 @@ bool PhysicsSystem::Init(MapInfo map_info, GameSession *target) {
     session->FlushGameObject();
     session->UpdateComponents();
 
-    // =================================================================
-    // 🚨 K-D 트리에 넣을 스태틱 콜라이더 색출 작전 (디버그 로그 포함)
-    // =================================================================
+
     int totalBoxes = 0, addedBoxes = 0, skipNull = 0, skipRb = 0;
 
     for (auto& o : *cmManager->GetOrCreatePool<BoxCollider>()) {
@@ -82,4 +80,82 @@ bool PhysicsSystem::Init(MapInfo map_info, GameSession *target) {
     }
 
     return success;
+}
+
+
+std::vector<Collider*> PhysicsSystem::OverlapSphere(const Vector3& center, float radius, LayerMask layerMask = LayerMask(0xFFFFFFFF)){
+    std::vector<Collider*> result;
+
+    // 1. K-D 트리에서 후보군 추출
+    std::vector<ComponentHandle<Collider>> candidates;
+    AABB searchBounds(center - Vector3(radius), center + Vector3(radius));
+    tree.GetOverlaps(searchBounds, candidates);
+
+    // 2. 후보군 정밀 검사
+    Contact dummyContact;
+    for (auto& handle : candidates) {
+        Collider* col = handle.operator->();
+        if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
+            continue;
+        }
+        if (CollisionSolver::OverlapSphere(center, radius, col, dummyContact)) {
+            result.push_back(col);
+        }
+    }
+
+    for (auto& actor : activeActors) {
+        for (auto& colHandle : actor.colliders) {
+            Collider* col = colHandle.operator->();
+            if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
+                continue;
+            }
+            if (CollisionSolver::OverlapSphere(center, radius, col, dummyContact)) {
+                result.push_back(col);
+            }
+        }
+    }
+
+    return result;
+}
+bool PhysicsSystem::CheckSphere(const Vector3& center, float radius, LayerMask layerMask) {
+    // 1. K-D 트리에서 AABB로 후보군 추출
+    std::vector<ComponentHandle<Collider>> candidates;
+    AABB searchBounds(center - Vector3(radius), center + Vector3(radius));
+    tree.GetOverlaps(searchBounds, candidates);
+
+    Contact dummyContact;
+
+    // 2. K-D 트리 후보군 정밀 검사 (Static 객체 / 지형)
+    for (auto& handle : candidates) {
+        Collider* col = handle.operator->();
+
+        // 레이어 마스크 체크 (아까 논의한 캐싱이 적용되었다면 col->cachedLayer.idx 로 바꾸시면 더 빠릅니다!)
+        if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
+            continue;
+        }
+
+        // 💡 핵심: 하나라도 부딪히면 배열에 담을 필요 없이 즉시 true 반환! (Early Exit)
+        if (CollisionSolver::OverlapSphere(center, radius, col, dummyContact)) {
+            return true;
+        }
+    }
+
+    // 3. 동적 객체 검사 (activeActors)
+    for (auto& actor : activeActors) {
+        for (auto& colHandle : actor.colliders) {
+            Collider* col = colHandle.operator->();
+
+            if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
+                continue;
+            }
+
+            // 💡 여기서도 하나 닿으면 바로 true
+            if (CollisionSolver::OverlapSphere(center, radius, col, dummyContact)) {
+                return true;
+            }
+        }
+    }
+
+    // 끝까지 다 뒤졌는데 아무것도 안 걸렸다면
+    return false;
 }

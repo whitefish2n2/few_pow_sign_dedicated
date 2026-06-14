@@ -11,6 +11,7 @@
 #include "ColliderMaterial.h"
 #include "CollisionSolver.h"
 #include "../../AABB.h"
+#include "../../Layer.h"
 
 #include "../../../Component/Definition/ComponentArgument.h"
 #include "../../../FhishiX/Triangle.h"
@@ -42,11 +43,13 @@ public:
     virtual ~Collider() noexcept = default;
     bool staticObject = false;
     bool isTrigger = false;
-    ColliderMaterial material;
+    Layer cachedLayer;
+    ColliderMaterial material;///todo: 나중에 공용 ColliderMaterial 저장소 만들어서 여기서 id로 접근할 수 있게 하기
     inline ColliderType GetShapeType() const { return shapeType; }
     ///관성 텐서 계산 함수 - > 구현필
     virtual Vector3 CalculateLocalInertia(float mass) const = 0;
 
+    void Start() override;
 
     [[nodiscard]] virtual std::unique_ptr<Collider> clone() const = 0;
 
@@ -64,8 +67,8 @@ public:
         const auto &[min, max] = GetAABB();
         return (max + min) *0.5f;
     }
-    std::vector<Vector3> vertices;
-    std::vector<Triangle> triangles = std::vector<Triangle>();
+
+
     virtual void CalculateAABB() const  = 0;
 
     [[nodiscard]]virtual bool ContainsPoint(const Vector3 &point) const=0;

@@ -79,7 +79,7 @@ Layer ParseLayer(const std::string& str, LayerManager& layerManager) {
 std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
 {
     auto newPhysicsConstructor = std::make_unique<PhysicsSystemConstructor>();
-    auto path = MapRegister::GetPath(&type);
+    auto path = MapRegister::GetPath(type);
 
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -113,6 +113,8 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
     };
     // 파일 라인별 읽기
     while (std::getline(file, line)) {
+        if (line.empty()) continue;
+        line = StringUtils::Trim(line);
         if (line.empty()) continue;
         if (line.back() == '\r') line.pop_back();
 

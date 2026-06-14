@@ -24,14 +24,14 @@ struct Vector3 {
     }
     ///정규화(방향 벡터화) 된 벡터 반환
     Vector3 Normalized() const {
-        const float len = this->length();
+        const float len = this->Magnitude();
         if (len == 0) return *this;
         return { x / len, y / len, z / len };
     }
 
     ///정규화(방향 벡터화)
     void Normalize() {
-        const float len = this->length();
+        const float len = this->Magnitude();
         if (len!=0) {
             x /= len;y /= len;z /= len;
         }
@@ -47,12 +47,12 @@ struct Vector3 {
     }
 
     ///벡터 길이
-    float length() const {
+    float Magnitude() const {
         return sqrt(x*x + y*y + z*z);
     }
 
     ///비교용 벡터 길이
-    float LengthSquared() const {
+    float MagnitudeSq() const {
         return x*x + y*y + z*z;
     }
 
@@ -89,14 +89,19 @@ struct Vector3 {
     Vector3 Project(const Vector3& on) const {
         static constexpr float EPS = 1e-8f;
         float d = Dot(on);
-        float lenSq = on.LengthSquared();
+        float lenSq = on.MagnitudeSq();
         if (lenSq<EPS) return Vector3::Zero();
         return on * (d / lenSq);
     }
 
+
     //선형 보간
     static Vector3 Lerp(const Vector3& from, const Vector3& to, float t) {
         return from + (to - from) * t;
+    }
+
+    float Max() const {
+        return (std::max)({x, y, z});
     }
 
     // 1. "문자열" + Vector3

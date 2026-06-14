@@ -1,0 +1,38 @@
+[SECTION: HEADER]
+PrefabID: 1
+PrefabName: playerPrefab-1
+
+[SECTION: OBJECTS]
+-
+Name: playerPrefab-1
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 24.1300,29.9100,-49.5900
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+COMPONENT: CapsuleCollider
+IsTrigger: 0
+Center: 0.0000,-0.2500,0.0000
+Radius: 0.5000
+Height: 1.5000
+Direction: 1
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 80
+CollisionDetection: 0
+CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: PlayerComponent
+MaxSpeed:10
+Acceleration:50
+Deceleration:40
+MoveSpeed:1
+JumpPower:4
+MaxHp:100
+OnGroundRadius:1
+OnGroundYDistance:0.5
+

@@ -27,7 +27,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(GameMode,{
 struct player_dto {
     std::string id;
     std::string name;
-    uint8_t team;
+    int team;
     int kill = 0;
     int death = 0;
 };

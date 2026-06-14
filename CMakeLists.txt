@@ -41,8 +41,8 @@ add_executable(fpsProjectServer
         Session/FhishiX/AABB.h
         Session/FhishiX/FhishiX.h
         Session/Game/KDTree.cpp
-        Socket/BroadcastMoveDto.cpp
-        Socket/BroadcastMoveDto.h
+        Socket/dto/BroadcastMoveDto.cpp
+        Socket/dto/BroadcastMoveDto.h
         Session/Game/GameLogic/Gun.h
         Session/Game/GameLogic/InteractableObject.h
         Session/FhishiX/Layer.h
@@ -131,6 +131,27 @@ add_executable(fpsProjectServer
         Session/FhishiX/gameobject/collider/ColliderMaterial.h
         util/StringUtil.h
         MonitorUtil.h
+        PrefabSystem/PrefabManager.cpp
+        PrefabSystem/PrefabManager.h
+        objectPool.h
+        Session/Component/Implementation/Weapon.cpp
+        Session/Component/Implementation/Weapon.h
+        Session/Component/Implementation/CharacterSummonPosition.cpp
+        Session/Component/Implementation/CharacterSummonPosition.h
+        Session/Component/Implementation/GamePlayManager.cpp
+        Session/Component/Implementation/GamePlayManager.h
+        Session/InGamePhase.h
+        Session/Component/Implementation/SynchronizedObject.h
+        Session/Component/Implementation/SynchronizedObject.cpp
+        Socket/dto/MapInitDto.cpp
+        Socket/dto/MapInitDto.h
+        Session/Component/Implementation/PlayerGenerateManager.cpp
+        Session/Component/Implementation/PlayerGenerateManager.h
+        Session/Component/Implementation/PlayerComponent.cpp
+        Session/Component/Implementation/PlayerComponent.h
+        Socket/dto/LoadingProgressDto.h
+        Socket/dto/AssignResponseDto.cpp
+        Socket/dto/AssignResponseDto.h
 )
 target_precompile_headers(fpsProjectServer PUBLIC pch.h)
 add_custom_command(TARGET fpsProjectServer POST_BUILD
@@ -138,6 +159,12 @@ add_custom_command(TARGET fpsProjectServer POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/Assets
         $<TARGET_FILE_DIR:fpsProjectServer>/Assets
         COMMENT "Copying Assets directory to binary output directory..."
+)
+
+add_custom_command(TARGET fpsProjectServer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/Prefabs"
+        "$<TARGET_FILE_DIR:fpsProjectServer>/Prefabs"
 )
 
 find_path(ENET_INCLUDE_DIR enet/enet.h)

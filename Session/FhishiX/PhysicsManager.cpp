@@ -45,30 +45,28 @@ void PhysicsManager::PhysicsUpdate() {
 
     for (auto& v : *rigidBodies) {
         if (v.isActive && v.gameObject && !v.isKinematic) {
-            if (v.entityId >= activeActors.size()) {
-                activeActors.resize(v.entityId + 1, PhysicsActor::NULLPTR());
+            if (v.entityId >= gameSession->physicsSystem->activeActors.size()) {
+                 gameSession->physicsSystem->activeActors.resize(v.entityId + 1, PhysicsActor::NULLPTR());
             }
-            if (!activeActors[v.entityId].isActive()) {
-                PhysicsActor actor;
-                actor.rb = v.MakeHandle();
-                actor.col = v.gameObject->GetComponent<Collider>(); /// fix:: 매 업데이트마다 추상 객체 GetComponent를 하던 문제를 콜라이더 캐싱으로 해결함.
 
-                activeActors[v.entityId] = actor;
+            auto& actor =  gameSession->physicsSystem->activeActors[v.entityId];
+            if (!actor.isActive()) {
+                actor.rb = v.MakeHandle();
+                actor.colliders = v.gameObject->GetComponents<Collider>();
             }
-            auto& actor = activeActors[v.entityId];
-            /*
-            std::string msg1 = "[PhysicsManager] ID: " + std::to_string(v.entityId) +
-                   " 검사 -> isActive: " + std::to_string(v.isActive) +
-                   " | isKinematic: " + std::to_string(v.isKinematic) +
-                   " | hasCollider: " + std::to_string(!actor.col.isNull());
-            LOG_DEBUG(msg1);
-            */
-            if (actor.col.isNull()) continue;
+
+            if (actor.colliders.empty()) continue;
+
             v.Integrate();
 
-            dynamicProxies.emplace_back(&v, actor.col.operator->());
+            for (auto& colHandle : actor.colliders) {
+                if (colHandle.isNull()) continue;
+
+                dynamicProxies.emplace_back(&v, colHandle.operator->());
+            }
         }
-    }if (!dynamicProxies.empty()) {
+    }
+    if (!dynamicProxies.empty()) {
         std::vector<CollisionPair> collisionPairs;
         std::vector<DynamicCollisionPair> dynamicCollisionPairs;
         // 보통 하나의 다이나믹 객체가 2~4개의 스태틱 객체와 겹친다고 가정하여 미리 메모리 할당

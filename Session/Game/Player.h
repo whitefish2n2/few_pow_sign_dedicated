@@ -7,6 +7,10 @@
 
 #include "../FhishiX/vector/Vector2.h"
 #include "PlayerStatus.h"
+#include "../Component/Definition/ComponentHandle.h"
+#include "../FhishiX/gameobject/GameObject.h"
+#include "../Component/Implementation/PlayerComponent.h"
+
 class Player {
     public:
     std::string userId;
@@ -14,15 +18,14 @@ class Player {
     std::string assignKey;
     uint64_t privateKey{};
     uint8_t publicKey{};
-    player_status status;
+    playerStatus status;
+
+    ComponentHandle<PlayerComponent> playerComponent;
+    //Component<Player>
 
     ENetPeer* peer=nullptr;
 
     void SetCharacter(std::string characterId);
-
-    void Move(Vector2 inputVector);
-    void Rotate(Vector3 r);
-    void Jump();
     Player() = default;
-    Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey, player_status status );
+    Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey, playerStatus status );
 };

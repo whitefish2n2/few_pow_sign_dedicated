@@ -21,6 +21,8 @@ protected:
     // 로컬 AABB가 계산되었는지 확인하는 플래그
     mutable bool isLocalAABBCalculated = false;
 public:
+    static constexpr bool DO_UPDATE = false;
+    std::vector<Triangle> triangles = std::vector<Triangle>();
     mutable std::vector<Vector3> vertices;
     mutable std::vector<uint32_t> trianglesIndices;
         MeshCollider(const bool isStatic, const std::vector<Vector3> &vertices, const std::vector<uint32_t> &indices) : Component(ColliderType::Mesh, isStatic),vertices(vertices),trianglesIndices(indices) {

@@ -5,25 +5,30 @@
 #ifndef SOCKETEVENTTYPE_H
 #define SOCKETEVENTTYPE_H
 
-enum class SocketEventType:unsigned char
+enum class SocketEventType : unsigned char
 {
-    //player->server
-    Assign=0,//_R_
-    Input=1,
-    Move=2,
+    Assign = 0, //P2S _R_
+    Input = 1,//P2S
+    Move = 2,//P2S
 
-    //server->player
-    Setup=3,//_R_
-    Update=4,
-    Hit=5,//_R_
-    Swap=6,//_R_
-    Generate=7,//_R_
+    Setup = 3, // S2P_R_
+    Update = 4,//S2P
+    Hit = 5,   //S2P _R_
+    Swap = 6,  //S2P _R_
+    Generate = 7, //S2P _R_
 
+    MapInit = 8,//S2P_R_
 
+    MapInitReady = 9,//P2S _R_
 
-    Ping=252,
-    Pong=253,
-    //fuck that
-    Default = 254
+    Progress = 10, //P2S _R_
+    ProgressNotify = 11, // S2P
+
+    AssignResponse = 12, //S2P _R_
+
+    Ping = 252,//S2P
+    Pong = 253,//P2S
+
+    Default = 254,
 };
 #endif //SOCKETEVENTTYPE_H

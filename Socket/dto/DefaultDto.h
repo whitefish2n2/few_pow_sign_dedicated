@@ -14,7 +14,7 @@ class DefaultDto {
     uint16_t UserSecretKey;
     std::vector<uint8_t> payload;
     size_t payloadLength;
-    static DefaultDto Parse(const uint8_t* data, const size_t& size);
+   void Parse(const uint8_t* data, const size_t& size);
 };
 
 

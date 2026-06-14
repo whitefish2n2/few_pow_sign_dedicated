@@ -17,6 +17,7 @@
 #include "Session/SessionDXViewer/DirectXCore.h"
 
 #include "ServerStatics.h"
+#include "PrefabSystem/PrefabManager.h"
 #include "Session/Game/MapManager.h"
 using std::thread;
 
@@ -84,6 +85,7 @@ int main() {
     #ifdef _WIN64
     SetUnhandledExceptionFilter(CrashHandler);
     std::signal(SIGTERM, onExit);
+    CreateDebugScreen();
     #endif
     try {
         isRunning.store(false);
@@ -91,6 +93,10 @@ int main() {
             std::cerr << "ENet init failed\n";
             return 1;
         }
+        //프리팹 로드
+        std::string prefabDirectory = "./Prefabs";
+        PrefabManager::Init(prefabDirectory);
+
         std::signal(SIGINT, onExit);   // Ctrl+C
         std::signal(SIGTERM, onExit);
         const std::string ip = GetLocalIP();

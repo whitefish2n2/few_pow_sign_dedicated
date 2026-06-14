@@ -6,6 +6,7 @@
 #define FPSPROJECTSERVER_COMPONENT_ARGUMENT_H
 #include <string>
 
+#include "ComponentHandle.h"
 #include "ComponentHandleBase.h"
 #include "../../FhishiX/gameobject/EntityTypes.h"
 #include "../../FhishiX/gameobject/GameObject.h"
@@ -24,6 +25,7 @@ protected:
     size_t typeId;
     bool isActive = true;
     bool willDead = false;
+    static constexpr bool DO_UPDATE = true;
     GameSession* gameSession = nullptr;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
     ComponentArgument(ComponentArgument&& other) = default;
@@ -36,11 +38,14 @@ protected:
 protected:
     virtual void OnAttach() { };
     virtual void OnDetach() { };
+
 public:
     virtual void Update() { };
+    virtual void FixedUpdate(){ };
     virtual void Reset() { };
     virtual void Start() { };
     virtual void Awake(){ };
+    virtual void OnDestroy() { };
     ///String형식으로 된 컴포넌트 정보를 토대로 컴포넌트를 초기화하는 함수(컴포넌트 ID 등은 이전되지 않음)
     virtual void ParseFromString(const std::string& arg) { };
 

@@ -11,5 +11,6 @@ struct DedicatedNewPlayerDto {
     std::string name;
     std::string key;
     std::string characterId;
+    int team;
 };
 #endif //NEWPLAYERDTO_H

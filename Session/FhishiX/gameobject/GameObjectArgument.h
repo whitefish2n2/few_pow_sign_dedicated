@@ -97,6 +97,29 @@ protected:
         return ComponentHandle<T>::NULLPTR();
     }
     template <typename T>
+    std::vector<ComponentHandle<T>> GetComponents() {
+        std::vector<ComponentHandle<T>> result;
+        const size_t typeId = GetTypeId<T>();
+
+        for (auto& comp : components) {
+            if (comp.typeId == typeId) {
+                result.push_back(ComponentHandle<T>(comp.typeId, comp.entityId, comp.componentManager));
+                continue;
+            }
+
+            // 다형성 검사 (예: GetComponents<Collider>() 호출 시 BoxCollider, SphereCollider 모두 수집)
+            if constexpr (!std::is_final_v<T>) {
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
+                if (rawPtr == nullptr) continue;
+
+                if (dynamic_cast<T*>(rawPtr)) {
+                    result.push_back(ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get()));
+                }
+            }
+        }
+        return result;
+    }
+    template <typename T>
         void DetachComponent() {
         const size_t typeId = GetTypeId<T>();
         for (auto it = components.begin(); it != components.end(); ) {

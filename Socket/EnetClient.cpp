@@ -7,6 +7,7 @@
 #include <iostream>
 #include <enet/enet.h>
 
+#include "../ObjectPool.h"
 #include "dto/SocketEventType.h"
 #include "../Session/sessionPool/SessionManager.h"
 #include "dto/AssignDto.h"
@@ -24,14 +25,25 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
     if (session == nullptr) return;
 
     try {
-        auto dto = std::make_shared<TDto>(TDto::Parse(payload, payloadLength));
-        auto event = std::make_shared<GameEvent>();
+        GameEvent* rawEvent = ObjectPool<GameEvent>::GetInstance().Acquire();
+
+        GameEventPtr event(rawEvent, [](GameEvent* p) {
+            ObjectPool<GameEvent>::GetInstance().Release(p);
+        });
+        TDto* rawDto = ObjectPool<TDto>::GetInstance().Acquire();
+        rawDto->Parse(payload, payloadLength);
+
+        std::unique_ptr<TDto, void(*)(TDto*)> uniqueDto(rawDto, [](TDto* p) {
+            ObjectPool<TDto>::GetInstance().Release(p);
+        });
+
+        // variant에 소유권 이동
+        event->payload = std::move(uniqueDto);
         event->timestamp = *timeStamp;
         event->type = type;
-        event->payload = dto;
         event->peer = peer;
 
-        session->ProcessEvent(event);
+        session->ProcessEvent(std::move(event));
     }
     catch (const std::exception& e) {
         std::cout << "[Packet Error] Type: " << static_cast<int>(type) << ", Parse failed: " << e.what() << std::endl;
@@ -43,6 +55,24 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
 
 
 
+}
+
+void EnetClient::EnqueueSend(ENetPeer* peer, std::vector<uint8_t> payload, enet_uint32 flags) {
+    std::lock_guard<std::mutex> lock(sendMutex);
+    sendQueue.push({peer, std::move(payload), flags});
+}
+
+void EnetClient::ProcessSendQueue() {
+    std::lock_guard<std::mutex> lock(sendMutex);
+    while (!sendQueue.empty()) {
+        auto& task = sendQueue.front();
+
+        if (task.peer && task.peer->state == ENET_PEER_STATE_CONNECTED) {
+            ENetPacket* packet = enet_packet_create(task.payload.data(), task.payload.size(), task.flags);
+            enet_peer_send(task.peer, 0, packet);
+        }
+        sendQueue.pop();
+    }
 }
 
 void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
@@ -66,55 +96,7 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
         switch (messageType) {
             case static_cast<int>(SocketEventType::Assign): {
                 RegisterPacket<AssignRequestDto>(SocketEventType::Assign, sessionKey, peer, payload, payloadLength,&timestamp);
-
-                /*
-                std::string v(reinterpret_cast<char*>(payload), payloadLength);
-                nlohmann::json j = nlohmann::json::parse(v);
-
-                AssignRequestDto body;
-                from_json(j, body);
-
-                auto gameId = body.SessionId;
-                auto userId = body.UserId;
-                auto userKey = body.Key;
-
-                std::shared_ptr<GameSession> currentSession;
-                std::uint16_t key;
-
-                for (auto& [k, v] : SessionManager::getInstance().sessions) {
-                    if (v->sessionId == gameId) {
-                        currentSession = v;
-                        break;
-                    }
-                }
-
-                if (currentSession == nullptr) {
-                    std::cout << "session not found" << std::endl;
-                    ReturnError(peer);
-                    return;
-                }
-
-                key = currentSession->sessionConnectKey;
-
-                std::cout << "player assign on session: " << currentSession->sessionId
-                          << "\n player: " << userId << std::endl;
-
-                auto p = currentSession->RegistUser(body.Key, peer);
-                if (p == nullptr) {
-                    std::cout << "regist user failed" << std::endl;
-                    ReturnError(peer);
-                    return;
-                }
-
-                AssignResponseDto response(key, p->privateKey, p->publicKey);
-                nlohmann::json responseJson = response;
-                auto raw = responseJson.dump();
-
-                std::cout << raw << std::endl;
-
-                ENetPacket* packet = enet_packet_create(raw.c_str(), raw.size(), ENET_PACKET_FLAG_RELIABLE);
-                enet_peer_send(peer, 1, packet);
-                break;*/
+                break;
             }
 
             case static_cast<int>(SocketEventType::Move): {
@@ -127,7 +109,7 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
                 break;
             }
         }
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
         return;
     }
@@ -183,10 +165,10 @@ void EnetClient::RunClient(int port) {
 
     ENetEvent event;
     while (running) {
-        while (enet_host_service(server, &event, 1000) > 0) {
+        ProcessSendQueue();
+        while (enet_host_service(server, &event, 1) > 0) {
             HandleClientEvent(event);
         }
     }
-
     enet_host_destroy(server);
 }

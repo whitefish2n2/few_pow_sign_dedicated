@@ -6,10 +6,7 @@
 #define FPSPROJECTSERVER_COMPONENTMANAGER_H
 #include <iostream>
 #include <memory>
-#include <unordered_map>
 #include "ComponentHandle.h"
-#include "../../GameSession.h"
-#include "../../SessionContext.h"
 #include "../../../util/Log.h"
 /*
  //fix
@@ -22,7 +19,22 @@
  *상응하는 맵->인덱스 변환 어레이의 해당 오브젝트 인덱스 값을 변경하여 핸들 유효성을 유지시킴.
  *해당 방식은 캐시 히트율을 높여주며, 단편화 현상도 해결함.
  */
-
+template<typename T>
+consteval int GetPoolPriority() {
+    if constexpr (requires { T::UPDATE_PRIORITY; }) {
+        return T::UPDATE_PRIORITY; // 선언되어 있으면 그 값 반환
+    } else {
+        return 0; // 선언 안 되어 있으면 기본값 0 반환
+    }
+}
+template<typename T>
+consteval bool GetDoUpdate() {
+    if constexpr (requires { T::DO_UPDATE; }) {
+        return T::DO_UPDATE; // 선언되어 있으면 그 값을 반환 (true or false)
+    } else {
+        return true; // 선언이 안 되어 있으면 기본적으로 Update를 수행함
+    }
+}
 class BasePool {
     protected:
     std::vector<size_t> indexArray;
@@ -37,6 +49,7 @@ public:
     BasePool() = default;
 
     virtual void UpdateAll() = 0;
+    virtual void FixedUpdateAll() = 0;
     ///엔티티 ID로 하여금 요소를 지우는 함수.
     virtual void DeleteComponent(ComponentEntityId entityId) = 0;
     ///유효한 엔티티 ID인지 확인하는 함수
@@ -65,11 +78,45 @@ public:
     size_t size() {
         return dataArray.size();
     }
+    ComponentHandle<T> FindFirstHandle() {
+        ComponentHandle<T> handle;
+        handle.typeId = GetTypeId<T>();
+        handle.componentManager = this->componentManager;
+
+        // 1. 메인 배열(dataArray) 먼저 검색
+        for (auto& item : dataArray) {
+            if (item.isActive && !item.willDead) {
+                return item.MakeHandle();
+            }
+        }
+
+        // 2. 아직 Flush()되지 않은 대기열(pendingAdds) 검색
+        for (auto& item : pendingAdds) {
+            if (item.isActive && !item.willDead) {
+                return  item.MakeHandle();
+            }
+        }
+
+        handle =ComponentHandle<T>::NULLPTR();
+        return handle;
+    }
     void UpdateAll() override {
-        size_t currentSize = dataArray.size();
-        for (size_t i = 0; i < currentSize; ++i) {
-            if (dataArray[i].isActive && !dataArray[i].willDead) {
-                dataArray[i].Update();
+        if constexpr (GetDoUpdate<T>()) {
+            size_t currentSize = dataArray.size();
+            for (size_t i = 0; i < currentSize; ++i) {
+                if (dataArray[i].isActive && !dataArray[i].willDead) {
+                    dataArray[i].Update();
+                }
+            }
+        }
+    }
+    void FixedUpdateAll() override {
+        if constexpr (GetDoUpdate<T>()) {
+            size_t currentSize = dataArray.size();
+            for (size_t i = 0; i < currentSize; ++i) {
+                if (dataArray[i].isActive && !dataArray[i].willDead) {
+                    dataArray[i].FixedUpdate();
+                }
             }
         }
     }
@@ -109,6 +156,7 @@ public:
         if (!dataArray.empty()) {
             for (size_t i = dataArray.size(); i-- > 0; ) {
                 if (dataArray[i].willDead) {
+                    dataArray[i].OnDestroy();
                     ComponentEntityId deadId = dataArray[i].entityId;
                     size_t lastIndex = dataArray.size() - 1;
 
@@ -125,6 +173,7 @@ public:
             }
         }
 
+        size_t newElementsStartIndex = dataArray.size();
         // 2. 지연 생성 처리: 대기열(pendingAdds)의 데이터를 메인 배열로 병합
         for (size_t i = 0; i < pendingAdds.size(); ++i) {
             if (pendingAdds[i].willDead) {
@@ -138,6 +187,15 @@ public:
             size_t newIndex = dataArray.size();
             indexArray[pendingAdds[i].entityId] = newIndex; // 마스크를 벗긴 진짜 인덱스로 갱신
             dataArray.push_back(std::move(pendingAdds[i]));
+
+            if constexpr (std::is_base_of_v<ComponentArgument, T>) {
+                dataArray.back().Awake();
+            }
+        }
+        if constexpr (std::is_base_of_v<ComponentArgument, T>) {
+            for (size_t i = newElementsStartIndex; i < dataArray.size(); ++i) {
+                dataArray[i].Start();
+            }
         }
 
         // 3. 대기열 비우기
@@ -145,14 +203,7 @@ public:
     }
 };
 
-template<typename T>
-consteval int GetPoolPriority() {
-    if constexpr (requires { T::UPDATE_PRIORITY; }) {
-        return T::UPDATE_PRIORITY; // 선언되어 있으면 그 값 반환
-    } else {
-        return 0; // 선언 안 되어 있으면 기본값 0 반환
-    }
-}
+
 
 class ComponentManager {
 protected:
@@ -195,6 +246,12 @@ public:
         for (BasePool* pool : updateOrder) {
             pool->Flush();
         }
+    }
+    // ComponentManager 클래스 내부 (public 영역)에 추가
+
+    template<typename T>
+    ComponentHandle<T> FindFirstComponent() {
+        return GetOrCreatePool<T>()->FindFirstHandle();
     }
     template<typename T>
     T* GetComponentFromPool(ComponentHandle<T>* handle) {
@@ -283,7 +340,6 @@ ComponentHandle<T> DrivenPool<T>::CreateComponent(Args&&... args) {
     ComponentEntityId entityId = nextId++;
     h.entityId = entityId;
 
-    // 이제 ComponentManager가 완전히 정의된 상태이므로 에러가 나지 않습니다!
     h.gameSession = this->componentManager->ownerSession;
 
     if (entityId >= indexArray.size()) {

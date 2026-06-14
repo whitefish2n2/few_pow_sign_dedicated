@@ -13,8 +13,9 @@ class MoveDto {
     public:
     uint64_t UserSecretKey;
     Vector2 InputVector;
-    Vector3 RotationVector;
-    static MoveDto Parse(const uint8_t* data, const size_t& size);
+    float inputPitch;
+    float inputYaw;
+    void Parse(const uint8_t* data, const size_t& size);
 };
 
 

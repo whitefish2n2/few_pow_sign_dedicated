@@ -9,10 +9,12 @@
 #include <queue>
 #include <shared_mutex>
 #include <string>
+#include <utility>
 #include <variant>
 
 #include "Time.h"
 #include "../Socket/dto/AssignDto.h"
+#include "../Socket/dto/AssignResponseDto.h"
 #include "../Socket/dto/DefaultDto.h"
 #include "../Socket/dto/MoveDto.h"
 #include "../Socket/dto/SocketEventType.h"
@@ -20,6 +22,10 @@
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
 #include "netcode/SessionNetworkDto.h"
+struct ProgressNotifyDto;
+struct LoadingProgressDto;
+struct GameEvent;
+struct MapInitDto;
 class Renderer;
 struct Mesh;
 class BroadcastMoveDto;
@@ -28,17 +34,23 @@ class GameObjectManager;
 class ComponentManager;
 class PhysicsSystem;
 using EventPayloadVariant = std::variant<
-    std::nullptr_t,
-    std::shared_ptr<AssignRequestDto>,
-    std::shared_ptr<DefaultDto>,
-    std::shared_ptr<MoveDto>
-    // std::shared_ptr<MoveDto> //type-Move
+    std::monostate,
+    std::unique_ptr<AssignRequestDto, void(*)(AssignRequestDto*)>,
+    std::unique_ptr<DefaultDto, void(*)(DefaultDto*)>,
+    std::unique_ptr<MoveDto, void(*)(MoveDto*)>,
+    std::unique_ptr<MapInitDto, void(*)(MapInitDto*)>,
+    std::unique_ptr<LoadingProgressDto, void(*)(LoadingProgressDto*)>
+    // std::unique_ptr<MoveDto> //type-Move
     // 다른 이벤트 DTO 만들어라 훗치훗치
     // TODO 이 마더퍼커 처리해봐
 >;
+using GameEventPtr = std::unique_ptr<GameEvent, void(*)(GameEvent*)>;
 using BroadCastPayloadVariant = std::variant<
     std::nullptr_t,
-std::shared_ptr<BroadcastMoveDto>
+    std::unique_ptr<BroadcastMoveDto, void(*)(BroadcastMoveDto*)>,
+    std::unique_ptr<MapInitDto, void(*)(MapInitDto*)>,
+    std::unique_ptr<ProgressNotifyDto, void(*)(ProgressNotifyDto*)>,
+    std::unique_ptr<AssignResponseDto, void(*)(AssignResponseDto*)>
 >;
 
 
@@ -49,7 +61,7 @@ std::shared_ptr<BroadcastMoveDto>
 struct GameEvent {
     uint64_t timestamp = 0;
     SocketEventType type = SocketEventType::Update;
-    EventPayloadVariant payload = nullptr;
+    EventPayloadVariant payload = std::monostate{};
     ENetPeer* peer = nullptr;
 };
 
@@ -63,9 +75,10 @@ struct BroadCastEvent {
 
     }
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload)
-        :type(type), payload(payload){}
+        :type(type), payload(std::move(payload)){}
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*>& target)
-        : type(type), payload(payload), target(target) {}
+        : type(type), payload(std::move(payload)), target(target) {}
+    BroadCastEvent() = default;
 };
 
 ///<summary>
@@ -87,7 +100,7 @@ class GameSession {
     std::vector<Renderer> renderers = {};
     std::queue<int> usableRenderersIndex = {};
     std::atomic<bool> isRenderDataReady = false;
-    //버퍼링 배열
+    //렌더러 3중 버퍼링 배열
     std::vector<RenderPacket> buffers[3];
 
     // 각 스레드가 사용할 버퍼의 인덱스
@@ -110,14 +123,14 @@ class GameSession {
 
     Time time;
 
-    std::queue<std::shared_ptr<GameEvent>> eventQueue;
+    std::queue<GameEventPtr> eventQueue;
     std::mutex queueMutex;
     std::condition_variable queueCV;
 
     std::unique_ptr<GameObjectManager> objectManager;
     std::unique_ptr<ComponentManager> componentManager;
 
-
+    std::vector<std::pair<std::string,int>> objectNameToIdCahce;
 
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
@@ -142,7 +155,7 @@ class GameSession {
 
     std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer) const;
 
-    void ProcessEvent(std::shared_ptr<GameEvent> &event);
+    void ProcessEvent(GameEventPtr event);
 
     void BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event);
     void Start();

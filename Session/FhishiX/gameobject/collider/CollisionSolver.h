@@ -62,6 +62,9 @@ public:
     // 레이캐스팅 - 가장 먼저 맞은 콜라이더를 반환합니다.
     static bool Raycast(const Ray& ray, Collider* collider, float maxDistance, RaycastHit& outHit);
 
+    //overlab
+    static bool OverlapSphere(const Vector3 &center, float radius, Collider *collider, Contact &outContact);
+
 private:
 
     //Raycast
@@ -69,6 +72,10 @@ private:
     static bool RaycastBox(const Ray& ray, BoxCollider* box, float maxDistance, RaycastHit& outHit);
     static bool RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float maxDistance, RaycastHit& outHit);
     static bool RaycastMesh(const Ray& ray, MeshCollider* mesh, float maxDistance, RaycastHit& outHit);
+
+
+
+
 
     //충돌 네로우페이즈
     static bool SphereVsSphere(Collider* a, Collider* b, Contact &outContact);

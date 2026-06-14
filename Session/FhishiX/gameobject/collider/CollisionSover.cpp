@@ -148,7 +148,7 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
 
     // 접선 방향 (normal 성분 제거)
     Vector3 tangent = relativeVelocity - contact.normal * Vector3::Dot(relativeVelocity, contact.normal);
-    float tangentLen = tangent.length();
+    float tangentLen = tangent.Magnitude();
     if (tangentLen < 0.0001f) return; // 접선 속도 없으면 마찰 없음
     tangent = tangent * (1.0f / tangentLen);
 
@@ -326,7 +326,7 @@ namespace {
         Vector3 pts[2] = { segA, segB };
         for (int i = 0; i < 2; ++i) {
             Vector3 ptOnTri = ClosestPtPointTriangle(pts[i], triA, triB, triC);
-            float distSq = (pts[i] - ptOnTri).LengthSquared();
+            float distSq = (pts[i] - ptOnTri).MagnitudeSq();
             if (distSq < outMinDistSq) {
                 outMinDistSq = distSq; outClosestSeg = pts[i]; outClosestTri = ptOnTri;
             }
@@ -337,7 +337,7 @@ namespace {
         for (int i = 0; i < 3; ++i) {
             Vector3 c1, c2; // c1: 캡슐 선분 위의 점, c2: 삼각형 모서리 위의 점
             ClosestPtSegmentSegment(segA, segB, edges[i][0], edges[i][1], c1, c2);
-            float distSq = (c1 - c2).LengthSquared();
+            float distSq = (c1 - c2).MagnitudeSq();
             if (distSq < outMinDistSq) {
                 outMinDistSq = distSq; outClosestSeg = c1; outClosestTri = c2;
             }
@@ -349,7 +349,7 @@ namespace {
                   Vector3 aX, Vector3 aY, Vector3 aZ, Vector3 aExtents,
                   Vector3 bX, Vector3 bY, Vector3 bZ, Vector3 bExtents,
                   float& outPenetration) {
-        float sqLen = axis.LengthSquared();
+        float sqLen = axis.MagnitudeSq();
         if (sqLen < 0.0001f) return true; // 두 축이 평행해서 외적이 0이 된 경우 무시
         axis = axis / std::sqrt(sqLen);   // 축 정규화
 
@@ -458,7 +458,7 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
     GetCapsuleSegment(cap, capTop, capBottom);
 
     Vector3 d = capBottom - capTop;
-    float md = d.LengthSquared();
+    float md = d.MagnitudeSq();
     if (md < EPSILON) { // 선분이 너무 짧으면 Sphere로 취급
         SphereCollider tempSphere;
         tempSphere.gameObject = cap->gameObject;
@@ -589,7 +589,7 @@ bool CollisionSolver::RaycastMesh(const Ray& ray, MeshCollider* mesh, float maxD
             closestT = t;
             // 삼각형의 법선(Normal) 계산: (v1-v0) x (v2-v0) 후 정규화
             bestNormal = Vector3::Cross(edge1, edge2);
-            float nLen = bestNormal.length();
+            float nLen = bestNormal.Magnitude();
             if (nLen > EPSILON) bestNormal = bestNormal / nLen;
 
             // 광선이 뒤에서 맞은 경우(백페이스 컬링 방지용 법선 뒤집기)
@@ -611,6 +611,78 @@ bool CollisionSolver::RaycastMesh(const Ray& ray, MeshCollider* mesh, float maxD
 
     return false;
 }
+
+bool CollisionSolver::OverlapSphere(const Vector3& center, float radius, Collider* collider, Contact& outContact) {
+    if (!collider || !collider->gameObject) return false;
+
+    // AABB를 이용한 1차 솎아내기 (Sphere-AABB 테스트는 빠름)
+    AABB colAABB = collider->GetAABB();
+    if (!colAABB.IntersectsSphere(center, radius)) return false;
+
+    // 타입별로 정밀 거리 검사
+    switch (collider->GetShapeType()) {
+        case ColliderType::Sphere: {
+            auto* sphere = static_cast<SphereCollider*>(collider);
+            Vector3 sPos = sphere->gameObject->transform.GetPosition() + (sphere->gameObject->transform.GetRotation() * sphere->center);
+            float sRadius = sphere->radius * sphere->gameObject->transform.GetScale().Max(); // 스케일 적용
+
+            float distSq = (sPos - center).MagnitudeSq();
+            float sumR = radius + sRadius;
+            return distSq < (sumR * sumR);
+        }
+        case ColliderType::Box: {
+            auto* box = static_cast<BoxCollider*>(collider);
+            // 박스 로컬 공간으로 점을 변환하여 클램프 후 거리 계산
+            // (이미 BoxVsSphere 로직에 구현된 로직을 재사용)
+            return SphereVsBox(collider, nullptr, outContact); // 적절히 수정 가능
+        }
+        case ColliderType::Capsule: {
+            auto* cap = static_cast<CapsuleCollider*>(collider);
+            Vector3 capTop, capBottom;
+            GetCapsuleSegment(cap, capTop, capBottom);
+            Vector3 closestPt = ClosestPtPointSegment(center, capTop, capBottom);
+            return (closestPt - center).MagnitudeSq() < (radius + cap->radius) * (radius + cap->radius);
+        }
+        case ColliderType::Mesh: {
+            auto* mesh = static_cast<MeshCollider*>(collider);
+
+            const auto& verts = mesh->GetVertices();
+            const auto& indices = mesh->GetTriangles();
+
+            Vector3 mPos = mesh->gameObject->transform.GetPosition();
+            Vector3 mScale = mesh->gameObject->transform.GetScale();
+            Quaternion mRot = mesh->gameObject->transform.GetRotation();
+
+            // 정점을 월드 좌표로 변환하는 람다
+            auto LocalToWorld = [&](const Vector3& localV) -> Vector3 {
+                Vector3 scaled = { localV.x * mScale.x, localV.y * mScale.y, localV.z * mScale.z };
+                return (mRot * scaled) + mPos;
+            };
+
+            float radiusSq = radius * radius;
+
+            // 메쉬의 모든 삼각형을 순회
+            for (size_t i = 0; i < indices.size(); i += 3) {
+                if (i + 2 >= indices.size()) break;
+
+                Vector3 v0 = LocalToWorld(verts[indices[i]]);
+                Vector3 v1 = LocalToWorld(verts[indices[i+1]]);
+                Vector3 v2 = LocalToWorld(verts[indices[i+2]]);
+
+                // 구의 중심과 삼각형 면 사이의 가장 가까운 점 찾기
+                Vector3 closestPt = ClosestPtPointTriangle(center, v0, v1, v2);
+                float distSq = (center - closestPt).MagnitudeSq();
+
+                if (distSq <= radiusSq) {
+                    return true;
+                }
+            }
+            return false; // 끝까지 다 뒤졌는데 안 겹치면 false
+        }
+        default: return false;
+    }
+}
+
 // endregion
 bool CollisionSolver::SphereVsSphere(Collider *a, Collider *b, Contact &outContact) {
     auto* sphereA = static_cast<SphereCollider*>(a);
@@ -625,7 +697,7 @@ bool CollisionSolver::SphereVsSphere(Collider *a, Collider *b, Contact &outConta
     Vector3 posB = sphereB->gameObject->transform.GetPosition() + (sphereB->gameObject->transform.GetRotation() * Vector3(sphereB->center.x * scaleB.x, sphereB->center.y * scaleB.y, sphereB->center.z * scaleB.z));
 
     Vector3 diff = posA - posB;
-    float distSq = diff.LengthSquared();
+    float distSq = diff.MagnitudeSq();
     float sumRadius = radiusA + radiusB;
 
     if (distSq < sumRadius * sumRadius) {
@@ -657,7 +729,7 @@ bool CollisionSolver::CapsuleVsCapsule(Collider *a, Collider *b, Contact &outCon
     ClosestPtSegmentSegment(aTop, aBottom, bTop, bBottom, c1, c2);
 
     Vector3 diff = c1 - c2;
-    float distSq = diff.LengthSquared();
+    float distSq = diff.MagnitudeSq();
     float sumRadius = radiusA + radiusB;
 
     if (distSq < sumRadius * sumRadius) {
@@ -688,7 +760,7 @@ bool CollisionSolver::SphereVsCapsule(Collider *a, Collider *b, Contact &outCont
 
     Vector3 closestPt = ClosestPtPointSegment(spherePos, capTop, capBottom);
     Vector3 diff = spherePos - closestPt;
-    float distSq = diff.LengthSquared();
+    float distSq = diff.MagnitudeSq();
     float sumRadius = sRadius + cRadius;
 
     if (distSq < sumRadius * sumRadius) {
@@ -745,7 +817,7 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
 
         Vector3 closestPt = ClosestPtPointTriangle(spherePos, v0, v1, v2);
         Vector3 diff = spherePos - closestPt;
-        float distSq = diff.LengthSquared();
+        float distSq = diff.MagnitudeSq();
 
         if (distSq < radiusSq) {
             float dist = std::sqrt(distSq);
@@ -814,7 +886,7 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
 
         // 💡 1. 삼각형의 실제 법선(앞면 방향)을 구합니다.
         Vector3 triNormal = Vector3::Cross(v2 - v0, v1 - v0);
-        float nLen = triNormal.length();
+        float nLen = triNormal.Magnitude();
         if (nLen > EPSILON) triNormal = triNormal / nLen;
         else continue;
 
@@ -895,7 +967,7 @@ bool CollisionSolver::SphereVsBox(Collider *a, Collider *b, Contact &outContact)
     };
 
     Vector3 localDiff = localSpherePos - ptOnBox;
-    float distSq = localDiff.LengthSquared();
+    float distSq = localDiff.MagnitudeSq();
     float radiusSq = sRadius * sRadius;
 
     if (distSq < radiusSq) {
@@ -974,7 +1046,7 @@ bool CollisionSolver::BoxVsCapsule(Collider *a, Collider *b, Contact &outContact
     }
 
     Vector3 localDiff = ptOnBox - ptOnSeg;
-    float distSq = localDiff.LengthSquared();
+    float distSq = localDiff.MagnitudeSq();
     float radiusSq = cRadius * cRadius;
 
     if (distSq < radiusSq) {
@@ -1096,7 +1168,7 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
     }
 
     // 축 정규화 (TestAxis에서 정규화하기 전의 벡터가 들어왔을 수 있으므로)
-    float axLen = bestAxis.length();
+    float axLen = bestAxis.Magnitude();
     if (axLen > 0.0001f) bestAxis = bestAxis / axLen;
     else bestAxis = Vector3(0, 1, 0);
 
@@ -1154,7 +1226,7 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         Vector3 w1 = (mRot * Vector3(verts[indices[i+1]].x * mScale.x, verts[indices[i+1]].y * mScale.y, verts[indices[i+1]].z * mScale.z)) + mPos;
         Vector3 w2 = (mRot * Vector3(verts[indices[i+2]].x * mScale.x, verts[indices[i+2]].y * mScale.y, verts[indices[i+2]].z * mScale.z)) + mPos;
         Vector3 triWorldNormal = Vector3::Cross(w2 - w0, w1 - w0);
-        float triNormLen = triWorldNormal.length();
+        float triNormLen = triWorldNormal.Magnitude();
         if (triNormLen > EPSILON) triWorldNormal = triWorldNormal / triNormLen;
         else triWorldNormal = Vector3(0, 1, 0);
 
@@ -1190,7 +1262,7 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         bool isIntersecting = true;
 
         for (int j = 0; j < 13; ++j) {
-            float sqLen = axes[j].LengthSquared();
+            float sqLen = axes[j].MagnitudeSq();
             if (sqLen < 0.0001f) continue;
             Vector3 axis = axes[j] / std::sqrt(sqLen);
 

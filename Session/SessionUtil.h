@@ -14,7 +14,9 @@
 class SessionUtil {
     public:
         static Player* GetPlayerFromPeer(ENetPeer *peer) {
-            return static_cast<Player *>(peer->data);
+            if (peer->data != nullptr)
+                return static_cast<Player *>(peer->data);
+            else return nullptr;
         }
 
         static bool ContainsPrivateKey(std::map<uint64_t,Player>& list, uint64_t key) {

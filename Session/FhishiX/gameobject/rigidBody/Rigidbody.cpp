@@ -123,8 +123,8 @@ void Rigidbody::Integrate() {
     if (constraints & 64) angularVelocity.z = 0.0f;
 
     ///미세 떨림 방지
-    if (linearVelocity.LengthSquared() < 0.0001f) linearVelocity = Vector3(0, 0, 0);
-    if (angularVelocity.LengthSquared() < 0.0001f) angularVelocity = Vector3(0, 0, 0);
+    if (linearVelocity.MagnitudeSq() < 0.0001f) linearVelocity = Vector3(0, 0, 0);
+    if (angularVelocity.MagnitudeSq() < 0.0001f) angularVelocity = Vector3(0, 0, 0);
 
     // ----------------------------------------------------
     // 3. 누적된 힘(Force) 초기화

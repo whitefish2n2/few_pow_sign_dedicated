@@ -45,6 +45,23 @@ struct AABB {
                (this->min.z <= other.max.z && this->max.z >= other.min.z);
     }
 
+    bool IntersectsSphere(const Vector3& center, float radius) const {
+        // 구의 중심을 AABB 영역 내로 클램핑하여 가장 가까운 점을 찾음
+        float closestX = std::clamp(center.x, min.x, max.x);
+        float closestY = std::clamp(center.y, min.y, max.y);
+        float closestZ = std::clamp(center.z, min.z, max.z);
+
+        // 가장 가까운 점과 구의 중심 사이의 거리 제곱 계산
+        float distanceX = center.x - closestX;
+        float distanceY = center.y - closestY;
+        float distanceZ = center.z - closestZ;
+
+        float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ);
+
+        // 그 거리가 반지름의 제곱보다 작거나 같으면 충돌!
+        return distanceSquared <= (radius * radius);
+    }
+
     ///텅텅 AABB
     static AABB Empty() {
         const float float_max = (std::numeric_limits<float>::max)();

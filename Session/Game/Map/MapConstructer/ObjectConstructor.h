@@ -20,10 +20,14 @@ class ObjectConstructor {
     GameObject Construct(GameSession *gameSession) const;
 
     std::string name;
-    Layer layer;
-    Transform transform;
+    Layer layer = Layer(0);
+    Transform transform = Transform();
     Tag tag;
-    std::vector<ComponentConstructor> components;
+    std::vector<ComponentConstructor> components = std::vector<ComponentConstructor>();
+
+    static ObjectConstructor NullPTR() {
+        return {};
+    }
 };
 
 

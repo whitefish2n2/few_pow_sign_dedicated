@@ -12,18 +12,13 @@
 #include <vector>
 
 
-struct player_status {
-    uint8_t team = 0;
+struct playerStatus {
+
+    int team = 0;
 
     int kill = 0;
     int death = 0;
-
-    Vector3 position = Vector3::Zero();
-    Vector3 velocity = Vector3::Zero();
-
-    Vector3 rotation = Vector3::Zero();
-    WEAPON holdingWeapon;
-    std::vector<WEAPON> weapons = std::vector<WEAPON>();
-    NetworkStatus networkStatus;
+    NetworkStatus networkStatus = not_connected;
+    uint8_t loadingProgress = 0;
 };
 #endif //PLAYERSTATUS_H

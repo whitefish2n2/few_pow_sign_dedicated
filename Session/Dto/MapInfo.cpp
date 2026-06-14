@@ -6,28 +6,36 @@
 
 const std::string & MapRegister::GetPath(uint32_t id) {
     if (!idToInfo.contains(id)) {
-        return idToInfo[101].path;
+        if (!idToInfo.contains(101)) {
+            static const std::string fallbackPath = "Assets/DefaultMap.mapfile";
+            return fallbackPath;
+        }
+        return idToInfo.at(101).path;
     }
     return idToInfo[id].path;///에러 맵
 }
 
-const std::string &MapRegister::GetPath(const MapInfo* Info) {
-    if (!idToInfo.contains(Info->GetID())) {
+const std::string &MapRegister::GetPath(const MapInfo& Info) {
+    if (!idToInfo.contains(Info.GetID())) {
         return idToInfo[101].path;
     }
-    return idToInfo[Info->GetID()].path;///에러 맵
+    return idToInfo[Info.GetID()].path;///에러 맵
 }
 
 const std::string & MapRegister::GetName(uint32_t id) {
     if (!idToInfo.contains(id)) {
-        return idToInfo[101].name;///에러 맵
+        if (!idToInfo.contains(101)) {
+            static const std::string fallbackName = "default map";
+            return fallbackName;
+        }
+        return idToInfo.at(101).name;
     }
     return idToInfo[id].name;
 }
 
-const std::string &MapRegister::GetName(const MapInfo *Info)  {
-    if (!idToInfo.contains(Info->GetID())) {
+const std::string &MapRegister::GetName(const MapInfo& Info)  {
+    if (!idToInfo.contains(Info.GetID())) {
         return idToInfo[101].name;
     }
-    return idToInfo[Info->GetID()].name;
+    return idToInfo[Info.GetID()].name;
 }

@@ -14,16 +14,8 @@ class AssignRequestDto
     std::string SessionId;
     std::string Key;
 
-    static AssignRequestDto Parse(const uint8_t* data, const size_t& size);
+    void Parse(const uint8_t* data, const size_t& size);
 };
-struct AssignResponseDto
-{
-    std::uint16_t sessionKey;
-    std::uint64_t userSecretKey;
-    std::uint8_t userPublicKey;
-};
-
-void to_json(nlohmann::json& j, const AssignResponseDto& d);
 void from_json(const nlohmann::json& j, AssignRequestDto& g);
 
 

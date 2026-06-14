@@ -6,11 +6,6 @@
 #include <unordered_map>
 #include <utility>
 
-enum class Layers {
-    Default,
-    Ground,
-    Gun,
-};
 
 class Layer {
     public:
@@ -69,13 +64,60 @@ class LayerManager {
         if (stringToLayer.contains(layerName)) return stringToLayer[layerName];
         return Layer(0);
     }
+
+    uint32_t GetMask(const std::string& layerName) {
+        if (!stringToLayer.contains(layerName)) return 0;
+        return (1 << stringToLayer[layerName].idx);
+    }
+
+    // 사용법: layerManager.GetMask({"Ground", "Default", "Gun"})
+    uint32_t GetMask(const std::vector<std::string>& layerNames) {
+        uint32_t mask = 0;
+        for (const auto& name : layerNames) {
+            if (stringToLayer.contains(name)) {
+                mask |= (1 << stringToLayer[name].idx);
+            }
+        }
+        return mask;
+    }
+
     void SetLayerInfo(Layer Layer, const std::string& name, uint32_t mask) {
         if (Layer.idx < 0 || Layer.idx>= 32) return;
         layerNames[Layer] = name;
         collisionMasks[Layer.idx] = mask;
         stringToLayer[name] = Layer;
     }
-
-
-
 };
+struct LayerMask {
+    uint32_t value = 0;
+
+    // 기본 생성자
+    LayerMask() = default;
+    LayerMask(uint32_t val) : value(val) {}
+
+    // 사용법: LayerMask::Get(layer1, layer2, layer3)
+    template<typename... Args>
+    static LayerMask Get(const Args&... layers) {
+        return LayerMask(((1 << layers.idx) | ...));
+    }
+
+    void Add(const Layer& layer) {
+        value |= (1 << layer.idx);
+    }
+
+    void Remove(const Layer& layer) {
+        value &= ~(1 << layer.idx);
+    }
+
+    bool Contains(const Layer& layer) const {
+        return (value & (1 << layer.idx)) != 0;
+    }
+
+    LayerMask operator~() const {
+        return LayerMask(~value);
+    }
+    operator uint32_t() const {
+        return value;
+    }
+};
+

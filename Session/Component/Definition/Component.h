@@ -7,7 +7,6 @@
 #include "ComponentArgument.h"
 #include "ComponentManager.h"
 #include "ComponentTypeCounter.h"
-#include "../../FhishiX/gameobject/EntityTypes.h"
 
 ///Component의 직계 자식일 경우: public Component<자신>
 ///Component의 손자 관계일 경우: public Component<자신,직계 부모>
@@ -18,13 +17,13 @@ class Component : public Parent {
 public:
     // 생성자 포워딩: 부모(Parent)의 생성자가 어떤 인자를 받든 그대로 전달
     template <typename... Args>
-    Component(Args&&... args) : Parent(std::forward<Args>(args)...) {
+    explicit Component(Args&&... args) : Parent(std::forward<Args>(args)...) {
         this->typeId = GetTypeId<T>();
     }
     ///handleOut은 ComponentHandle<T>가 담겨 반환됩니다.
-    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) override final;
+    void MoveToManager(ComponentManager* manager, ComponentHandleBase* handleOut) final;
 
-    ComponentHandle<T> MakeHandle() {
+    ComponentHandle<T> MakeHandle () const {
         if (this->gameSession == nullptr) LOG_ERROR("gameSession이 NULL인 Component객체가 MakeHandle을 시도함.");
         return ComponentHandle<T>(
             this->typeId,
@@ -40,7 +39,7 @@ template<typename T, typename Parent> requires std::derived_from<Parent, Compone
 void Component<T, Parent>::
 MoveToManager(ComponentManager *manager, ComponentHandleBase *handleOut) {
     std::cout << "MoveToManager" << std::endl;
-    auto handle = manager-> template InsertOrphanageComponent<T>(static_cast<T*>(this));
+    auto handle = manager->InsertOrphanageComponent<T>(static_cast<T*>(this));
     if (handleOut) {
         *handleOut = handle;
     }
