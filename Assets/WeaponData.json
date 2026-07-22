@@ -1,0 +1,121 @@
+{
+    "weaponList": [
+        {
+            "id": 0,
+            "weaponName": "Fisher",
+            "type": "Knife",
+            "headDamage": 100.0,
+            "lagDamage": 50.0,
+            "bodyDamage": 40.0,
+            "maxAmmo": 30,
+            "termToShot": 0.20000000298023225,
+            "handlePosition": {
+                "x": 0.4810028076171875,
+                "y": -0.4419934153556824,
+                "z": 0.77130126953125
+            },
+            "handleObjectRotation": {
+                "x": 0.0,
+                "y": 1.0000026226043702,
+                "z": 0.0
+            },
+            "thirdPovObjectPosition": {
+                "x": 0.4810028076171875,
+                "y": -0.4419934153556824,
+                "z": 0.77130126953125
+            },
+            "thirdPovObjectRotation": {
+                "x": 0.0,
+                "y": 1.0000026226043702,
+                "z": 0.0
+            },
+            "interactHighlightColor": {
+                "r": 0.06984639912843704,
+                "g": 0.592452883720398,
+                "b": 0.025710154324769975,
+                "a": 0.572549045085907
+            },
+            "handleObjectPrefabName": "Fisher",
+            "thirdPovObjectPrefabName": "Fisher",
+            "shotSoundName": ""
+        },
+        {
+            "id": 2,
+            "weaponName": "Kcal",
+            "type": "MainWeapon",
+            "headDamage": 100.0,
+            "lagDamage": 20.0,
+            "bodyDamage": 50.0,
+            "maxAmmo": -1,
+            "termToShot": 0.5,
+            "handlePosition": {
+                "x": 0.44000244140625,
+                "y": -0.3620068430900574,
+                "z": 0.59930419921875
+            },
+            "handleObjectRotation": {
+                "x": 292.9021911621094,
+                "y": 108.07818603515625,
+                "z": 142.84811401367188
+            },
+            "thirdPovObjectPosition": {
+                "x": 0.44000244140625,
+                "y": -0.3620068430900574,
+                "z": 0.59930419921875
+            },
+            "thirdPovObjectRotation": {
+                "x": 292.9021911621094,
+                "y": 108.07818603515625,
+                "z": 142.84811401367188
+            },
+            "interactHighlightColor": {
+                "r": 0.011914103291928769,
+                "g": 0.4264150857925415,
+                "b": 0.0,
+                "a": 0.5529412031173706
+            },
+            "handleObjectPrefabName": "kcal",
+            "thirdPovObjectPrefabName": "kcal",
+            "shotSoundName": ""
+        },
+        {
+            "id": 1,
+            "weaponName": "Kick",
+            "type": "MainWeapon",
+            "headDamage": 100.0,
+            "lagDamage": 30.0,
+            "bodyDamage": 30.0,
+            "maxAmmo": 7,
+            "termToShot": 0.800000011920929,
+            "handlePosition": {
+                "x": 0.4640044867992401,
+                "y": -0.4020000994205475,
+                "z": 0.7789993286132813
+            },
+            "handleObjectRotation": {
+                "x": 0.0,
+                "y": -90.0,
+                "z": 0.0
+            },
+            "thirdPovObjectPosition": {
+                "x": 0.4640044867992401,
+                "y": -0.4020000994205475,
+                "z": 0.7789993286132813
+            },
+            "thirdPovObjectRotation": {
+                "x": 0.0,
+                "y": -90.0,
+                "z": 0.0
+            },
+            "interactHighlightColor": {
+                "r": 0.2170257419347763,
+                "g": 0.8037735223770142,
+                "b": 0.0,
+                "a": 0.5686274766921997
+            },
+            "handleObjectPrefabName": "1911",
+            "thirdPovObjectPrefabName": "1911",
+            "shotSoundName": ""
+        }
+    ]
+}

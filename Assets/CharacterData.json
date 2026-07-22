@@ -1,0 +1,11 @@
+{
+  "characterList": [
+    { "id": 0, "characterId": "tester",  "prefabId": 2, "role": "Attack",  "baseStats": { "maxHp": 200, "speed": 105 } },
+    { "id": 1, "characterId": "boba",    "prefabId": 3, "role": "Attack",  "baseStats": { "maxHp": 200, "speed": 105 } },
+    { "id": 2, "characterId": "charles", "prefabId": 4, "role": "Attack",  "baseStats": { "maxHp": 250, "speed": 105 } },
+    { "id": 3, "characterId": "polun",   "prefabId": 5, "role": "Defence", "baseStats": { "maxHp": 350, "speed": 85  } },
+    { "id": 4, "characterId": "bellu",   "prefabId": 6, "role": "Defence", "baseStats": { "maxHp": 450, "speed": 85  } },
+    { "id": 5, "characterId": "rr",      "prefabId": 7, "role": "Support", "baseStats": { "maxHp": 150, "speed": 115 } },
+    { "id": 6, "characterId": "lessone", "prefabId": 8, "role": "Support", "baseStats": { "maxHp": 150, "speed": 115 } }
+  ]
+}

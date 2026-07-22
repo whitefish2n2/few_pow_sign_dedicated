@@ -5,6 +5,7 @@
 #ifndef FPSPROJECTSERVER_PLAYERGENERATEMANAGER_H
 #define FPSPROJECTSERVER_PLAYERGENERATEMANAGER_H
 #include "CharacterSummonPosition.h"
+#include "../../FhishiX/vector/Vector3.h"
 #include "../Definition/ComponentArgument.h"
 #include "../Definition/ComponentHandle.h"
 
@@ -17,6 +18,7 @@ class PlayerGenerateManager final : public Component<PlayerGenerateManager> {
     void Start() override;
 
     void SummonPlayer();
+    Vector3 GetNextSpawnPosition(int team);
 };
 
 
