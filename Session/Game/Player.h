@@ -16,7 +16,6 @@ class Player {
     std::string userId;
     std::string userName;
     std::string assignKey;
-    uint64_t privateKey{};
     uint8_t publicKey{};
     playerStatus status;
 
@@ -24,8 +23,12 @@ class Player {
     //Component<Player>
 
     ENetPeer* peer=nullptr;
+    enet_uint32 peerConnectId = 0;
 
-    void SetCharacter(std::string characterId);
+    void SetCharacter(uint8_t charId);
+
+    Player(std::string id, std::string name, std::string assignKey, uint8_t publicKey, playerStatus status);
+
     Player() = default;
     Player(std::string id, std::string name, std::string assignKey, uint64_t privateKey, uint8_t publicKey, playerStatus status );
 };
