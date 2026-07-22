@@ -4,12 +4,20 @@
 
 #include "PlayerComponent.h"
 
+#include <cmath>
+
 #include "../../../util/StringUtil.h"
 #include "../../FhishiX/gameobject/GameObjectArgument.h"
 #include "../../FhishiX/gameobject/GameObjectManager.h"
 #include "../Definition/ComponentFactory.h"
 #include "../../FhishiX/PhysicsManager.h"
 #include "../../Game/PhysicsSystem.h"
+#include "../../Game/data/CharacterRegistry.h"
+#include "Weapon.h"
+#include "WeaponInventory.h"
+#include "../../Game/data/WeaponRegistry.h"
+#include "../../FhishiX/gameobject/collider/Collider.h"
+
 
 void PlayerComponent::Move(const Vector2 playerInputVector, const float pitch, const float yaw) {
     playerInputVector.normalize();
@@ -18,8 +26,47 @@ void PlayerComponent::Move(const Vector2 playerInputVector, const float pitch, c
     this->aimYaw = yaw;
 }
 
+void PlayerComponent::Jump() {
+    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) return;
+    if (currentHp <= 0) return;
+
+    Vector3 pos = gameObject->transform.GetPosition();
+    bool isOnGround = gameSession->physicsSystem->CheckSphere(pos - Vector3(0, onGroundYDistance, 0), onGroundRadius, _groundMask);
+    if (!isOnGround) return;
+
+    rb.operator->()->AddImpulse(Vector3(0.0f, jumpPower, 0.0f));
+}
+
+int PlayerComponent::CalcDamage(Collider *hitCollider, Weapon *weapon) {
+    if (hitCollider->gameObject != gameObject) return 0;
+    if (weapon == nullptr) return 0;
+
+    const WeaponInfo* info = weapon->GetInfo();
+    if (info == nullptr) return 0;
+
+    bool isHead = hitCollider->GetShapeType() == ColliderType::Sphere;   // 인터림: Sphere=head, 그 외=body
+    return static_cast<int>(isHead ? info->headDamage : info->bodyDamage);
+}
+
+PlayerMoveSnapshot PlayerComponent::GetMoveSnapshot() {
+    PlayerMoveSnapshot snap;
+    snap.position = gameObject->transform.GetPosition();
+    snap.rotation = Vector3(aimPitch, aimYaw, 0.0f);
+    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) {
+        snap.velocity = Vector3::Zero();
+    } else {
+        snap.velocity = rb.operator->()->linearVelocity;
+    }
+    return snap;
+}
+
 void PlayerComponent::Start() {
     Component<PlayerComponent>::Start();
+
+    constexpr float kHistorySeconds = 0.5f;   // 지연보상 리와인드 상한(19c-4)과 동일
+    historySize = static_cast<int>(std::ceil(kHistorySeconds / gameSession->time.DeltaTime));
+    history.resize(historySize);
+
     rb = this->gameObject->GetComponent<Rigidbody>();
     if (rb == ComponentHandle<Rigidbody>::NULLPTR()) {
         std::cout<<"Player's RigidBody Is Null"<< std::endl;
@@ -29,17 +76,21 @@ void PlayerComponent::Start() {
 }
 
 void PlayerComponent::FixedUpdate() {
-    Component<PlayerComponent>::FixedUpdate();
-
     auto transform  = this->gameObject->transform;
     if (rb == ComponentHandle<Rigidbody>::NULLPTR()) return;
     auto rbPtr = rb.operator->();
+
+    if (currentHp <= 0) {
+        rbPtr->SetVelocity(Vector3(0.0f, rbPtr->linearVelocity.y, 0.0f));
+        return;
+    }
 
     // 1. Ground Check (임시)
     bool isOnGround = true;
     isOnGround = gameSession->physicsSystem->CheckSphere(transform.GetPosition()- Vector3(0,onGroundYDistance,0), onGroundRadius, _groundMask);
 
-    float fixedDeltaTime = gameSession->time.FixedDeltaTime;
+    float deltaTime = gameSession->time.DeltaTime
+    ;
 
     // 2. 현재 평면 속도 (X, Z) 추출
     Vector3 currentRbVelocity = rbPtr->linearVelocity;
@@ -65,8 +116,8 @@ void PlayerComponent::FixedUpdate() {
     };
 
     Vector3 targetVelocity = Vector3::Zero();
-    float accelStep = this->acceleration * fixedDeltaTime;
-    float decelStep = this->deceleration * fixedDeltaTime;
+    float accelStep = this->acceleration * deltaTime;
+    float decelStep = this->deceleration * deltaTime;
 
     // ✨ 5. 가속 / 감속 및 미끄러짐 로직 ✨
     if (isOnGround) {
@@ -97,6 +148,16 @@ void PlayerComponent::FixedUpdate() {
 
     // 7. 본체 회전 (Yaw)
     transform.SetRotation(Quaternion::FromEuler(Vector3(0.0f, this->aimYaw, 0.0f)));
+
+    // 히스토리 링버퍼 기록 (tick 기반 인덱스, historySize로 랩어라운드)
+    if (historySize > 0) {
+        int idx = gameSession->tick % historySize;
+        PlayerHistoryArgument& slot = history[idx];
+        slot.position = transform.GetPosition();
+        slot.timestamp = std::chrono::steady_clock::now();
+        lastHistoryIndex = idx;
+        if (validHistorySamples < historySize) validHistorySamples++;
+    }
 }
 
 
@@ -139,12 +200,33 @@ void PlayerComponent::ParseFromString(const std::string &arg) {
         else if (key == "OnGroundYDistance") {
             this->onGroundYDistance = std::stof(val);
         }
+        else if (key == "AimOrigin") {
+            this->aimOrigin = Vector3::ParseVector3(val);
+        }
     }
 }
 
-void PlayerComponent::SetCharacter(const std::string &characterId) {
-    this->characterId = characterId;
-    ///todo: 캐릭터 설정(프리팹 설정, 기본 체력 설정 등)
+void PlayerComponent::SetCharacter(uint8_t charId) {
+    this->characterId = charId;
+    const auto* info = CharacterRegistry::Get(charId);
+    if (info) maxHp = info->maxHp;
+    currentHp = maxHp;
+}
+
+void PlayerComponent::Death() {
+    auto inventory = gameObject->GetComponent<WeaponInventory>();
+    if (!inventory.isNull()) inventory->DropAll(publicKey);
+    gameObject->SetActive(false);
+}
+
+bool PlayerComponent::TakeDamage(int amount) {
+    if (currentHp <= 0) return false;   // 이미 사망 → 무시
+    currentHp -= amount;
+    if (currentHp <= 0) {
+        currentHp = 0;
+        return true;                    // 사망 전이
+    }
+    return false;
 }
 
 
