@@ -41,13 +41,24 @@ protected:
     GameObjectArgument(GameObjectArgument&&) noexcept = default;
     GameObjectArgument& operator=(GameObjectArgument&&) noexcept = default;
 
-    uint32_t id = -1;
-    uint32_t generationId = -1;
+    GameObjectId id = -1;
+    GameObjectGenerationId generationId = -1;
     std::string name;
     Tag tag;
 
 
+    void SetActive(bool active) {
+        if (!gameSession || !gameSession->componentManager) return;
+        for (auto& c : components) {
+            if (c.isNull()) continue;
+            if (ComponentArgument* raw =
+                    gameSession->componentManager->GetRawPtr(c.typeId, c.generationId, c.entityId))
+                raw->isActive = active;
+        }
+    }
+
     [[nodiscard]] GameObject MakeHandle() const;
+
 
     // T는 ComponentArgument를 상속받아야 하고,
     // T는 Args... 인자들로 생성 가능해야 한다고 명시
@@ -82,15 +93,15 @@ protected:
         const size_t typeId = GetTypeId<T>();
         for (auto& comp : components) {
             if (comp.typeId == typeId) {
-                return ComponentHandle<T>(comp.typeId, comp.entityId, comp.componentManager);
+                return ComponentHandle<T>(comp.typeId, comp.generationId, comp.entityId, comp.componentManager);
             }
             if constexpr (!std::is_final_v<T>) {
-                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId,comp.generationId,  comp.entityId);
                 if (rawPtr == nullptr) continue;
 
                 // (예: GetComponent<Collider>()를 불렀는데 현재 comp가 BoxCollider인 경우 여기서 잡힘)
                 if (dynamic_cast<T*>(rawPtr)) {
-                    return ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get());
+                    return ComponentHandle<T>(comp.typeId, comp.generationId, comp.entityId, gameSession->componentManager.get());
                 }
             }
         }
@@ -103,17 +114,17 @@ protected:
 
         for (auto& comp : components) {
             if (comp.typeId == typeId) {
-                result.push_back(ComponentHandle<T>(comp.typeId, comp.entityId, comp.componentManager));
+                result.push_back(ComponentHandle<T>(comp.typeId,comp.generationId,  comp.entityId, comp.componentManager));
                 continue;
             }
 
             // 다형성 검사 (예: GetComponents<Collider>() 호출 시 BoxCollider, SphereCollider 모두 수집)
             if constexpr (!std::is_final_v<T>) {
-                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId, comp.entityId);
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(comp.typeId,comp.generationId,comp.entityId);
                 if (rawPtr == nullptr) continue;
 
                 if (dynamic_cast<T*>(rawPtr)) {
-                    result.push_back(ComponentHandle<T>(comp.typeId, comp.entityId, gameSession->componentManager.get()));
+                    result.push_back(ComponentHandle<T>(comp.typeId, comp.generationId, comp.entityId, gameSession->componentManager.get()));
                 }
             }
         }
@@ -124,13 +135,13 @@ protected:
         const size_t typeId = GetTypeId<T>();
         for (auto it = components.begin(); it != components.end(); ) {
             if (it->typeId == typeId) {
-                ComponentHandle<T> handle(it->typeId, it->entityId, gameSession->componentManager.get());
+                ComponentHandle<T> handle(it->typeId, it->generationId, it->entityId, gameSession->componentManager.get());
                 gameSession->componentManager->DeleteComponentFromPool<T>(&handle);
                 it = components.erase(it);
             } else {
-                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(it->typeId, it->entityId);
+                ComponentArgument* rawPtr = gameSession->componentManager->GetRawPtr(it->typeId,it->generationId, it->entityId);
                 if (rawPtr && dynamic_cast<T*>(rawPtr)) {
-                    ComponentHandle<T> handle(it->typeId, it->entityId, gameSession->componentManager.get());
+                    ComponentHandle<T> handle(it->typeId, it->generationId,  it->entityId, gameSession->componentManager.get());
                     gameSession->componentManager->DeleteComponentFromPool<T>(&handle);
                     it = components.erase(it);
                 } else {

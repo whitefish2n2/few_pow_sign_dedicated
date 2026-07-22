@@ -87,7 +87,7 @@ void Rigidbody::Integrate() {
 
     if (isKinematic || inverseMass <= 0.0f) return;
 
-    float dt = gameSession->time.FixedDeltaTime;
+    float dt = gameSession->time.DeltaTime;
 
     /*
     std::string msg2 = "[Integrate 시작] dt: " + std::to_string(dt) +
@@ -111,6 +111,13 @@ void Rigidbody::Integrate() {
     linearVelocity = linearVelocity * (std::max)(0.0f, 1.0f - (drag * dt));
     angularVelocity = angularVelocity * (std::max)(0.0f, 1.0f - (angularDrag * dt));
 
+    // Unity Rigidbody.maxAngularVelocity(기본 7 rad/s) 미러 — 관성 작은 물체가 충돌 임펄스로 비정상 스핀하는 것 차단
+    constexpr float MAX_ANGULAR_VELOCITY = 7.0f;
+    float angSq = angularVelocity.MagnitudeSq();
+    if (angSq > MAX_ANGULAR_VELOCITY * MAX_ANGULAR_VELOCITY) {
+        angularVelocity = angularVelocity * (MAX_ANGULAR_VELOCITY / std::sqrt(angSq));
+    }
+
     // ----------------------------------------------------
     // 2. 제약 조건(Constraints) 적용
     // ----------------------------------------------------
@@ -123,8 +130,8 @@ void Rigidbody::Integrate() {
     if (constraints & 64) angularVelocity.z = 0.0f;
 
     ///미세 떨림 방지
-    if (linearVelocity.MagnitudeSq() < 0.0001f) linearVelocity = Vector3(0, 0, 0);
-    if (angularVelocity.MagnitudeSq() < 0.0001f) angularVelocity = Vector3(0, 0, 0);
+    if (linearVelocity.MagnitudeSq() < 0.01f) linearVelocity = Vector3(0, 0, 0);
+    if (angularVelocity.MagnitudeSq() < 0.01f) angularVelocity = Vector3(0, 0, 0);
 
     // ----------------------------------------------------
     // 3. 누적된 힘(Force) 초기화
@@ -139,9 +146,30 @@ void Rigidbody::Integrate() {
     Vector3 newPos = transform->GetPosition() + (linearVelocity * dt);
     transform->SetPosition(newPos);
 
-    Vector3 newEuler = transform->GetEularRotation() + (angularVelocity * dt);
-    transform->SetRotation(Quaternion::FromEuler(newEuler));
+    // 회전 적분: dq/dt = 0.5·ω̂·q (ω: rad/s, 월드 프레임)
+    // 오일러각 덧셈은 다축 회전(텀블링)에서 축이 섞여 틀림 → 쿼터니언 적분
+    if (angularVelocity.MagnitudeSq() > 0.0f) {
+        Quaternion q = transform->GetRotation();
+        Quaternion wq(0.0f, angularVelocity.x, angularVelocity.y, angularVelocity.z);
+        transform->SetRotation((q + (wq * q) * (0.5f * dt)).Normalized());
+    }
 }
+void Rigidbody::AddImpulseAtPoint(const Vector3& worldPoint, const Vector3& impulse) {
+    if (isKinematic || inverseMass == 0.0f) return;
+    linearVelocity += impulse * inverseMass;                       // 기존 AddImpulse와 동일
 
+    Quaternion rot = gameObject->transform.GetRotation();
+    Vector3 r = worldPoint - (gameObject->transform.GetPosition() + rot * centerOfMass);
+
+    if (inverseInertiaLocal.MagnitudeSq() > 0.0f) {
+        Vector3 torque = Vector3::Cross(r, impulse);      // 이 충격이 만드는 회전량(월드 기준)
+        Vector3 localTorque = rot.Conjugate() * torque;   // 물체 로컬 축으로 돌려서
+        localTorque = Vector3(localTorque.x * inverseInertiaLocal.x,
+                              localTorque.y * inverseInertiaLocal.y,
+                              localTorque.z * inverseInertiaLocal.z);   // 축별 회전저항(역관성) 반영
+        angularVelocity += rot * localTorque;              // 다시 월드로 되돌려 각속도에 누적
+    }
+    isDirty = true;
+}
 
 REGISTER_COMPONENT(Rigidbody);

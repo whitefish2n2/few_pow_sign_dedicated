@@ -26,6 +26,7 @@ HWND DirectXCore::window = nullptr;
 int DirectXCore::screenWidth = 0;
 int DirectXCore::screenHeight = 0;
 std::atomic<bool> DirectXCore::isRunningViewer(true);
+std::atomic<bool> DirectXCore::isViewerAlive(false);
 
 ID3D11VertexShader* DirectXCore::vertexShader = nullptr;
 ID3D11PixelShader* DirectXCore::pixelShader = nullptr;
@@ -198,7 +199,7 @@ void DirectXCore::RunDirectXLoop() {
         bool prevMKey = false;
         DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.01f, 2000.0f);
 
-        while (isRunning.load()) {
+        while (isRunningViewer.load()) {
 
             ///세션 올리기(위 방향키)
             bool currentUpArrow = (GetAsyncKeyState(VK_UP) & 0x8000) != 0;
@@ -309,15 +310,12 @@ void DirectXCore::RunDirectXLoop() {
         }
     });
     MSG msg = {};
-    while (GetMessage(&msg, nullptr, 0, 0)) {
+    while (GetMessage(&msg, nullptr, 0, 0) > 0) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
-
-        if (msg.message == WM_QUIT) { // WM_QUIT 받으면 루프 종료
-            isRunning.store(false);
-            break;
-        }
     }
+    // WM_QUIT이면 GetMessage가 0 반환하며 탈출 → 여기서 렌더스레드 종료 신호 (루프 안 체크는 죽은 코드였음)
+    isRunningViewer.store(false);
 
     if (renderThread.joinable()) {renderThread.join();}
 

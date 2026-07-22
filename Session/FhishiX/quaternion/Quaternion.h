@@ -23,7 +23,7 @@ public:
     static Quaternion ParseQuaternion(const std::string& str) {
         float x, y, z, w;
         if(sscanf_s(str.c_str(), "%f,%f,%f,%f", &x, &y, &z, &w) == 4) {
-            return {x, y, z, w};
+            return {w,x, y, z};
         }
         return Quaternion::Identity;
     }
@@ -79,36 +79,26 @@ public:
 
     // 오일러 -> 쿼터니언
     static Quaternion FromEuler(const Vector3& eulerDeg) {
-        Vector3 euler = eulerDeg * (3.1415926535f / 180.0f);
-        float cx = std::cos(euler.x * 0.5f);
-        float sx = std::sin(euler.x * 0.5f);
-        float cy = std::cos(euler.y * 0.5f);
-        float sy = std::sin(euler.y * 0.5f);
-        float cz = std::cos(euler.z * 0.5f);
-        float sz = std::sin(euler.z * 0.5f);
-
+        Vector3 e = eulerDeg * (3.1415926535f / 180.0f);
+        float cx = std::cos(e.x * 0.5f), sx = std::sin(e.x * 0.5f);
+        float cy = std::cos(e.y * 0.5f), sy = std::sin(e.y * 0.5f);
+        float cz = std::cos(e.z * 0.5f), sz = std::sin(e.z * 0.5f);
         return Quaternion(
-            cz * cy * cx + sz * sy * sx,
-            cz * cy * sx - sz * sy * cx,
-            cz * sy * cx + sz * cy * sx,
-            sz * cy * cx - cz * sy * sx
+            cy * cx * cz + sy * sx * sz,
+            cy * sx * cz + sy * cx * sz,
+            sy * cx * cz - cy * sx * sz,
+            cy * cx * sz - sy * sx * cz
         ).Normalized();
     }
-
     // 쿼터니언 -> 오일러 (도 단위)
     [[nodiscard]] Vector3 ToEuler() const {
-        float sinr_cosp = 2 * (w * x + y * z);
-        float cosr_cosp = 1 - 2 * (x * x + y * y);
-        float roll = std::atan2(sinr_cosp, cosr_cosp);
-
-        float sinp = 2 * (w * y - z * x);
-        float pitch = std::abs(sinp) >= 1 ? std::copysign(3.1415926535f / 2, sinp) : std::asin(sinp);
-
-        float siny_cosp = 2 * (w * z + x * y);
-        float cosy_cosp = 1 - 2 * (y * y + z * z);
-        float yaw = std::atan2(siny_cosp, cosy_cosp);
-
-        return Vector3(roll, pitch, yaw) * (180.0f / 3.1415926535f);
+        float sinx = 2.0f * (w * x - y * z);
+        float xRot = std::abs(sinx) >= 0.9999f
+                   ? std::copysign(3.1415926535f / 2.0f, sinx)   // 짐벌: x=±90°
+                   : std::asin(sinx);
+        float yRot = std::atan2(2.0f * (x * z + w * y), 1.0f - 2.0f * (x * x + y * y));
+        float zRot = std::atan2(2.0f * (x * y + w * z), 1.0f - 2.0f * (x * x + z * z));
+        return Vector3(xRot, yRot, zRot) * (180.0f / 3.1415926535f);
     }
 
     //주의: 이 함수를 호출하기 전에 쿼터니언은 반드시 정규화(Normalize())하세요

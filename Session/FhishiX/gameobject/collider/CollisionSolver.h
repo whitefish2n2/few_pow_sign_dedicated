@@ -19,9 +19,13 @@ class Rigidbody;
 
 // 1. 충돌 결과 데이터 (Manifold)
 struct Contact {
-    Vector3 normal;       // 튕겨나갈 방향 (B에서 A를 향하는 법선 벡터)
-    float penetration;    // 파고든 깊이 (이만큼 밀어내야 함)
-    Vector3 contactPoint; // 실제 부딪힌 지점 (현재는 옵션)
+    Vector3 normal = Vector3(0, 1, 0);       // 튕겨나갈 방향 (B에서 A를 향하는 법선 벡터)
+    float penetration = 0.0f;                // 파고든 깊이 (이만큼 밀어내야 함)
+    Vector3 contactPoint = Vector3(0, 0, 0); // 단일접점 폴백(pointCount==0일 때 사용)
+
+    static constexpr int kMaxManifoldPoints = 4;
+    Vector3 points[kMaxManifoldPoints];      // 다접점 매니폴드(면-면 안정 적층용, BoxVsBox/BoxVsMesh만 채움)
+    int pointCount = 0;                      // 0이면 contactPoint 단일경로로 폴백
 
     Collider* colA;
     Collider* colB;

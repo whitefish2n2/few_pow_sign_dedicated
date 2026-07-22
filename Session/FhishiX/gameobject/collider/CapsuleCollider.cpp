@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "../../../../util/StringUtil.h"
 #include "../../../Component/Definition/ComponentFactory.h"
 using namespace std;
 #include "../GameObjectArgument.h"
@@ -115,11 +116,10 @@ void CapsuleCollider::ParseFromString(const std::string &arg) {
         if (line.empty()) continue;
         if (line.back() == '\r') line.pop_back();
 
-        size_t delimPos = line.find(": ");
+        size_t delimPos = line.find(':');
         if (delimPos == std::string::npos) continue;
-
-        std::string key = line.substr(0, delimPos);
-        std::string val = line.substr(delimPos + 2);
+        std::string key = StringUtils::Trim(line.substr(0, delimPos));
+        std::string val = StringUtils::Trim(line.substr(delimPos + 1));
 
         if (key == "IsTrigger") {
             this->isTrigger = (val == "1");

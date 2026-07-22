@@ -47,6 +47,10 @@ class PhysicsSystem
 
     bool CheckSphere(const Vector3 &center, float radius, LayerMask layerMask);
 
+
+    bool Raycast(const Ray &ray, float maxDistance, LayerMask layerMask, RaycastHit &outHit,
+                 const std::function<bool(Collider*)> &filter = nullptr);
+
     PhysicsSystem() = default;
     ~PhysicsSystem() = default;
     PhysicsSystem(const PhysicsSystem &) = delete;
