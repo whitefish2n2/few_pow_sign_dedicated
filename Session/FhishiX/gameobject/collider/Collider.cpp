@@ -5,10 +5,18 @@
 #include "Collider.h"
 
 #include "../GameObjectArgument.h"
+#include "../rigidBody/Rigidbody.h"
 
 void Collider::Start() {
     ComponentArgument::Start();
 
+    // 자기 형상의 로컬 관성텐서(대각)를 Rigidbody에 합산 — 충돌 회전 임펄스 응답용
+    if (this->gameObject.IsNull(this->gameObject)) return;
+    auto rbHandle = gameObject->GetComponent<Rigidbody>();
+    if (rbHandle.isNull()) return;
+    Rigidbody* rb = rbHandle.operator->();
+    if (rb == nullptr || rb->isKinematic) return;
+    rb->AddLocalInertia(CalculateLocalInertia(rb->mass));
 }
 
 ///WIN64환경이면  세션에 InsertRenderer를 자동 호출함

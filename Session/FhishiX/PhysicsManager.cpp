@@ -38,7 +38,7 @@ struct DynamicProxy {
     }
 };
 void PhysicsManager::PhysicsUpdate() {
-    LOG_DEBUG("PhysicsUpdate 실행");
+    //LOG_DEBUG("PhysicsUpdate 실행");
     DrivenPool<Rigidbody>* rigidBodies = gameSession->componentManager.get()->GetOrCreatePool<Rigidbody>();
     std::vector<DynamicProxy> dynamicProxies;
     dynamicProxies.reserve(rigidBodies->size());
@@ -79,15 +79,9 @@ void PhysicsManager::PhysicsUpdate() {
             thread_local std::vector<ComponentHandle<Collider>> overlapResults;
 
             overlapResults.clear(); // 사이즈만 0으로 만들고 메모리는 유지
-            std::string dbgMsg = "[X-RAY] 트리 객체 수: " + std::to_string(gameSession->physicsSystem->tree.objectCount) +
-                                 " | 내 Y위치: " + std::to_string(myCollider->gameObject->transform.GetPosition().y) +
-                                 " | AABB Min.y: " + std::to_string(bounds.min.y);
-            LOG_DEBUG(dbgMsg);
             // K-D 트리 탐색!
             gameSession->physicsSystem->tree.GetOverlaps(proxy.bounds, overlapResults);
             if (!overlapResults.empty()) {
-                std::string msg1 = "[BroadPhase] K-D 트리에서 AABB 겹침 감지! 후보 개수: " + std::to_string(overlapResults.size());
-                LOG_DEBUG(msg1);
             }
             for (auto v: overlapResults) {
                 CollisionPair collisionPair;
@@ -122,14 +116,7 @@ void PhysicsManager::PhysicsUpdate() {
             contact.rbB = nullptr;
             bool isHit = CollisionSolver::CheckCollision(pair.dynamicCollider, staticCol, contact);
 
-            std::string msg2 = "[NarrowPhase] 정밀 충돌 검사 결과 (1이면 충돌, 0이면 무시): " + std::to_string(isHit);
-            LOG_DEBUG(msg2);
-
             if (isHit) {
-                std::string msg3 = "[Solver] 💥 튕겨냅니다! 파고든 깊이: " + std::to_string(contact.penetration) +
-                                   " | 법선 방향: (" + std::to_string(contact.normal.x) + ", " +
-                                   std::to_string(contact.normal.y) + ", " + std::to_string(contact.normal.z) + ")";
-                LOG_DEBUG(msg3);
 
                 CollisionSolver::ResolveCollision(contact);
             }
@@ -147,6 +134,7 @@ void PhysicsManager::PhysicsUpdate() {
 
     }
 }
+
 
 
 

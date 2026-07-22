@@ -26,33 +26,28 @@ class GameObjectManager {
     std::vector<GameObjectArgument> pendingAdds;
 
     std::queue<uint32_t> freeIndices;
+    std::vector<uint32_t> generations;
     std::vector<GameObject> pendingDestroys;
     std::unordered_map<std::string, GameObject> nameIndex;
 
-    uint32_t nextId = 0;
+    GameObjectId nextId = 0;
 
     public:
     GameSession *ownerSession;
 
     GameObject CreateGameObject() {
         uint32_t id;
-        uint32_t gen = 1;
-
         if (freeIndices.empty()) {
             id = nextId++;
         } else {
             id = freeIndices.front();
             freeIndices.pop();
-            // 재사용 시 세대 증가
-            if (id < objects.size()) {
-                gen = objects[id].generationId + 1;
-            }
         }
-
         if (id >= indexArray.size()) {
             indexArray.resize(id + 1, INVALID_INDEX);
+            generations.resize(id + 1, 1);   // 최초 세대 1
         }
-
+        uint32_t gen = generations[id];       // ← objects[id].generationId 대신 sidecar
         GameObjectArgument obj(id, gen, ownerSession);
         obj.id = id;
 
@@ -98,7 +93,7 @@ class GameObjectManager {
         pendingDestroys.push_back(ref);
     }
 
-    ///오브젝트 생성/삭제 지연 처리 플러쉬 함수(매 Update 끝에 호출 요망)
+    ///오브젝트 생성/삭제 지연 처리 플러쉬 함수(매 FixedUpdate 끝에 호출 요망)
     void Flush() {
         for (const auto& ref : pendingDestroys) {
             GameObjectArgument* obj = GetGameObject(ref);
@@ -107,11 +102,11 @@ class GameObjectManager {
             }
 
             obj->Clear();
-            obj->generationId++;
 
             size_t idx = indexArray[ref.GetId()];
             if (idx != INVALID_INDEX) {
                 indexArray[ref.GetId()] = INVALID_INDEX;
+                generations[ref.GetId()]++;
                 freeIndices.push(ref.GetId());
             }
         }

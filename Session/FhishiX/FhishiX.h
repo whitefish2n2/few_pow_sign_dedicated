@@ -3,4 +3,4 @@
 //
 
 #pragma once
-# define Gravity 1;
+constexpr float Gravity = 9.81f;

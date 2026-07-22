@@ -13,12 +13,13 @@ class Rigidbody;
 ///Physics Loop 돌리는애->컴포넌트에 속하며 Update에 따라서 알아서 루프 돌린다.
 class PhysicsManager final:public Component<PhysicsManager> {
     public:
+    static constexpr int UPDATE_PRIORITY = -100;
     PhysicsManager() = default;
     ~PhysicsManager() = default;
     void ParseFromString(const std::string &arg) override {
 
     };
-    void Update() override {
+    void FixedUpdate() override {
         this->PhysicsUpdate();
         //Log("PhysicsManager::PhysicsUpdate 호출해썩");
     }

@@ -27,8 +27,7 @@ bool PhysicsSystem::Init(MapInfo map_info, GameSession *target) {
     auto cmManager =  session->componentManager.get();
 
     session->FlushGameObject();
-    session->UpdateComponents();
-
+    cmManager->FlushComponents();
 
     int totalBoxes = 0, addedBoxes = 0, skipNull = 0, skipRb = 0;
 
@@ -47,7 +46,7 @@ bool PhysicsSystem::Init(MapInfo map_info, GameSession *target) {
         }
 
         // [수정2] MakeHandle() 대신 명확하게 다형성 캐스팅해서 넣습니다!
-        colliders.push_back(ComponentHandle<Collider>(o.typeId, o.entityId, cmManager));
+        colliders.push_back(ComponentHandle<Collider>(o.typeId, o.generationId, o.entityId, cmManager));
         addedBoxes++;
     }
     std::string reportMsg = "[TreeBuild] BoxCollider 탐색 결과 -> 총: " + std::to_string(totalBoxes) +
@@ -88,13 +87,14 @@ std::vector<Collider*> PhysicsSystem::OverlapSphere(const Vector3& center, float
 
     // 1. K-D 트리에서 후보군 추출
     std::vector<ComponentHandle<Collider>> candidates;
-    AABB searchBounds(center - Vector3(radius), center + Vector3(radius));
+    AABB searchBounds(center - Vector3(radius, radius, radius), center + Vector3(radius, radius, radius));
     tree.GetOverlaps(searchBounds, candidates);
 
     // 2. 후보군 정밀 검사
     Contact dummyContact;
     for (auto& handle : candidates) {
         Collider* col = handle.operator->();
+        if (col == nullptr || !col->gameObject || !col->isActive) continue;   // 죽은 핸들/비활성 제외
         if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
             continue;
         }
@@ -106,6 +106,7 @@ std::vector<Collider*> PhysicsSystem::OverlapSphere(const Vector3& center, float
     for (auto& actor : activeActors) {
         for (auto& colHandle : actor.colliders) {
             Collider* col = colHandle.operator->();
+            if (col == nullptr || !col->gameObject || !col->isActive) continue;   // 죽은 핸들/비활성(픽업된 무기 등) 제외
             if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
                 continue;
             }
@@ -120,14 +121,16 @@ std::vector<Collider*> PhysicsSystem::OverlapSphere(const Vector3& center, float
 bool PhysicsSystem::CheckSphere(const Vector3& center, float radius, LayerMask layerMask) {
     // 1. K-D 트리에서 AABB로 후보군 추출
     std::vector<ComponentHandle<Collider>> candidates;
-    AABB searchBounds(center - Vector3(radius), center + Vector3(radius));
+    AABB searchBounds(center - Vector3(radius, radius, radius), center + Vector3(radius, radius, radius));
     tree.GetOverlaps(searchBounds, candidates);
+
 
     Contact dummyContact;
 
     // 2. K-D 트리 후보군 정밀 검사 (Static 객체 / 지형)
     for (auto& handle : candidates) {
         Collider* col = handle.operator->();
+        if (col == nullptr || !col->gameObject || !col->isActive) continue;   // 죽은 핸들/비활성 제외
 
         // 레이어 마스크 체크 (아까 논의한 캐싱이 적용되었다면 col->cachedLayer.idx 로 바꾸시면 더 빠릅니다!)
         if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
@@ -144,6 +147,7 @@ bool PhysicsSystem::CheckSphere(const Vector3& center, float radius, LayerMask l
     for (auto& actor : activeActors) {
         for (auto& colHandle : actor.colliders) {
             Collider* col = colHandle.operator->();
+            if (col == nullptr || !col->gameObject || !col->isActive) continue;   // 죽은 핸들/비활성(픽업된 무기 등) 제외
 
             if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) {
                 continue;
@@ -158,4 +162,36 @@ bool PhysicsSystem::CheckSphere(const Vector3& center, float radius, LayerMask l
 
     // 끝까지 다 뒤졌는데 아무것도 안 걸렸다면
     return false;
+}
+
+bool PhysicsSystem::Raycast(const Ray &ray, float maxDistance, LayerMask layerMask, RaycastHit &outHit, const std::function<bool(Collider *)> &
+                            filter) {
+    // 레이 구간을 감싸는 AABB로 후보 추출 (OverlapSphere 패턴 미러)
+    Vector3 end = ray.origin + ray.direction * maxDistance;
+    Vector3 mn((std::min)(ray.origin.x, end.x), (std::min)(ray.origin.y, end.y), (std::min)(ray.origin.z, end.z));
+    Vector3 mx((std::max)(ray.origin.x, end.x), (std::max)(ray.origin.y, end.y), (std::max)(ray.origin.z, end.z));
+    std::vector<ComponentHandle<Collider>> candidates;
+    tree.GetOverlaps(AABB(mn, mx), candidates);
+
+    bool found = false;
+    RaycastHit best;
+
+    auto test = [&](Collider* col) {
+        if (col == nullptr || !col->gameObject) return;
+        if (!col->isActive) return;                        // 비활성(픽업된 무기 등) 제외
+        if ((layerMask & (1 << col->gameObject->layer.idx)) == 0) return;
+        if (filter && !filter(col)) return;                // 호출자 제외조건
+        RaycastHit hit;
+        if (CollisionSolver::Raycast(ray, col, maxDistance, hit) && (!found || hit.distance < best.distance)) {
+            best = hit;
+            found = true;
+        }
+    };
+
+    for (auto& handle : candidates) test(handle.operator->());
+    for (auto& actor : activeActors)
+        for (auto& colHandle : actor.colliders) test(colHandle.operator->());
+
+    if (found) outHit = best;
+    return found;
 }

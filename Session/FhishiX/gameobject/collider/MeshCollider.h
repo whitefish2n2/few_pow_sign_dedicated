@@ -73,7 +73,7 @@ public:
         // 로직 비움
     }
     void CalculateAABB() const override;
-    void Update() override {
+    void FixedUpdate() override {
         //Log("메쉬콜라이더업데이트해요");
     };
     void ParseFromString(const std::string &arg) override;

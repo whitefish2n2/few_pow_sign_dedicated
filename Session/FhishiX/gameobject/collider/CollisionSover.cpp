@@ -13,6 +13,17 @@
 #include "../rigidBody/Rigidbody.h"
 constexpr float EPSILON = 1e-4f;
 CollisionFunc CollisionSolver::dispatchTable[(int)ColliderType::MaxCount][(int)ColliderType::MaxCount] = {};
+
+namespace {
+    // 로컬 대각 역관성을 월드 공간 벡터에 적용: I⁻¹_world·v = R·(I⁻¹_local·(Rᵀ·v))
+    Vector3 ApplyInvInertia(const Rigidbody* rb, const Quaternion& rot, const Vector3& v) {
+        Vector3 local = rot.Conjugate() * v;
+        local = Vector3(local.x * rb->inverseInertiaLocal.x,
+                        local.y * rb->inverseInertiaLocal.y,
+                        local.z * rb->inverseInertiaLocal.z);
+        return rot * local;
+    }
+}
 float CollisionSolver::CombineMaterial(float a, float b,CombineMode modeA, CombineMode modeB) {
     // 두 객체의 CombineMode 중 우선순위가 높은 쪽을 따름
     // 우선순위: Maximum > Multiply > Minimum > Average
@@ -70,11 +81,6 @@ bool CollisionSolver::CheckCollision(Collider *a, Collider *b, Contact &outConta
     return dispatchTable[typeA][typeB](a, b, outContact);
 }
 void CollisionSolver::ResolveCollision(const Contact &contact) {
-    std::string msg3 = "[ResolveCollision 💥] 부딪힘! 파고든 깊이: " + std::to_string(contact.penetration) +
-                       " | 튕겨낼 Normal: (" + std::to_string(contact.normal.x) + ", " +
-                       std::to_string(contact.normal.y) + ", " +
-                       std::to_string(contact.normal.z) + ")";
-    LOG_DEBUG(msg3);
     Rigidbody* rbA = contact.rbA;
     Rigidbody* rbB = contact.rbB;
 
@@ -98,10 +104,15 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
         matA.bounciness, matB.bounciness,
         matA.bounceCombine, matB.bounceCombine
     );
+    constexpr float BOUNCE_THRESHOLD = 2.0f;
 
     // 마찰계수 조합 (동적)
     float friction = CombineMaterial(
         matA.dynamicFriction, matB.dynamicFriction,
+        matA.frictionCombine, matB.frictionCombine
+    );
+    float staticFrictionC = CombineMaterial(
+        matA.staticFriction, matB.staticFriction,
         matA.frictionCombine, matB.frictionCombine
     );
 
@@ -121,50 +132,102 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
         trB.SetPosition(trB.GetPosition() - (moveVector * invMassB));
     }
 
-    ///충격량 계산
+    ///충격량 계산 — 접촉점(들) 기준 (선형 + 회전)
 
-    Vector3 velA = rbA ? rbA->linearVelocity : Vector3::Zero();
-    Vector3 velB = rbB ? rbB->linearVelocity : Vector3::Zero();
-    Vector3 relativeVelocity = velA - velB;
+    Quaternion rotA = contact.colA->gameObject->transform.GetRotation();
+    Quaternion rotB = contact.colB->gameObject->transform.GetRotation();
+    bool spinA = (invMassA > 0.0f) && rbA->inverseInertiaLocal.MagnitudeSq() > 0.0f;
+    bool spinB = (invMassB > 0.0f) && rbB->inverseInertiaLocal.MagnitudeSq() > 0.0f;
 
-    float velAlongNormal = Vector3::Dot(relativeVelocity, contact.normal);
-    if (velAlongNormal > 0) return; // 이미 멀어지는 중
+    // pointCount==0(대부분의 쌍)이면 기존처럼 contactPoint 하나로 1회만 순회 — 동작 동일
+    int pointCount = contact.pointCount > 0 ? contact.pointCount : 1;
+    // 다접점은 각 접점이 자기 접근속도를 온전히 죽이게 두고(임펄스 분할 금지), 대신 전체 접점을
+    // 여러 번 반복 순회해 서로 수렴시킴(순차 임펄스). 1/N 분할+1패스는 접근속도가 ~30% 살아남아
+    // 모서리가 계속 파고들고 위치보정이 에너지를 주입해 텀블링을 유발했음.
+    int iterations = pointCount > 1 ? 4 : 1;
 
-    float j = -(1.0f + restitution) * velAlongNormal;
-    j /= totalInvMass;
+    for (int iter = 0; iter < iterations; ++iter)
+    for (int p = 0; p < pointCount; ++p) {
+        Vector3 contactPoint = contact.pointCount > 0 ? contact.points[p] : contact.contactPoint;
 
-    Vector3 normalImpulse = contact.normal * j;
+        // 지렛대 팔: 접촉점 - 질량중심(월드). 회전 가능(역관성>0)한 동적 바디만 의미 있음
+        Vector3 rA = spinA ? contactPoint - (contact.colA->gameObject->transform.GetPosition() + rotA * rbA->centerOfMass) : Vector3::Zero();
+        Vector3 rB = spinB ? contactPoint - (contact.colB->gameObject->transform.GetPosition() + rotB * rbB->centerOfMass) : Vector3::Zero();
 
-    if (rbA && invMassA > 0) rbA->SetVelocity(velA + normalImpulse * invMassA);
-    if (rbB && invMassB > 0) rbB->SetVelocity(velB - normalImpulse * invMassB);
+        // 접촉점 상대속도: v + ω×r
+        Vector3 velA = rbA ? rbA->linearVelocity : Vector3::Zero();
+        Vector3 velB = rbB ? rbB->linearVelocity : Vector3::Zero();
+        if (spinA) velA += Vector3::Cross(rbA->angularVelocity, rA);
+        if (spinB) velB += Vector3::Cross(rbB->angularVelocity, rB);
+        Vector3 relativeVelocity = velA - velB;
 
+        float velAlongNormal = Vector3::Dot(relativeVelocity, contact.normal);
+        if (velAlongNormal > 0) continue; // 이 접점은 이미 멀어지는 중
 
-    ///마찰 충격량
+        // 유효질량 분모: Σ invMass + Σ n·((I⁻¹(r×n))×r)
+        float angularTermN = 0.0f;
+        if (spinA) {
+            Vector3 raCrossN = Vector3::Cross(rA, contact.normal);
+            angularTermN += Vector3::Dot(Vector3::Cross(ApplyInvInertia(rbA, rotA, raCrossN), rA), contact.normal);
+        }
+        if (spinB) {
+            Vector3 rbCrossN = Vector3::Cross(rB, contact.normal);
+            angularTermN += Vector3::Dot(Vector3::Cross(ApplyInvInertia(rbB, rotB, rbCrossN), rB), contact.normal);
+        }
 
-    // 충돌 후 갱신된 속도로 재계산
-    velA = rbA ? rbA->linearVelocity : Vector3::Zero();
-    velB = rbB ? rbB->linearVelocity : Vector3::Zero();
-    relativeVelocity = velA - velB;
+        float pointRestitution = (-velAlongNormal < BOUNCE_THRESHOLD) ? 0.0f : restitution;
 
-    // 접선 방향 (normal 성분 제거)
-    Vector3 tangent = relativeVelocity - contact.normal * Vector3::Dot(relativeVelocity, contact.normal);
-    float tangentLen = tangent.Magnitude();
-    if (tangentLen < 0.0001f) return; // 접선 속도 없으면 마찰 없음
-    tangent = tangent * (1.0f / tangentLen);
+        float j = -(1.0f + pointRestitution) * velAlongNormal;
+        j /= (totalInvMass + angularTermN);
 
-    float velAlongTangent = Vector3::Dot(relativeVelocity, tangent);
-    float jt = -velAlongTangent / totalInvMass;
+        Vector3 normalImpulse = contact.normal * j;
 
-    // 쿨롱 마찰: |jt| <= friction * |j| 이면 정지 마찰, 초과하면 동적 마찰
-    Vector3 frictionImpulse;
-    if (std::abs(jt) <= j * friction) {
-        frictionImpulse = tangent * jt;           // 정지 마찰 (완전히 멈춤)
-    } else {
-        frictionImpulse = tangent * (-j * friction); // 동적 마찰 (미끄러짐)
+        if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + normalImpulse * invMassA);
+        if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - normalImpulse * invMassB);
+        if (spinA) { rbA->angularVelocity += ApplyInvInertia(rbA, rotA, Vector3::Cross(rA, normalImpulse)); rbA->isDirty = true; }
+        if (spinB) { rbB->angularVelocity -= ApplyInvInertia(rbB, rotB, Vector3::Cross(rB, normalImpulse)); rbB->isDirty = true; }
+
+        ///마찰 충격량 — 같은 접점 상대속도로 재계산
+
+        velA = rbA ? rbA->linearVelocity : Vector3::Zero();
+        velB = rbB ? rbB->linearVelocity : Vector3::Zero();
+        if (spinA) velA += Vector3::Cross(rbA->angularVelocity, rA);
+        if (spinB) velB += Vector3::Cross(rbB->angularVelocity, rB);
+        relativeVelocity = velA - velB;
+
+        // 접선 방향 (normal 성분 제거)
+        Vector3 tangent = relativeVelocity - contact.normal * Vector3::Dot(relativeVelocity, contact.normal);
+        float tangentLen = tangent.Magnitude();
+        if (tangentLen < 0.0001f) continue; // 접선 속도 없으면 마찰 없음
+        tangent = tangent * (1.0f / tangentLen);
+
+        // 접선축 유효질량 (노멀과 동일 형태)
+        float angularTermT = 0.0f;
+        if (spinA) {
+            Vector3 raCrossT = Vector3::Cross(rA, tangent);
+            angularTermT += Vector3::Dot(Vector3::Cross(ApplyInvInertia(rbA, rotA, raCrossT), rA), tangent);
+        }
+        if (spinB) {
+            Vector3 rbCrossT = Vector3::Cross(rB, tangent);
+            angularTermT += Vector3::Dot(Vector3::Cross(ApplyInvInertia(rbB, rotB, rbCrossT), rB), tangent);
+        }
+
+        float velAlongTangent = Vector3::Dot(relativeVelocity, tangent);
+        float jt = -velAlongTangent / (totalInvMass + angularTermT);
+
+        // 쿨롱 마찰: |jt| <= friction * |j| 이면 정지 마찰, 초과하면 동적 마찰
+        Vector3 frictionImpulse;
+        if (std::abs(jt) <= j * staticFrictionC) {
+            frictionImpulse = tangent * jt;           // 정지 마찰 (완전히 멈춤)
+        } else {
+            frictionImpulse = tangent * (-j * friction); // 동적 마찰 (미끄러짐)
+        }
+
+        if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + frictionImpulse * invMassA);
+        if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - frictionImpulse * invMassB);
+        if (spinA) rbA->angularVelocity += ApplyInvInertia(rbA, rotA, Vector3::Cross(rA, frictionImpulse));
+        if (spinB) rbB->angularVelocity -= ApplyInvInertia(rbB, rotB, Vector3::Cross(rB, frictionImpulse));
     }
-
-    if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + frictionImpulse * invMassA);
-    if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - frictionImpulse * invMassB);
 }
 bool CollisionSolver::Raycast(const Ray& ray, Collider* collider, float maxDistance, RaycastHit& outHit) {
     if (!collider) return false;
@@ -373,39 +436,57 @@ namespace {
 // endregion
 
 // region Raycast
+namespace {
+    // 월드 공간 구 레이캐스트 코어 — RaycastSphere/RaycastCapsule 끝단이 공용 (outHit.collider 세팅은 호출자 몫)
+    bool RaycastSphereWorld(const Ray& ray, const Vector3& center, float radius, float maxDistance, RaycastHit& outHit) {
+        Vector3 m = ray.origin - center;
+
+        float b = Vector3::Dot(m, ray.direction);
+        float c = Vector3::Dot(m, m) - (radius * radius);
+
+        // 광선 시작점이 구 밖에 있고, 광선 방향이 구를 향하지 않으면 충돌 불가
+        if (c > 0.0f && b > 0.0f) return false;
+
+        float discr = b * b - c;
+        // 판별식이 0보다 작으면 허근 (빗나감)
+        if (discr < 0.0f) return false;
+
+        // 가장 가까운 충돌 거리 (t)
+        float t = -b - std::sqrt(discr);
+
+        // 만약 광선 시작점이 구 내부라면 t는 음수이므로, 반대편 교차점을 사용
+        if (t < 0.0f) t = -b + std::sqrt(discr);
+
+        if (t > maxDistance) return false;
+
+        outHit.distance = t;
+        outHit.point = ray.origin + (ray.direction * t);
+        outHit.normal = (outHit.point - center) / radius;
+
+        return true;
+    }
+}
+
 bool CollisionSolver::RaycastSphere(const Ray& ray, SphereCollider* sphere, float maxDistance, RaycastHit& outHit) {
-    Vector3 center = sphere->gameObject->transform.GetPosition() + sphere->center;
-    Vector3 m = ray.origin - center;
+    // center/radius에 트랜스폼 스케일·회전 적용 (RaycastBox와 동일 규약)
+    const Transform& tr = sphere->gameObject->transform;
+    Vector3 scale = tr.GetScale();
+    Vector3 scaledCenter = { sphere->center.x * scale.x, sphere->center.y * scale.y, sphere->center.z * scale.z };
+    Vector3 center = tr.GetPosition() + (tr.GetRotation() * scaledCenter);
+    float radius = sphere->radius * (std::max)({std::abs(scale.x), std::abs(scale.y), std::abs(scale.z)});
 
-    float b = Vector3::Dot(m, ray.direction);
-    float c = Vector3::Dot(m, m) - (sphere->radius * sphere->radius);
-
-    // 광선 시작점이 구 밖에 있고, 광선 방향이 구를 향하지 않으면 충돌 불가
-    if (c > 0.0f && b > 0.0f) return false;
-
-    float discr = b * b - c;
-    // 판별식이 0보다 작으면 허근 (빗나감)
-    if (discr < 0.0f) return false;
-
-    // 가장 가까운 충돌 거리 (t)
-    float t = -b - std::sqrt(discr);
-
-    // 만약 광선 시작점이 구 내부라면 t는 음수이므로, 반대편 교차점을 사용
-    if (t < 0.0f) t = -b + std::sqrt(discr);
-
-    if (t > maxDistance) return false;
-
+    if (!RaycastSphereWorld(ray, center, radius, maxDistance, outHit)) return false;
     outHit.collider = sphere;
-    outHit.distance = t;
-    outHit.point = ray.origin + (ray.direction * t);
-    outHit.normal = (outHit.point - center) / sphere->radius;
-
     return true;
 }
 bool CollisionSolver::RaycastBox(const Ray& ray, BoxCollider* box, float maxDistance, RaycastHit& outHit) {
-    Vector3 boxPos = box->gameObject->transform.GetPosition() + box->center;
+    // center/size에 트랜스폼 스케일·회전 적용 (BoxVsBox와 동일 규약 — 스케일 빼먹으면 로우폴리 모델의
+    // 거대 로컬 size가 그대로 월드 크기가 되어 레이 원점이 박스 내부로 판정되는(dist=0) 버그)
     Quaternion boxRot = box->gameObject->transform.GetRotation();
-    Vector3 extents = box->size * 0.5f;
+    Vector3 scale = box->gameObject->transform.GetScale();
+    Vector3 scaledCenter = { box->center.x * scale.x, box->center.y * scale.y, box->center.z * scale.z };
+    Vector3 boxPos = box->gameObject->transform.GetPosition() + (boxRot * scaledCenter);
+    Vector3 extents = { box->size.x * scale.x * 0.5f, box->size.y * scale.y * 0.5f, box->size.z * scale.z * 0.5f };
 
     // 광선을 Box의 로컬 공간으로 역변환
     Quaternion invRot = boxRot;
@@ -457,14 +538,20 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
     Vector3 capTop, capBottom;
     GetCapsuleSegment(cap, capTop, capBottom);
 
+    // 반지름에 스케일 적용 (GetCapsuleSegment의 rScale과 동일 규약 — 축에 수직인 두 성분의 max)
+    Vector3 capScale = cap->gameObject->transform.GetScale();
+    float rScale = 1.0f;
+    if (cap->direction == 0)      rScale = (std::max)(capScale.y, capScale.z);
+    else if (cap->direction == 1) rScale = (std::max)(capScale.x, capScale.z);
+    else                          rScale = (std::max)(capScale.x, capScale.y);
+    float radius = cap->radius * rScale;
+
     Vector3 d = capBottom - capTop;
     float md = d.MagnitudeSq();
     if (md < EPSILON) { // 선분이 너무 짧으면 Sphere로 취급
-        SphereCollider tempSphere;
-        tempSphere.gameObject = cap->gameObject;
-        tempSphere.radius = cap->radius;
-        tempSphere.center = cap->center;
-        return RaycastSphere(ray, &tempSphere, maxDistance, outHit);
+        if (!RaycastSphereWorld(ray, capTop, radius, maxDistance, outHit)) return false;
+        outHit.collider = cap;
+        return true;
     }
 
     Vector3 m = ray.origin - capTop;
@@ -480,7 +567,7 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
 
     float a = dd * nn - nd * nd;
     float b = dd * mn - nd * md_dot;
-    float c = dd * Vector3::Dot(m, m) - md_dot * md_dot - cap->radius * cap->radius * dd;
+    float c = dd * Vector3::Dot(m, m) - md_dot * md_dot - radius * radius * dd;
 
     if (std::abs(a) < EPSILON) {
         // 광선이 원기둥 축과 평행한 경우, 캡슐 끝단 구(Sphere) 검사로 넘어감
@@ -498,7 +585,7 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
                     outHit.point = ray.origin + ray.direction * t;
                     // 원기둥 표면 법선 계산
                     Vector3 closestPtOnAxis = capTop + d * (y * md_inv);
-                    outHit.normal = (outHit.point - closestPtOnAxis) / cap->radius;
+                    outHit.normal = (outHit.point - closestPtOnAxis) / radius;
                     return true;
                 }
             }
@@ -509,17 +596,8 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
     bool hitSphere = false;
     RaycastHit topHit, bottomHit;
 
-    SphereCollider dummySphere;
-    dummySphere.gameObject = cap->gameObject;
-    dummySphere.radius = cap->radius;
-
-    // Top Sphere
-    dummySphere.center = capTop - cap->gameObject->transform.GetPosition();
-    bool h1 = RaycastSphere(ray, &dummySphere, maxDistance, topHit);
-
-    // Bottom Sphere
-    dummySphere.center = capBottom - cap->gameObject->transform.GetPosition();
-    bool h2 = RaycastSphere(ray, &dummySphere, maxDistance, bottomHit);
+    bool h1 = RaycastSphereWorld(ray, capTop, radius, maxDistance, topHit);
+    bool h2 = RaycastSphereWorld(ray, capBottom, radius, maxDistance, bottomHit);
 
     if (h1 && h2) {
         outHit = (topHit.distance < bottomHit.distance) ? topHit : bottomHit;
@@ -632,9 +710,31 @@ bool CollisionSolver::OverlapSphere(const Vector3& center, float radius, Collide
         }
         case ColliderType::Box: {
             auto* box = static_cast<BoxCollider*>(collider);
-            // 박스 로컬 공간으로 점을 변환하여 클램프 후 거리 계산
-            // (이미 BoxVsSphere 로직에 구현된 로직을 재사용)
-            return SphereVsBox(collider, nullptr, outContact); // 적절히 수정 가능
+            const auto& tr = box->gameObject->transform;
+            Vector3 pos    = tr.GetPosition();
+            Vector3 scale  = tr.GetScale();
+            Quaternion rot = tr.GetRotation();
+
+            // 박스 월드 중심 + half-extents (GetAABB와 동일 컨벤션)
+            Vector3 worldCenter = pos + rot * Vector3(box->center.x * scale.x,
+                                                      box->center.y * scale.y,
+                                                      box->center.z * scale.z);
+            Vector3 he = { box->size.x * scale.x * 0.5f,
+                           box->size.y * scale.y * 0.5f,
+                           box->size.z * scale.z * 0.5f };
+
+            // sphere center를 박스 로컬 축에 투영
+            Vector3 d  = center - worldCenter;
+            float lx = Vector3::Dot(d, rot * Vector3(1, 0, 0));
+            float ly = Vector3::Dot(d, rot * Vector3(0, 1, 0));
+            float lz = Vector3::Dot(d, rot * Vector3(0, 0, 1));
+
+            // half-extents로 클램프 → 최근접점까지 거리²
+            float dx = lx - std::clamp(lx, -he.x, he.x);
+            float dy = ly - std::clamp(ly, -he.y, he.y);
+            float dz = lz - std::clamp(lz, -he.z, he.z);
+
+            return (dx*dx + dy*dy + dz*dz) < (radius * radius);
         }
         case ColliderType::Capsule: {
             auto* cap = static_cast<CapsuleCollider*>(collider);
@@ -707,6 +807,8 @@ bool CollisionSolver::SphereVsSphere(Collider *a, Collider *b, Contact &outConta
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = sumRadius - dist;
         outContact.normal = (dist > EPSILON) ? diff / dist : Vector3(0, 1, 0);
+        // 접촉점: 두 표면점의 중점
+        outContact.contactPoint = ((posA - outContact.normal * radiusA) + (posB + outContact.normal * radiusB)) * 0.5f;
         return true;
     }
     return false;
@@ -739,6 +841,8 @@ bool CollisionSolver::CapsuleVsCapsule(Collider *a, Collider *b, Contact &outCon
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = sumRadius - dist;
         outContact.normal = (dist > EPSILON) ? diff / dist : Vector3(0, 1, 0);
+        // 접촉점: 축 최근접점에서 각자 표면으로 나간 점의 중점
+        outContact.contactPoint = ((c1 - outContact.normal * radiusA) + (c2 + outContact.normal * radiusB)) * 0.5f;
         return true;
     }
     return false;
@@ -770,6 +874,8 @@ bool CollisionSolver::SphereVsCapsule(Collider *a, Collider *b, Contact &outCont
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = sumRadius - dist;
         outContact.normal = (dist > EPSILON) ? diff / dist : Vector3(0, 1, 0);
+        // 접촉점: 구 표면점과 캡슐 표면점의 중점
+        outContact.contactPoint = ((spherePos - outContact.normal * sRadius) + (closestPt + outContact.normal * cRadius)) * 0.5f;
         return true;
     }
     return false;
@@ -801,6 +907,7 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
     bool hasCollision = false;
     float maxPenetration = -1.0f;
     Vector3 bestNormal = Vector3::Zero();
+    Vector3 bestPoint = Vector3::Zero();
 
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
@@ -826,6 +933,7 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
             if (penetration > maxPenetration) {
                 maxPenetration = penetration;
                 bestNormal = (dist > EPSILON) ? (diff / dist) : Vector3(0, 1, 0);
+                bestPoint = closestPt;   // 최심 삼각형 위의 최근접점 = 접촉점
                 hasCollision = true;
             }
         }
@@ -837,6 +945,7 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = maxPenetration;
         outContact.normal = bestNormal;
+        outContact.contactPoint = bestPoint;
         return true;
     }
     return false;
@@ -869,6 +978,7 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
     bool hasCollision = false;
     float maxPenetration = -1.0f;
     Vector3 bestNormal = Vector3::Zero();
+    Vector3 bestPoint = Vector3::Zero();
 
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
@@ -883,9 +993,7 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
         if (capAABB.max.x < triMin.x || capAABB.min.x > triMax.x) continue;
         if (capAABB.max.y < triMin.y || capAABB.min.y > triMax.y) continue;
         if (capAABB.max.z < triMin.z || capAABB.min.z > triMax.z) continue;
-
-        // 💡 1. 삼각형의 실제 법선(앞면 방향)을 구합니다.
-        Vector3 triNormal = Vector3::Cross(v2 - v0, v1 - v0);
+        Vector3 triNormal = Vector3::Cross(v1 - v0, v2 - v0);
         float nLen = triNormal.Magnitude();
         if (nLen > EPSILON) triNormal = triNormal / nLen;
         else continue;
@@ -900,32 +1008,25 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
             Vector3 normal = Vector3::Zero();
 
             if (dist > EPSILON) {
-                // 선분이 메쉬를 완전히 뚫지는 않은 일반적인 상태
+                // 일반 접촉: 캡슐이 있는 쪽으로 밀어냄 (앞/뒤 강제 없음 = 양면)
                 normal = (closestSeg - closestTri) / dist;
-
-                // 💡 2. 법선이 삼각형 뒷면을 향하고 있다면 앞면으로 강제 보정
-                if (Vector3::Dot(normal, triNormal) < 0.0f) {
-                    normal = normal * -1.0f;
-                }
                 penetration = cRadius - dist;
             } else {
-                // 🚨 3. [관통 버그 해결] 선분 자체가 메쉬를 뚫어버린 심각한 상태 (dist == 0)
-                normal = triNormal; // 무조건 삼각형 앞면 방향으로 밀어내기
+                // 깊은 관통: 캡슐 중심이 있는 쪽으로 밀어냄 (양면)
+                Vector3 capCenter = (capTop + capBottom) * 0.5f;
+                float side = Vector3::Dot(capCenter - v0, triNormal);
+                normal = (side >= 0.0f) ? triNormal : (triNormal * -1.0f);
 
-                // 캡슐의 위(Top) 아래(Bottom) 중 바닥을 얼마나 깊이 파고들었는지 계산
-                float dTop = Vector3::Dot(capTop - v0, triNormal);
-                float dBot = Vector3::Dot(capBottom - v0, triNormal);
-
-                // minD가 음수일수록 삼각형 뒷면으로 깊게 관통한 것
-                float minD = (std::min)(dTop, dBot);
-
-                // 실제 밀어내야 할 깊이 = 뚫린 깊이(-minD) + 캡슐 반지름
-                penetration = cRadius - minD;
+                float pTop = Vector3::Dot(capTop - v0, normal);
+                float pBot = Vector3::Dot(capBottom - v0, normal);
+                float minProj = (std::min)(pTop, pBot);
+                penetration = cRadius - minProj;
             }
 
             if (penetration > maxPenetration) {
                 maxPenetration = penetration;
                 bestNormal = normal;
+                bestPoint = closestTri;   // 삼각형 위의 최근접점 = 접촉점 (깊은 관통 시에도 유효)
                 hasCollision = true;
             }
         }
@@ -937,6 +1038,7 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = maxPenetration;
         outContact.normal = bestNormal;
+        outContact.contactPoint = bestPoint;
         return true;
     }
     return false;
@@ -1001,6 +1103,8 @@ bool CollisionSolver::SphereVsBox(Collider *a, Collider *b, Contact &outContact)
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = penetration;
         outContact.normal = boxRot * localNormal;
+        // 접촉점: 박스 표면 최근접점(월드). 구 중심이 박스 내부면 구 중심 사용
+        outContact.contactPoint = (dist > EPSILON) ? (boxPos + (boxRot * ptOnBox)) : spherePos;
 
         return true;
     }
@@ -1080,6 +1184,8 @@ bool CollisionSolver::BoxVsCapsule(Collider *a, Collider *b, Contact &outContact
 outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = penetration;
         outContact.normal = boxRot * localNormal;
+        // 접촉점: 박스 표면 최근접점(박스 로컬 → 월드)
+        outContact.contactPoint = boxPos + (boxRot * ptOnBox);
 
         return true;
     }
@@ -1146,6 +1252,7 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
 
     float minPenetration = (std::numeric_limits<float>::max)();
     Vector3 bestAxis = Vector3::Zero();
+    int bestAxisIndex = -1;
 
     // 15개 축에 대해 그림자가 겹치는지 테스트
     for (int i = 0; i < 15; ++i) {
@@ -1159,6 +1266,7 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
         if (penetration < minPenetration) {
             minPenetration = penetration;
             bestAxis = axes[i];
+            bestAxisIndex = i;
         }
     }
 
@@ -1172,12 +1280,85 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
     if (axLen > 0.0001f) bestAxis = bestAxis / axLen;
     else bestAxis = Vector3(0, 1, 0);
 
+    // 접촉점: 충돌축 방향 서포트(최심 꼭짓점) 중점 — 단일 접점 대표.
+    // 면-면 안정 적층까지 필요해지면 face clipping 매니폴드(다접점)로 승격할 것
+    auto BoxSupport = [](const Vector3& pos, const Vector3& ux, const Vector3& uy, const Vector3& uz,
+                         const Vector3& ext, const Vector3& dir) {
+        return pos + ux * (ext.x * (Vector3::Dot(ux, dir) >= 0.0f ? 1.0f : -1.0f))
+                   + uy * (ext.y * (Vector3::Dot(uy, dir) >= 0.0f ? 1.0f : -1.0f))
+                   + uz * (ext.z * (Vector3::Dot(uz, dir) >= 0.0f ? 1.0f : -1.0f));
+    };
+    Vector3 suppA = BoxSupport(posA, aX, aY, aZ, extA, bestAxis * -1.0f);   // A에서 B쪽으로 가장 깊은 점
+    Vector3 suppB = BoxSupport(posB, bX, bY, bZ, extB, bestAxis);           // B에서 A쪽으로 가장 깊은 점
+
     outContact.colA = a;
     outContact.colB = b;
     outContact.rbA = GetSafeRigidbody(a);
     outContact.rbB = GetSafeRigidbody(b);
     outContact.penetration = minPenetration;
     outContact.normal = bestAxis;
+    outContact.contactPoint = (suppA + suppB) * 0.5f;
+    outContact.pointCount = 0;   // 기본은 단일접점(모서리-모서리 등)
+
+    // bestAxisIndex < 6 = 면 법선이 이겼다 = 면-면 접촉(박스가 얹혀있는 케이스) → 다접점 매니폴드로 승격
+    // 6 이상(외적축)은 모서리-모서리 접촉이라 접점이 진짜 하나뿐이므로 위 단일점 그대로 둠
+    if (bestAxisIndex >= 0 && bestAxisIndex < 6) {
+        bool refIsA = bestAxisIndex < 3;
+        Vector3 refPos   = refIsA ? posA : posB;
+        Vector3 refX     = refIsA ? aX : bX;
+        Vector3 refY     = refIsA ? aY : bY;
+        Vector3 refZ     = refIsA ? aZ : bZ;
+        Vector3 refExt   = refIsA ? extA : extB;
+
+        Vector3 incPos   = refIsA ? posB : posA;
+        Vector3 incX     = refIsA ? bX : aX;
+        Vector3 incY     = refIsA ? bY : aY;
+        Vector3 incZ     = refIsA ? bZ : aZ;
+        Vector3 incExt   = refIsA ? extB : extA;
+
+        // 인시던트 박스에서 bestAxis와 가장 반대로 마주보는 면 하나를 고른다
+        Vector3 dir = bestAxis * -1.0f;   // 인시던트 입장에서 "레퍼런스를 향한" 방향
+        float dotX = std::abs(Vector3::Dot(incX, dir));
+        float dotY = std::abs(Vector3::Dot(incY, dir));
+        float dotZ = std::abs(Vector3::Dot(incZ, dir));
+
+        Vector3 faceNormalAxis, faceU, faceV;
+        float faceNormalExt, faceUExt, faceVExt;
+        if (dotX >= dotY && dotX >= dotZ) {
+            faceNormalAxis = incX; faceNormalExt = incExt.x;
+            faceU = incY; faceUExt = incExt.y;
+            faceV = incZ; faceVExt = incExt.z;
+        } else if (dotY >= dotX && dotY >= dotZ) {
+            faceNormalAxis = incY; faceNormalExt = incExt.y;
+            faceU = incX; faceUExt = incExt.x;
+            faceV = incZ; faceVExt = incExt.z;
+        } else {
+            faceNormalAxis = incZ; faceNormalExt = incExt.z;
+            faceU = incX; faceUExt = incExt.x;
+            faceV = incY; faceVExt = incExt.y;
+        }
+        if (Vector3::Dot(faceNormalAxis, dir) < 0.0f) faceNormalAxis = faceNormalAxis * -1.0f;
+
+        Vector3 faceCenter = incPos + faceNormalAxis * faceNormalExt;
+        Vector3 corners[4] = {
+            faceCenter + faceU * faceUExt + faceV * faceVExt,
+            faceCenter + faceU * faceUExt - faceV * faceVExt,
+            faceCenter - faceU * faceUExt + faceV * faceVExt,
+            faceCenter - faceU * faceUExt - faceV * faceVExt,
+        };
+
+        // 각 꼭짓점을 레퍼런스 박스 로컬 좌표로 투영 후, 레퍼런스 박스 범위 안으로 클램프
+        // (정식 Sutherland-Hodgman 클리핑의 근사 — 대부분의 평면 적층 케이스에서 충분히 안정적)
+        for (int i = 0; i < 4; ++i) {
+            Vector3 rel = corners[i] - refPos;
+            float u = std::clamp(Vector3::Dot(rel, refX), -refExt.x, refExt.x);
+            float v = std::clamp(Vector3::Dot(rel, refY), -refExt.y, refExt.y);
+            float w = std::clamp(Vector3::Dot(rel, refZ), -refExt.z, refExt.z);
+            outContact.points[i] = refPos + refX * u + refY * v + refZ * w;
+        }
+        outContact.pointCount = 4;
+    }
+
     return true;
 }
 
@@ -1213,6 +1394,8 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
     bool hasCollision = false;
     float maxPenetration = -1.0f;
     Vector3 bestWorldNormal = Vector3::Zero();
+    Vector3 bestPoint = Vector3::Zero();
+    Vector3 bestPlanePoint = Vector3::Zero();   // 승리한 삼각형 위의 한 점 (평면 투영용)
 
     // 삼각형 단위로 순회
     for (size_t i = 0; i < indices.size(); i += 3) {
@@ -1225,10 +1408,6 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         Vector3 w0 = (mRot * Vector3(verts[indices[i]].x * mScale.x, verts[indices[i]].y * mScale.y, verts[indices[i]].z * mScale.z)) + mPos;
         Vector3 w1 = (mRot * Vector3(verts[indices[i+1]].x * mScale.x, verts[indices[i+1]].y * mScale.y, verts[indices[i+1]].z * mScale.z)) + mPos;
         Vector3 w2 = (mRot * Vector3(verts[indices[i+2]].x * mScale.x, verts[indices[i+2]].y * mScale.y, verts[indices[i+2]].z * mScale.z)) + mPos;
-        Vector3 triWorldNormal = Vector3::Cross(w2 - w0, w1 - w0);
-        float triNormLen = triWorldNormal.Magnitude();
-        if (triNormLen > EPSILON) triWorldNormal = triWorldNormal / triNormLen;
-        else triWorldNormal = Vector3(0, 1, 0);
 
         Vector3 triMin = { (std::min)({w0.x, w1.x, w2.x}), (std::min)({w0.y, w1.y, w2.y}), (std::min)({w0.z, w1.z, w2.z}) };
         Vector3 triMax = { (std::max)({w0.x, w1.x, w2.x}), (std::max)({w0.y, w1.y, w2.y}), (std::max)({w0.z, w1.z, w2.z}) };
@@ -1257,8 +1436,8 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
             Vector3::Cross({0,0,1}, f0), Vector3::Cross({0,0,1}, f1), Vector3::Cross({0,0,1}, f2)
         };
 
-        float minPenetration = (std::numeric_limits<float>::max)();
-        Vector3 bestLocalAxis = Vector3::Zero();
+        float faceNormalPen = -1.0f;
+        Vector3 faceLocalNormal = Vector3::Zero();
         bool isIntersecting = true;
 
         for (int j = 0; j < 13; ++j) {
@@ -1283,22 +1462,21 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
                 break;
             }
 
-            // 겹친 깊이 계산
-            float penetration = (std::min)(rBox - triMinProj, triMaxProj - (-rBox));
-            if (penetration < minPenetration) {
-                minPenetration = penetration;
-                // B(Mesh) -> A(Box) 방향 보정
+            // 고스트 엣지 방지: 충돌 "여부"는 13축 SAT로 정확히 판정하되, 해석용 노멀/깊이는
+            // 삼각형 면 법선(j==3) 기준으로 고정. 평평한 바닥을 미끄러질 때 삼각형 이음새(내부 모서리)에서
+            // SAT 최소축이 옆으로 튀며 측면 임펄스+토크로 박스를 걸어 넘어뜨리는 것(텀블링 유발) 차단.
+            if (j == 3) {
+                faceNormalPen = (std::min)(rBox - triMinProj, triMaxProj - (-rBox));
                 float triCenterProj = (p0 + p1 + p2) / 3.0f;
-                bestLocalAxis = (triCenterProj < 0) ? axis : (axis * -1.0f);
+                faceLocalNormal = (triCenterProj < 0) ? axis : (axis * -1.0f);
             }
         }
 
-        if (isIntersecting && minPenetration > maxPenetration) {
-            maxPenetration = minPenetration;
-            bestWorldNormal = boxRot * bestLocalAxis;
-            if (Vector3::Dot(bestWorldNormal, triWorldNormal) < 0.0f) {
-                bestWorldNormal = bestWorldNormal * -1.0f;
-            }
+        if (isIntersecting && faceNormalPen >= 0.0f && faceNormalPen > maxPenetration) {
+            maxPenetration = faceNormalPen;
+            bestWorldNormal = boxRot * faceLocalNormal;
+            bestPoint = ClosestPtPointTriangle(boxPos, w0, w1, w2);   // 최심 삼각형 위 박스중심 최근접점
+            bestPlanePoint = w0;
             hasCollision = true;
         }
     }
@@ -1307,9 +1485,58 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         outContact.colA = a;
         outContact.colB = b;
         outContact.rbA = GetSafeRigidbody(a);
-outContact.rbB = GetSafeRigidbody(b);
+        outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = maxPenetration;
         outContact.normal = bestWorldNormal;
+        outContact.contactPoint = bestPoint;
+        outContact.pointCount = 0;   // 기본은 단일접점(모서리/뾰족한 부분이 박힌 경우)
+
+        Vector3 boxX = boxRot * Vector3(1, 0, 0);
+        Vector3 boxY = boxRot * Vector3(0, 1, 0);
+        Vector3 boxZ = boxRot * Vector3(0, 0, 1);
+        Vector3 dir = bestWorldNormal * -1.0f;   // 박스 입장에서 "바닥을 향한" 방향
+
+        float dotX = std::abs(Vector3::Dot(boxX, dir));
+        float dotY = std::abs(Vector3::Dot(boxY, dir));
+        float dotZ = std::abs(Vector3::Dot(boxZ, dir));
+
+        // 박스의 어느 면이 접촉 평면과 거의 평행(플러시)할 때만 4점 매니폴드로 승격 —
+        // 모서리 착지/기울어진 상태는 단일점이 기하학적으로 정답
+        if ((std::max)({dotX, dotY, dotZ}) > 0.95f) {
+
+            Vector3 faceNormalAxis, faceU, faceV;
+            float faceNormalExt, faceUExt, faceVExt;
+            if (dotX >= dotY && dotX >= dotZ) {
+                faceNormalAxis = boxX; faceNormalExt = extents.x;
+                faceU = boxY; faceUExt = extents.y;
+                faceV = boxZ; faceVExt = extents.z;
+            } else if (dotY >= dotX && dotY >= dotZ) {
+                faceNormalAxis = boxY; faceNormalExt = extents.y;
+                faceU = boxX; faceUExt = extents.x;
+                faceV = boxZ; faceVExt = extents.z;
+            } else {
+                faceNormalAxis = boxZ; faceNormalExt = extents.z;
+                faceU = boxX; faceUExt = extents.x;
+                faceV = boxY; faceVExt = extents.y;
+            }
+            if (Vector3::Dot(faceNormalAxis, dir) < 0.0f) faceNormalAxis = faceNormalAxis * -1.0f;
+
+            Vector3 faceCenter = boxPos + faceNormalAxis * faceNormalExt;
+            Vector3 corners[4] = {
+                faceCenter + faceU * faceUExt + faceV * faceVExt,
+                faceCenter + faceU * faceUExt - faceV * faceVExt,
+                faceCenter - faceU * faceUExt + faceV * faceVExt,
+                faceCenter - faceU * faceUExt - faceV * faceVExt,
+            };
+
+            // 승리한 삼각형이 놓인 평면에 투영 (국소적으로 평평한 바닥이라고 가정 — 일반 지형 바닥엔 타당)
+            for (int i = 0; i < 4; ++i) {
+                float d = Vector3::Dot(corners[i] - bestPlanePoint, bestWorldNormal);
+                outContact.points[i] = corners[i] - bestWorldNormal * d;
+            }
+            outContact.pointCount = 4;
+        }
+
         return true;
     }
 

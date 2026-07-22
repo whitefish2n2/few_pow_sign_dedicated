@@ -24,6 +24,7 @@ public:
     static ID3D11DeviceContext* Context() { return context; }
 
     static std::atomic<bool> isRunningViewer;
+    static std::atomic<bool> isViewerAlive;
     static ID3D11Device* device;
 private:
     static IDXGISwapChain* swapChain;
