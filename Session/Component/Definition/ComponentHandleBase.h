@@ -11,9 +11,10 @@ class ComponentManager;
 class ComponentHandleBase {
     public:
     size_t typeId = -1;
-    ComponentManager* componentManager;
+    ComponentGenerationId generationId = -1;
+    ComponentManager* componentManager = nullptr;
     ComponentHandleBase() = default;
-    ComponentHandleBase(size_t typeId, ComponentEntityId entityId, ComponentManager* componentManager = nullptr):typeId(typeId),entityId(entityId),componentManager(componentManager){}
+    ComponentHandleBase(size_t typeId, ComponentGenerationId generationId, ComponentEntityId entityId, ComponentManager* componentManager = nullptr):typeId(typeId),generationId(generationId), entityId(entityId),componentManager(componentManager){}
     virtual ~ComponentHandleBase() = default;
     ComponentEntityId entityId = -1;
     virtual ComponentHandleBase Clone() {
@@ -22,15 +23,16 @@ class ComponentHandleBase {
     static ComponentHandleBase NULLPTR() {
         return ComponentHandleBase{};
     }
-    void SetFromRawHandle(ComponentEntityId entity_id, size_t type_id) {
+    void SetFromRawHandle(ComponentEntityId entity_id, size_t type_id, ComponentGenerationId generation_key) {
         this->typeId = type_id;
         this->entityId = entity_id;
+        this->generationId = generation_key;
     }
     bool isNull() const {
         return typeId == -1 || entityId == -1;
     }
     bool operator==(const ComponentHandleBase& other) const {
-        return entityId == other.entityId && typeId == other.typeId;
+        return entityId == other.entityId && typeId == other.typeId&& generationId == other.generationId;;
     }
 };
 #endif //FPSPROJECTSERVER_COMPONENTHANDLEBASE_H

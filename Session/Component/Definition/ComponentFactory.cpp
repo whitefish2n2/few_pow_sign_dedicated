@@ -17,11 +17,11 @@ ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const 
             LOG_INFO("parent 타겟 아이디 ::" + parent.targetId);
             comp->gameObject = parent;
             comp->ParseFromString(arg);
-            comp->SetOwner(parent);
             comp->gameSession = parent->gameSession;
+            comp->SetOwner(parent);
             Log("GAMESESSION이 있을까요 없을까요???:::  ");
             Log(((comp->gameSession) == nullptr? "응없어요" : "와있어요" ));
-            ComponentHandleBase base(comp.get()->typeId, comp.get()->entityId,componentManager);
+            ComponentHandleBase base(comp.get()->typeId,comp->generationId,  comp.get()->entityId,componentManager);
             componentManager->RegisterOrphan(comp, &base);
             parent->AttachComponentBase(base);
 
