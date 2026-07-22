@@ -4,6 +4,8 @@
 
 #ifndef FPSPROJECTSERVER_GAMEPLAYMANAGER_H
 #define FPSPROJECTSERVER_GAMEPLAYMANAGER_H
+#include <unordered_map>
+
 #include "SynchronizedObject.h"
 #include "../../InGamePhase.h"
 #include "../Definition/Component.h"
@@ -11,12 +13,15 @@
 
 class GamePlayManager final : public Component<GamePlayManager>{
     public:
+    static constexpr int WIN_SCORE = 10;
+
     InGamePhase currentPhase = InGamePhase::Initialize;
     float phaseTimer = 0.0f;
     float initTimeOut = 30.0f;
+    std::unordered_map<int, int> teamScores;   // team -> 라운드 승수
     void Awake() override;
     void Start() override;
-    void Update() override;
+    void FixedUpdate() override;
 
     void AddSynchronizedObject(ComponentHandle<SynchronizedObject> obj);
 
@@ -24,11 +29,15 @@ class GamePlayManager final : public Component<GamePlayManager>{
 
     void UpdateLoading();
 
+    void OnAllPlayersLoaded();
+
     void UpdatePrepare();
 
     void UpdateFighting();
 
     void UpdateClosing();
+
+    void UpdateCleaning();
 
     void EnterLoadingPhase();
 
@@ -36,7 +45,13 @@ class GamePlayManager final : public Component<GamePlayManager>{
 
     void EnterPreparePhase();
 
+    void RespawnAllPlayers();
+
     void EnterFightingPhase();
+
+    void EnterClosingPhase(uint8_t winningTeam);
+
+    void CheckOneTeamRemain();
 
     void ChangePhase(InGamePhase phase);
 
