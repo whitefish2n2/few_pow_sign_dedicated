@@ -13,18 +13,18 @@ DedicatedServerNotifier& DedicatedServerNotifier::getInstance() {
     return instance;
 }
 
-void DedicatedServerNotifier::init(const std::string& clientBaseUrl) {
-    std::cout<<"Initializing DedicatedServerNotifier with base url:"<<clientBaseUrl<<std::endl;
+void DedicatedServerNotifier::init(const std::string& clientIpPort) {
+    std::cout<<"Initializing DedicatedServerNotifier with base url:"<<clientIpPort<<std::endl;
     if (clientBase != nullptr) {
         delete clientBase;
         clientBase = nullptr;
     }
-    auto baseUrl = U("http://") + utility::conversions::to_string_t(clientBaseUrl);
+    auto baseUrl = U("http://") + utility::conversions::to_string_t(clientIpPort);
     clientBase = new http_client(baseUrl);
     std::cout<<"Init Notifier successfully!"<<std::endl;
 }
 
-void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, const std::string& ip,const std::string& url, const std::vector<std::shared_ptr<GameSession>>& sessions) {
+void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, const std::string& ip,const std::string& url,const std::string& udpPort,  const std::vector<std::shared_ptr<GameSession>>& sessions) {
     if (!clientBase) {
         std::cout << "DedicatedServerNotifier not initialized!" << std::endl;
         return;
@@ -35,7 +35,8 @@ void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, co
     nlohmann::json body;
     body["key"] = key;
     body["ip"] = ip;
-    body["url"] = url;
+    body["http_url"] = url;
+    body["udp_port"] = udpPort,
     body["sessions"] = nlohmann::json::array();
 
     for (const auto& s : sessions) {
@@ -152,5 +153,7 @@ void DedicatedServerNotifier::notifyDedicatedServerOff(const std::string& id) {
         std::cout << "Exception: " << e.what() << std::endl;
     }
 }
+
+
 
 

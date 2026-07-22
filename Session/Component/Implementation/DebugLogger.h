@@ -12,7 +12,7 @@
 
 class  DebugLogger final:public Component<DebugLogger> {
     public:
-    void Update() override {
+    void FixedUpdate() override {
         std::cout << "Debug logger updated" << std::endl;
     }
     ;

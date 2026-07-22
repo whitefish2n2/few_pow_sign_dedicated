@@ -48,6 +48,8 @@ void from_json(const nlohmann::json& j, DedicatedNewPlayerDto& p) {
     p.id = j["id"];
     p.name = j["name"];
     p.key = j["key"];
+    p.team = j["team"];
+    p.characterId = j.value("characterId", std::string{});
 }
 
 void from_json(const nlohmann::json& j, GameSetupBoddari& g) {

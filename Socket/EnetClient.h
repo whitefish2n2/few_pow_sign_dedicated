@@ -9,6 +9,7 @@
 
 struct SendTask {
     ENetPeer* peer;
+    enet_uint32 connectId;
     std::vector<uint8_t> payload;
     enet_uint32 flags;
 };
@@ -22,7 +23,8 @@ class EnetClient {
         });
         return instance;
     }
-    void EnqueueSend(ENetPeer* peer, std::vector<uint8_t> payload, enet_uint32 flags);
+    void RunClient(int port);
+    void EnqueueSend(ENetPeer *peer, enet_uint32 connectId, std::vector<uint8_t> payload, enet_uint32 flags);
 
     private:
     inline static EnetClient* instance = nullptr;
@@ -41,7 +43,7 @@ class EnetClient {
 
     void SendPacket(const byte *payload, size_t length, ENetPeer *peer, bool isReliable);
 
-    void RunClient(int port);
+
 };
 
 

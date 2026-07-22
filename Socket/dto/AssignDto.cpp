@@ -6,9 +6,9 @@
 #include <iostream>
 
 void from_json(const nlohmann::json& j, AssignRequestDto& g) {
-    g.UserId = j.at("userId").get<std::string>();
-    g.SessionId = j.at("sessionId").get<std::string>();
-    g.Key = j.at("key").get<std::string>();
+    g.UserId = j.at("UserId").get<std::string>();
+    g.SessionId = j.at("SessionId").get<std::string>();
+    g.Key = j.at("Key").get<std::string>();
 }
 
 void AssignRequestDto::Parse(const uint8_t *data, const size_t &size) {

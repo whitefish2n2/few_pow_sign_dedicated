@@ -11,7 +11,6 @@
 
 class MoveDto {
     public:
-    uint64_t UserSecretKey;
     Vector2 InputVector;
     float inputPitch;
     float inputYaw;

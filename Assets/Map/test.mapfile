@@ -11,79 +11,53 @@ LAYER_DEF: 9,Interactable,-257
 LAYER_DEF: 10,gun,-65
 [SECTION: OBJECTS]
 -
-Name: Capsule
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
-Position: 5.7600,33.2600,-33.6741
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 3.4303,3.4303,3.4303
-COMPONENT: CapsuleCollider
-IsTrigger: 0
-Center: 0.0000,0.0000,0.0000
-Radius: 0.5000
-Height: 2.0000
-Direction: 1
-Material: 
-StaticFriction: 0.6
-DynamicFriction: 0.6
-Bounciness: 0
-BounceCombine: Average
-FrictionCombine: Average
+Name: silencer_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
 -
-Name: Cube (2)
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
-Position: 9.0000,72.6000,-37.4000
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 4.1185,3.7429,1.0798
-COMPONENT: BoxCollider
-IsTrigger: 0
-Center: 0.0000,0.0000,0.0000
-Size: 1.0000,1.0000,1.0000
-Material: 
-StaticFriction: 0.6
-DynamicFriction: 0.6
-Bounciness: 0
-BounceCombine: Average
-FrictionCombine: Average
-COMPONENT: Rigidbody
-Mass: 1.0000
-Drag: 0.0000
-AngularDrag: 0.0500
-UseGravity: 1
-IsKinematic: 0
-Constraints: 0
-CollisionDetection: 0
-CenterOfMass: 0.0000,0.0000,0.0000
+Name: Object001
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4211,30.1978,-45.6437
+Rotation: 0.0000,-0.7071,0.0000,0.7071
+Scale: 0.0142,0.0142,0.0142
 -
-Name: Cube (1)
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
-Position: 9.0000,72.6000,-30.9000
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 4.1185,3.7429,1.0798
-COMPONENT: BoxCollider
-IsTrigger: 0
-Center: 0.0000,0.0000,0.0000
-Size: 1.0000,1.0000,1.0000
-Material: 
-StaticFriction: 0.6
-DynamicFriction: 0.6
-Bounciness: 0
-BounceCombine: Average
-FrictionCombine: Average
-COMPONENT: Rigidbody
-Mass: 1.0000
-Drag: 0.0000
-AngularDrag: 0.0500
-UseGravity: 1
-IsKinematic: 0
-Constraints: 0
-CollisionDetection: 0
-CenterOfMass: 0.0000,0.0000,0.0000
+Name: trigger_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: Directional Light
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -201.0669,-179.2922,4.1063
+Rotation: 0.4082,-0.2346,0.1094,0.8754
+Scale: 1.0000,1.0000,1.0000
+-
+Name: trigger_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: body_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
 -
 Name: PhysicsManager
 Tag: Untagged
@@ -94,103 +68,71 @@ Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 1.0000,1.0000,1.0000
 COMPONENT: PhysicsManager
 -
-Name: fromt_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: EnetClient
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: 16.7244,30.1650,-50.8390
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
--
-Name: stock_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4147,30.1840,-43.7824
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: GameUtil
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: -124.8400,-178.5000,42.6200
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
--
-Name: silencer_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: debugP
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: 14.5607,30.9078,-48.7236
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
--
-Name: hold_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: trigger_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: add2_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4197,30.1578,-43.4932
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: gun
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: 15.9571,30.5998,-49.6000
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
--
-Name: Sphere
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
-Position: 14.4000,36.8000,-17.6000
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 17.2658,17.2658,17.2658
-COMPONENT: SphereCollider
+Name: kcal
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
+Position: 17.8251,30.2378,-44.2837
+Rotation: 0.5361,0.5225,0.6064,-0.2681
+Scale: 137.0504,137.0503,137.0503
+COMPONENT: BoxCollider
 IsTrigger: 0
-Center: 0.0000,0.0000,0.0000
-Radius: 0.5000
-Material: 
+Center: 0.0003,0.0000,-0.0006
+Size: 0.0073,0.0005,0.0028
+Material:  (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
 BounceCombine: Average
 FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 0
+CollisionDetection: 2
+CenterOfMass: 0.0400,-0.0065,-0.0806
+COMPONENT: Weapon
+WeaponName:Kcal
+WeaponType:MainWeapon
+MaxAmmo:-1
+CurrentAmmo:0
+HeadDamage:100
+BodyDamage:50
+TermToShot:0.5
+WeaponId:2
+
+COMPONENT: Interactable
+COMPONENT: SynchronizedObject
+ObjectId: 0
+-
+Name: CharacterSummonPosition
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 21.5400,28.3200,-57.2900
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+COMPONENT: CharacterSummonPosition
+TeamId: 1
+-
+Name: charge_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
+Rotation: 0.7071,0.0062,-0.0062,0.7071
+Scale: -33.5114,-33.5114,-33.5113
+-
+Name: plate_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4260,30.1578,-43.5971
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
 -
 Name: Capsule (1)
 Tag: Ground
@@ -205,7 +147,7 @@ Center: 0.0000,0.0000,0.0000
 Radius: 0.5000
 Height: 2.0000
 Direction: 1
-Material: 
+Material:  (Instance) (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
@@ -217,49 +159,46 @@ Drag: 0.0000
 AngularDrag: 0.0500
 UseGravity: 1
 IsKinematic: 0
-Constraints: 0
+Constraints: 112
 CollisionDetection: 0
 CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
 -
-Name: reflex_lo
-Tag: Untagged
+Name: Sphere
+Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 10.4259,30.4750,-43.1390
-Rotation: 0.4956,0.4956,-0.5043,-0.5043
-Scale: 33.5113,33.5114,33.5114
--
-Name: gear_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4437,30.4091,-42.1166
-Rotation: 0.4956,0.4956,-0.5043,-0.5043
-Scale: 33.5113,33.5114,33.5114
--
-Name: plate_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4179,30.1578,-43.5971
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: clip_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4300,30.1840,-42.9040
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
--
-Name: Gun Camera
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: 15.9571,30.5998,-49.6000
+Position: 14.4000,36.8000,-17.6000
 Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
+Scale: 17.2658,17.2658,17.2658
+COMPONENT: SphereCollider
+IsTrigger: 0
+Center: 0.0000,0.0000,0.0000
+Radius: 0.5000
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+-
+Name: hip_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4508,30.4271,-42.1752
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: body_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
 -
 Name: Cube (3)
 Tag: Ground
@@ -272,7 +211,46 @@ COMPONENT: BoxCollider
 IsTrigger: 0
 Center: 0.0000,0.0000,0.0000
 Size: 1.0000,1.0000,1.0000
-Material: 
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 112
+CollisionDetection: 0
+CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
+-
+Name: PlayerGenerateManager
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -9.1711,28.0935,-9.2860
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+COMPONENT: PlayerGenerateManager
+-
+Name: 1911
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
+Position: 16.4211,30.1978,-45.6437
+Rotation: 0.0000,-0.7071,0.0000,0.7071
+Scale: 0.0142,0.0142,0.0142
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: -0.0706,0.0665,-0.8095
+Size: 60.0390,37.8482,7.0922
+Material:  (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
@@ -286,7 +264,52 @@ UseGravity: 1
 IsKinematic: 0
 Constraints: 0
 CollisionDetection: 0
-CenterOfMass: 0.0000,0.0000,0.0000
+CenterOfMass: -0.0010,0.0009,-0.0115
+COMPONENT: Interactable
+COMPONENT: Weapon
+WeaponName:Kick
+WeaponType:MainWeapon
+MaxAmmo:7
+CurrentAmmo:0
+HeadDamage:100
+BodyDamage:30
+TermToShot:0.8
+WeaponId:1
+
+COMPONENT: SynchronizedObject
+ObjectId: 0
+-
+Name: WeaponEditor
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 16.1622,30.2801,-48.8106
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: hold_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: add1_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4278,30.1578,-43.4932
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: PrefabDispenser
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 861.8303,357.9082,189.8071
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
 -
 Name: Plane
 Tag: Ground
@@ -620,43 +643,318 @@ TriangleCount: 200
 13,24,25
 13,25,14
 14,25,26
-Material: 
+Material:  (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
 BounceCombine: Average
 FrictionCombine: Average
 -
-Name: Cube
+Name: debugP
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 14.5607,30.9078,-48.7236
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: Cube (5)
 Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 9.0000,31.0746,-38.2000
+Position: 9.0000,72.6000,-53.4700
 Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 4.1185,4.3940,1.0798
+Scale: 4.1185,3.7429,1.0798
 COMPONENT: BoxCollider
 IsTrigger: 0
 Center: 0.0000,0.0000,0.0000
 Size: 1.0000,1.0000,1.0000
-Material: 
+Material:  (Instance) (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
 BounceCombine: Average
 FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 112
+CollisionDetection: 0
+CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
 -
-Name: WeaponEditor
+Name: add1_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4197,30.1578,-43.4932
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: clip_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4300,30.1840,-42.9040
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: Gun Camera
 Tag: Untagged
 LayerIndex: 0
 LayerName: Default
-Position: 16.1622,30.2801,-48.8106
+Position: 15.9571,30.5998,-49.5900
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: GamePlayManager
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -9.1711,28.0935,-9.2860
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+COMPONENT: GamePlayManager
+TimeOutSeconds: 30
+
+-
+Name: add2_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4197,30.1578,-43.4932
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: hip_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4427,30.4271,-42.1752
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: Capsule
+Tag: Ground
+LayerIndex: 7
+LayerName: Ground
+Position: 5.7600,33.2600,-33.6741
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 3.4303,3.4303,3.4303
+COMPONENT: CapsuleCollider
+IsTrigger: 0
+Center: 0.0000,0.0000,0.0000
+Radius: 0.5000
+Height: 2.0000
+Direction: 1
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: SynchronizedObject
+ObjectId: 0
+-
+Name: InGameLogicStatic
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.1309,28.0935,-41.9210
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: fromt_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: charge_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: 0.7071,0.0062,-0.0062,0.7071
+Scale: -33.5114,-33.5114,-33.5113
+-
+Name: Cube (2)
+Tag: Ground
+LayerIndex: 7
+LayerName: Ground
+Position: 9.0000,72.6000,-37.4000
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 4.1185,3.7429,1.0798
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: 0.0000,0.0000,0.0000
+Size: 1.0000,1.0000,1.0000
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 112
+CollisionDetection: 0
+CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
+-
+Name: clip_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4381,30.1840,-42.9040
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: gear_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4518,30.4091,-42.1166
+Rotation: 0.4956,0.4956,-0.5043,-0.5043
+Scale: 33.5113,33.5114,33.5114
+-
+Name: add2_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4278,30.1578,-43.4932
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: silencer_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: stock_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4147,30.1840,-43.7824
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: 1911 (1)
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
+Position: 17.0171,30.1978,-45.6437
+Rotation: 0.0000,-0.7071,0.0000,0.7071
+Scale: 0.0142,0.0142,0.0142
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: -0.0706,0.0665,-0.8095
+Size: 60.0390,37.8482,7.0922
+Material:  (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 0
+CollisionDetection: 0
+CenterOfMass: -0.0010,0.0009,-0.0115
+COMPONENT: Interactable
+COMPONENT: Weapon
+WeaponName:Kick
+WeaponType:MainWeapon
+MaxAmmo:7
+CurrentAmmo:0
+HeadDamage:100
+BodyDamage:30
+TermToShot:0.8
+WeaponId:1
+
+COMPONENT: SynchronizedObject
+ObjectId: 0
+-
+Name: CharacterSummonPosition (1)
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -13.4000,28.3200,-24.4000
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+COMPONENT: CharacterSummonPosition
+TeamId: 2
+-
+Name: Cube (4)
+Tag: Ground
+LayerIndex: 7
+LayerName: Ground
+Position: 9.0000,72.6000,-48.3900
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 4.1185,3.7429,1.0798
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: 0.0000,0.0000,0.0000
+Size: 1.0000,1.0000,1.0000
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 112
+CollisionDetection: 0
+CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
+-
+Name: hold_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4229,30.1578,-43.3122
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: SyncObjectBinder
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.5158,28.0935,-41.2216
 Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 1.0000,1.0000,1.0000
 -
 Name: Fisher (1)
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
 Position: 10.4300,30.1578,-42.9037
 Rotation: 0.0000,0.0087,0.0000,1.0000
 Scale: 0.3351,0.3351,0.3351
@@ -664,7 +962,7 @@ COMPONENT: BoxCollider
 IsTrigger: 0
 Center: 0.0000,-0.2658,0.7348
 Size: 0.6180,2.8114,7.9390
-Material: 
+Material:  (Instance) (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
@@ -679,22 +977,27 @@ IsKinematic: 0
 Constraints: 0
 CollisionDetection: 0
 CenterOfMass: 0.0000,-0.0891,0.2463
+COMPONENT: Interactable
+COMPONENT: Weapon
+WeaponName:Fisher
+WeaponType:Knife
+MaxAmmo:30
+CurrentAmmo:0
+HeadDamage:100
+BodyDamage:40
+TermToShot:0.2
+WeaponId:0
+
+COMPONENT: SynchronizedObject
+ObjectId: 0
 -
-Name: EventSystem
-Tag: Untagged
-LayerIndex: 0
-LayerName: Default
-Position: -201.0669,-182.2922,4.1063
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 1.0000,1.0000,1.0000
--
-Name: add1_lo
-Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4197,30.1578,-43.4932
-Rotation: -0.7071,0.0062,0.0062,0.7071
-Scale: 33.5114,33.5114,33.5113
+Name: kcal
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
+Position: 17.8251,30.2378,-44.2837
+Rotation: 0.5361,0.5225,0.6064,-0.2681
+Scale: 137.0504,137.0503,137.0503
 -
 Name: Sphere (1)
 Tag: Ground
@@ -707,7 +1010,7 @@ COMPONENT: SphereCollider
 IsTrigger: 0
 Center: 0.0000,0.0000,0.0000
 Radius: 0.5000
-Material: 
+Material:  (Instance) (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
@@ -719,30 +1022,41 @@ Drag: 0.0000
 AngularDrag: 0.0500
 UseGravity: 1
 IsKinematic: 0
-Constraints: 0
+Constraints: 112
 CollisionDetection: 0
 CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
 -
-Name: hip_lo
+Name: reflex_lo
 Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4427,30.4271,-42.1752
+LayerIndex: 10
+LayerName: gun
+Position: 10.4259,30.4750,-43.1390
+Rotation: 0.4956,0.4956,-0.5043,-0.5043
+Scale: 33.5113,33.5114,33.5114
+-
+Name: plate_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4179,30.1578,-43.5971
 Rotation: -0.7071,0.0062,0.0062,0.7071
 Scale: 33.5114,33.5114,33.5113
 -
-Name: Cube (5)
+Name: Cube (1)
 Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 9.0000,72.6000,-53.4700
+Position: 9.0000,72.6000,-30.9000
 Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 4.1185,3.7429,1.0798
 COMPONENT: BoxCollider
 IsTrigger: 0
 Center: 0.0000,0.0000,0.0000
 Size: 1.0000,1.0000,1.0000
-Material: 
+Material:  (Instance) (Instance)
 StaticFriction: 0.6
 DynamicFriction: 0.6
 Bounciness: 0
@@ -754,57 +1068,147 @@ Drag: 0.0000
 AngularDrag: 0.0500
 UseGravity: 1
 IsKinematic: 0
-Constraints: 0
+Constraints: 112
 CollisionDetection: 0
 CenterOfMass: 0.0000,0.0000,0.0000
+COMPONENT: SynchronizedObject
+ObjectId: 0
+COMPONENT: MovableWall
 -
-Name: Cube (4)
-Tag: Ground
-LayerIndex: 7
-LayerName: Ground
-Position: 9.0000,72.6000,-48.3900
-Rotation: 0.0000,0.0000,0.0000,1.0000
-Scale: 4.1185,3.7429,1.0798
-COMPONENT: BoxCollider
-IsTrigger: 0
-Center: 0.0000,0.0000,0.0000
-Size: 1.0000,1.0000,1.0000
-Material: 
-StaticFriction: 0.6
-DynamicFriction: 0.6
-Bounciness: 0
-BounceCombine: Average
-FrictionCombine: Average
-COMPONENT: Rigidbody
-Mass: 1.0000
-Drag: 0.0000
-AngularDrag: 0.0500
-UseGravity: 1
-IsKinematic: 0
-Constraints: 0
-CollisionDetection: 0
-CenterOfMass: 0.0000,0.0000,0.0000
--
-Name: Directional Light
+Name: EnetClient
 Tag: Untagged
 LayerIndex: 0
 LayerName: Default
-Position: -201.0669,-179.2922,4.1063
-Rotation: 0.4082,-0.2346,0.1094,0.8754
+Position: 16.7244,30.1650,-50.8390
+Rotation: 0.0000,0.0000,0.0000,1.0000
 Scale: 1.0000,1.0000,1.0000
 -
-Name: body_lo
+Name: Fisher
+Tag: Interactable
+LayerIndex: 10
+LayerName: gun
+Position: 16.4381,30.1578,-42.9037
+Rotation: 0.0000,0.0087,0.0000,1.0000
+Scale: 0.3351,0.3351,0.3351
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: 0.0000,-0.2658,0.7348
+Size: 0.6180,2.8114,7.9390
+Material:  (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+COMPONENT: Rigidbody
+Mass: 1.0000
+Drag: 0.0000
+AngularDrag: 0.0500
+UseGravity: 1
+IsKinematic: 0
+Constraints: 0
+CollisionDetection: 0
+CenterOfMass: 0.0000,-0.0891,0.2463
+COMPONENT: Interactable
+COMPONENT: Weapon
+WeaponName:Fisher
+WeaponType:Knife
+MaxAmmo:30
+CurrentAmmo:0
+HeadDamage:100
+BodyDamage:40
+TermToShot:0.2
+WeaponId:0
+
+COMPONENT: SynchronizedObject
+ObjectId: 0
+-
+Name: gun
 Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.9571,30.5998,-49.5900
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: Object001
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 17.0171,30.1978,-45.6437
+Rotation: 0.0000,-0.7071,0.0000,0.7071
+Scale: 0.0142,0.0142,0.0142
+-
+Name: Cube
+Tag: Ground
 LayerIndex: 7
 LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
+Position: 9.0000,31.0746,-38.2000
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 4.1185,4.3940,1.0798
+COMPONENT: BoxCollider
+IsTrigger: 0
+Center: 0.0000,0.0000,0.0000
+Size: 1.0000,1.0000,1.0000
+Material:  (Instance) (Instance)
+StaticFriction: 0.6
+DynamicFriction: 0.6
+Bounciness: 0
+BounceCombine: Average
+FrictionCombine: Average
+-
+Name: gear_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 10.4437,30.4091,-42.1166
+Rotation: 0.4956,0.4956,-0.5043,-0.5043
+Scale: 33.5113,33.5114,33.5114
+-
+Name: GameUtil
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -124.8400,-178.5000,42.6200
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: reflex_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4340,30.4750,-43.1390
+Rotation: 0.4956,0.4956,-0.5043,-0.5043
+Scale: 33.5113,33.5114,33.5114
+-
+Name: fromt_lo
+Tag: Untagged
+LayerIndex: 10
+LayerName: gun
+Position: 16.4310,30.1578,-43.3122
 Rotation: -0.7071,0.0062,0.0062,0.7071
 Scale: 33.5114,33.5114,33.5113
 -
-Name: charge_lo
+Name: stock_lo
 Tag: Untagged
-LayerIndex: 7
-LayerName: Ground
-Position: 10.4229,30.1578,-43.3122
-Rotation: 0.7071,0.0062,-0.0062,0.7071
-Scale: -33.5114,-33.5114,-33.5113
+LayerIndex: 10
+LayerName: gun
+Position: 16.4228,30.1840,-43.7824
+Rotation: -0.7071,0.0062,0.0062,0.7071
+Scale: 33.5114,33.5114,33.5113
+-
+Name: EventSystem
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: -201.0669,-182.2922,4.1063
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000
+-
+Name: WeaponNetworkManager
+Tag: Untagged
+LayerIndex: 0
+LayerName: Default
+Position: 15.5158,28.0934,-41.2216
+Rotation: 0.0000,0.0000,0.0000,1.0000
+Scale: 1.0000,1.0000,1.0000

@@ -1,10 +1,10 @@
 [SECTION: HEADER]
-PrefabID: 1
-PrefabName: playerPrefab-1
+PrefabID: 2
+PrefabName: tester-2
 
 [SECTION: OBJECTS]
 -
-Name: playerPrefab-1
+Name: tester-2
 Tag: Player
 LayerIndex: 0
 LayerName: Default

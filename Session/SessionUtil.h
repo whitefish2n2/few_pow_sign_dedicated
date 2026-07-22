@@ -18,13 +18,14 @@ class SessionUtil {
                 return static_cast<Player *>(peer->data);
             else return nullptr;
         }
+    static float GetRewindOffsetSeconds(Player* player) {
+            constexpr float kMaxRewindSeconds = 0.5f;
+            if (player == nullptr || player->peer == nullptr) return 0.0f;
 
-        static bool ContainsPrivateKey(std::map<uint64_t,Player>& list, uint64_t key) {
-            for (const Player& v: list|std::views::values) {
-                if (v.privateKey == key) return true;
-            }
-            return false;
+            float oneWaySeconds = static_cast<float>(player->peer->roundTripTime) / 1000.0f / 2.0f;
+            return (std::min)(oneWaySeconds, kMaxRewindSeconds);
         }
+
 };
 
 
