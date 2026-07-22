@@ -27,6 +27,7 @@ public:
         if (this->gameSession == nullptr) LOG_ERROR("gameSession이 NULL인 Component객체가 MakeHandle을 시도함.");
         return ComponentHandle<T>(
             this->typeId,
+            this->generationId,
             this->entityId,
             this->gameSession ? this->gameSession->componentManager.get() : nullptr
         );

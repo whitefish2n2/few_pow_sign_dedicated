@@ -17,14 +17,16 @@ class ComponentArgument {
 protected:
     public:
 
-    /// Update 우선순위(자식에서 해당 변수 재선언으로 값 변경 가능. 큰 양수일수록 먼저 실행됨)
+    /// FixedUpdate 우선순위(자식에서 해당 변수 재선언으로 값 변경 가능. 큰 양수일수록 먼저 실행됨)
     static constexpr int UPDATE_PRIORITY = 0;
 
     GameObject gameObject = GameObject::NullPTR();
     ComponentEntityId entityId = -1;
+    ComponentGenerationId generationId = -1;
     size_t typeId;
     bool isActive = true;
     bool willDead = false;
+    bool started = false;
     static constexpr bool DO_UPDATE = true;
     GameSession* gameSession = nullptr;
     ComponentArgument(const ComponentEntityId entityId): entityId(entityId){}
@@ -40,8 +42,7 @@ protected:
     virtual void OnDetach() { };
 
 public:
-    virtual void Update() { };
-    virtual void FixedUpdate(){ };
+    virtual void FixedUpdate() { };
     virtual void Reset() { };
     virtual void Start() { };
     virtual void Awake(){ };

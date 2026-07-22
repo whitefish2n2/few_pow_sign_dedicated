@@ -38,30 +38,33 @@ consteval bool GetDoUpdate() {
 class BasePool {
     protected:
     std::vector<size_t> indexArray;
+    std::vector<ComponentGenerationId> generations;
     std::queue<size_t> freeIndices;
     static constexpr size_t PENDING_MASK = (size_t)1 << (sizeof(size_t) * 8 - 1);
     //유효하지 않은 인덱스
     static constexpr size_t INVALID_INDEX = (std::numeric_limits<size_t>::max)();
 public:
     ComponentManager* componentManager;
-    int poolPriority = 0;///Update 실행 우선순위
+    int poolPriority = 0;///FixedUpdate 실행 우선순위
     virtual ~BasePool() = default;
     BasePool() = default;
 
     virtual void UpdateAll() = 0;
-    virtual void FixedUpdateAll() = 0;
     ///엔티티 ID로 하여금 요소를 지우는 함수.
     virtual void DeleteComponent(ComponentEntityId entityId) = 0;
     ///유효한 엔티티 ID인지 확인하는 함수
-    virtual bool ValidateHandle(ComponentEntityId entityId) {
+    virtual bool ValidateHandle(ComponentEntityId entityId, ComponentGenerationId generation) {
         if (entityId >= indexArray.size()) return false;
+        if (generations[entityId] != generation) return false;
         return indexArray[entityId] != INVALID_INDEX;
     }
 
-    ///컴포넌트 생성/삭제 지연 처리 플러쉬 함수(매 Update 끝에 호출 요망)
-    virtual void Flush() = 0;
 
-    virtual ComponentArgument* GetArgument(ComponentEntityId id) = 0;
+    ///컴포넌트 생성/삭제 지연 처리 플러쉬 함수(매 FixedUpdate 끝에 호출 요망)
+    virtual void Flush() = 0;
+    virtual void StartPending() = 0;
+
+    virtual ComponentArgument* GetArgument(ComponentEntityId id, ComponentGenerationId generation) = 0;
 };
 template<typename T>
 class DrivenPool:public BasePool {
@@ -105,16 +108,6 @@ public:
             size_t currentSize = dataArray.size();
             for (size_t i = 0; i < currentSize; ++i) {
                 if (dataArray[i].isActive && !dataArray[i].willDead) {
-                    dataArray[i].Update();
-                }
-            }
-        }
-    }
-    void FixedUpdateAll() override {
-        if constexpr (GetDoUpdate<T>()) {
-            size_t currentSize = dataArray.size();
-            for (size_t i = 0; i < currentSize; ++i) {
-                if (dataArray[i].isActive && !dataArray[i].willDead) {
                     dataArray[i].FixedUpdate();
                 }
             }
@@ -137,18 +130,13 @@ public:
         }
     }
 
-    ComponentArgument* GetArgument(ComponentEntityId id) override {
+    ComponentArgument* GetArgument(ComponentEntityId id, ComponentGenerationId generation) override {
         if (id >= indexArray.size()) return nullptr;
-
-        // 2. 실제 인덱스 가져오기 (O(1), 캐시 친화적)
+        if (generations[id] != generation) return nullptr;
         size_t index = indexArray[id];
-        if (index == INVALID_INDEX) return nullptr; // 삭제된 놈
-
-        if (index & PENDING_MASK) {
-            return &pendingAdds[index & ~PENDING_MASK];
-        } else {
-            return &dataArray[index];
-        }
+        if (index == INVALID_INDEX) return nullptr;
+        if (index & PENDING_MASK) return &pendingAdds[index & ~PENDING_MASK];
+        else return &dataArray[index];
     }
 
     void Flush() override {
@@ -168,18 +156,22 @@ public:
                     dataArray.pop_back();
                     if(deadId < indexArray.size()) {
                         indexArray[deadId] = INVALID_INDEX;
+                        generations[deadId]++;
+                        freeIndices.push(deadId);
                     }
                 }
             }
         }
 
-        size_t newElementsStartIndex = dataArray.size();
         // 2. 지연 생성 처리: 대기열(pendingAdds)의 데이터를 메인 배열로 병합
         for (size_t i = 0; i < pendingAdds.size(); ++i) {
             if (pendingAdds[i].willDead) {
                 // 대기열에 들어가자마자 삭제된 놈은 맵에서 제거만 하고 스킵
-                if(pendingAdds[i].entityId < indexArray.size()) {
-                    indexArray[pendingAdds[i].entityId] = INVALID_INDEX;
+                ComponentEntityId pid = pendingAdds[i].entityId;
+                if(pid < indexArray.size()) {
+                    indexArray[pid] = INVALID_INDEX;
+                    generations[pid]++;
+                    freeIndices.push(pid);
                 }
                 continue;
             }
@@ -192,14 +184,20 @@ public:
                 dataArray.back().Awake();
             }
         }
-        if constexpr (std::is_base_of_v<ComponentArgument, T>) {
-            for (size_t i = newElementsStartIndex; i < dataArray.size(); ++i) {
-                dataArray[i].Start();
-            }
-        }
 
         // 3. 대기열 비우기
         pendingAdds.clear();
+    }
+    void StartPending() override {
+        if constexpr (std::is_base_of_v<ComponentArgument, T>) {
+            for (size_t i = 0; i < dataArray.size(); ++i) {
+                auto& item = dataArray[i];
+                if (item.isActive && !item.willDead && !item.started) {
+                    item.started = true;   // Start 전에 세팅(재진입 방지)
+                    item.Start();
+                }
+            }
+        }
     }
 };
 
@@ -233,21 +231,24 @@ public:
 
     void UpdateComponents() {
         if (isOrderDirty) {
-            std::sort(updateOrder.begin(), updateOrder.end(), [](BasePool* a, BasePool* b) {
-                // 숫자가 클수록 먼저 Update
-                return a->poolPriority > b->poolPriority;
-            });
+            std::sort(updateOrder.begin(), updateOrder.end(),
+                      [](BasePool* a, BasePool* b){ return a->poolPriority > b->poolPriority; });
             isOrderDirty = false;
         }
-        for (BasePool* pool : updateOrder) {
-            pool->UpdateAll();
-        }
-        // 모든 Update가 끝나면 찌꺼기(지연 생성/삭제)들을 일괄 정리합니다.
-        for (BasePool* pool : updateOrder) {
-            pool->Flush();
-        }
+        for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->Flush();        // promote + Awake (전체)
+        for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->StartPending(); // Start (전체, 앞에 다 끝난 뒤)
+        for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->UpdateAll(); // UPDATE
     }
-    // ComponentManager 클래스 내부 (public 영역)에 추가
+
+    void FlushComponents() {
+        if (isOrderDirty) {
+            std::sort(updateOrder.begin(), updateOrder.end(),
+                      [](BasePool* a, BasePool* b){ return a->poolPriority > b->poolPriority; });
+            isOrderDirty = false;
+        }
+        for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->Flush();
+    }
+
 
     template<typename T>
     ComponentHandle<T> FindFirstComponent() {
@@ -258,7 +259,7 @@ public:
         size_t typeId = handle->getTypeId();
         if (pools.size()<=typeId || !pools[typeId] ) { return nullptr; };
         auto it = pools[typeId].get();
-        return static_cast<T*>(it->GetArgument(handle->entityId));
+        return static_cast<T*>(it->GetArgument(handle->entityId,handle->generationId));
     }
 
     template<typename T>
@@ -266,6 +267,7 @@ public:
         size_t typeId = handle->getTypeId();
         if (pools.size()<=typeId || !pools[typeId]) { return; };
         auto it = pools[typeId].get();
+        if (!it->ValidateHandle(handle->entityId, handle->generationId)) return;
         it->DeleteComponent(handle->entityId);
     }
     void DeleteComponentFromPoolById(size_t typeId, ComponentEntityId entityId) {
@@ -291,12 +293,14 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
         std::cout << "[InsertOrphan] 3. 핸들 생성 성공, PoolObj 가져오기" << std::endl;
         T* poolObj = GetComponentFromPool(&newHandle);
         ComponentEntityId newId = poolObj->entityId;
+        ComponentGenerationId newGen = poolObj->generationId;
 
         std::cout << "[InsertOrphan] 4. Move 대입 연산자 실행 시도" << std::endl;
         if (comp) {
             *poolObj = std::move(*comp);
         }
         poolObj->entityId = newId;
+        poolObj->generationId = newGen;
         LOG_DEBUG("컴포넌트매니저에 GAMESESSION이 있을까요 없을까요???:::  ");
         LOG_DEBUG(((comp->gameSession) == nullptr? "응없어요" : "와있어요" ));
         if (poolObj->gameSession == nullptr) {
@@ -318,45 +322,52 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
     }
     ///해당 타입의 특정 엔티티 id를 가진 객체의 ComponentArgument*(Raw PTR) 객체를 반환합니다.
     /// !! ALERT !! 해당 함수로 얻은 데이터를 캐싱하여 사용하지 마세요. 한 프레임정도는 버틸지 모르는데... 댕글링 포인터 위헙이 있습니다.
-    ComponentArgument* GetRawPtr(size_t typeId, ComponentEntityId entity_id) {
-        if (pools.size()<=typeId || !pools[typeId]) { return nullptr; };
+    ComponentArgument* GetRawPtr(size_t typeId,ComponentGenerationId generation, ComponentEntityId entity_id ) {
+        if (pools.size()<=typeId || !pools[typeId]) return nullptr;
         auto it = pools[typeId].get();
-        return it->GetArgument(entity_id);
+        return it->GetArgument(entity_id, generation);
     }
 };
 
 //ComponentHandle 순환 참조 해결
 template<typename T>
 T* ComponentHandle<T>::operator->() const{
-    void* ptr = componentManager->GetRawPtr(this->typeId, this->entityId);
+    if (componentManager == nullptr) return nullptr;
+    void* ptr = componentManager->GetRawPtr(this->typeId, this->generationId, this->entityId);
     if (ptr == nullptr) return nullptr;
     return static_cast<T*>(ptr);
 }
-
 template<typename T>
 template<typename... Args>
 ComponentHandle<T> DrivenPool<T>::CreateComponent(Args&&... args) {
     auto h = T(std::forward<Args>(args)...);
-    ComponentEntityId entityId = nextId++;
-    h.entityId = entityId;
 
+    // slot 재사용: 반납분 있으면 꺼내쓰고, 없으면 새로 발급
+    ComponentEntityId entityId;
+    if (!freeIndices.empty()) {
+        entityId = freeIndices.front();
+        freeIndices.pop();
+    } else {
+        entityId = nextId++;
+        if (entityId >= indexArray.size()) {
+            indexArray.resize(entityId + 1, INVALID_INDEX);
+            generations.resize(entityId + 1, 0);
+        }
+    }
+
+    h.entityId   = entityId;
+    h.generationId = generations[entityId];
     h.gameSession = this->componentManager->ownerSession;
 
-    if (entityId >= indexArray.size()) {
-        indexArray.resize(entityId + 1, INVALID_INDEX);
-    }
-    // 메인 배열이 아닌 대기열(pendingAdds)에 밀어 넣습니다.
     size_t pendingIndex = pendingAdds.size();
-
-    // 인덱스에 PENDING_MASK를 씌워서 배열에 저장합니다.
     indexArray[entityId] = pendingIndex | PENDING_MASK;
     pendingAdds.push_back(std::move(h));
 
     ComponentHandle<T> handle;
-    handle.entityId = entityId;
-    handle.typeId = GetTypeId<T>();
+    handle.entityId   = entityId;
+    handle.generationId = generations[entityId];
+    handle.typeId     = GetTypeId<T>();
     handle.componentManager = componentManager;
-
     return handle;
 }
 
@@ -374,8 +385,10 @@ ComponentHandleBase ComponentHandle<T>::Clone() {
 
         if (dest && src) {
             auto savedId = dest->entityId; // ID 백업
+            auto savedGen = dest->generationId;
             *dest = *src;                  // T 타입 전체 데이터 복사
             dest->entityId = savedId;      // ID 복구
+            dest->generationId = savedGen;
         }
 
         return newHandle;
