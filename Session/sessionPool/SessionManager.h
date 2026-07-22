@@ -33,6 +33,8 @@ public:
 
     void cleanupSessions();
 
+    void reapStoppedSessions();
+
 
 private:
     SessionManager() = default;

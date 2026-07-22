@@ -116,7 +116,7 @@ void PrefabManager::LoadPrefabFromFile(const std::string& filePath) {
                     std::string val = StringUtils::Trim(line.substr(delimPos + 1));
 
                     if (key == "Name") currentObj->name = val;
-                    else if (key == "Tag") currentObj->tag = TagManager::GetObjectTagFromString(val);
+                    else if (key == "Tag") currentObj->tag = TagManager::RegisterTag(val);
                     else if (key == "LayerIndex") currentObj->layer = Layer(std::stoi(val));
                     else if (key == "Position") currentObj->transform.SetPosition(Vector3::ParseVector3(val));
                     else if (key == "Rotation") currentObj->transform.SetRotation(Quaternion::ParseQuaternion(val));

@@ -22,13 +22,37 @@
 #include "Game/Player.h"
 #include "Dto/SessionStatus.h"
 #include "netcode/SessionNetworkDto.h"
+struct JumpDto;
+struct RespawnDto;
+struct HitDto;
+struct DeathDto;
+struct BroadcastPlayerMoveDto;
+struct GenerateDto;
 struct ProgressNotifyDto;
 struct LoadingProgressDto;
 struct GameEvent;
 struct MapInitDto;
+struct InteractDto;
+struct DropWeaponDto;
+struct SwapWeaponDto;
+struct ReloadDto;
+struct ShotDto;
+struct HitThisDto;
+struct GetWeaponNotifyDto;
+struct DropWeaponNotifyDto;
+struct SwapWeaponNotifyDto;
+struct ReloadNotifyDto;
+struct ShotNotifyDto;
+struct PhaseChangeNotifyDto;
+struct GameEndNotifyDto;
+struct RoundEndNotifyDto;
+class Weapon;
 class Renderer;
 struct Mesh;
-class BroadcastMoveDto;
+struct BroadcastMoveDto;
+struct GenerateObjectDto;
+class GameObject;
+struct Vector3;
 struct _EnetPeer;
 class GameObjectManager;
 class ComponentManager;
@@ -39,10 +63,16 @@ using EventPayloadVariant = std::variant<
     std::unique_ptr<DefaultDto, void(*)(DefaultDto*)>,
     std::unique_ptr<MoveDto, void(*)(MoveDto*)>,
     std::unique_ptr<MapInitDto, void(*)(MapInitDto*)>,
-    std::unique_ptr<LoadingProgressDto, void(*)(LoadingProgressDto*)>
+    std::unique_ptr<LoadingProgressDto, void(*)(LoadingProgressDto*)>,
+    std::unique_ptr<InteractDto, void(*)(InteractDto*)>,
+    std::unique_ptr<DropWeaponDto, void(*)(DropWeaponDto*)>,
+    std::unique_ptr<SwapWeaponDto, void(*)(SwapWeaponDto*)>,
+    std::unique_ptr<ReloadDto, void(*)(ReloadDto*)>,
+    std::unique_ptr<JumpDto, void(*)(JumpDto*)>,
+    std::unique_ptr<ShotDto, void(*)(ShotDto*)>,
+    std::unique_ptr<HitThisDto, void(*)(HitThisDto*)>
     // std::unique_ptr<MoveDto> //type-Move
-    // 다른 이벤트 DTO 만들어라 훗치훗치
-    // TODO 이 마더퍼커 처리해봐
+
 >;
 using GameEventPtr = std::unique_ptr<GameEvent, void(*)(GameEvent*)>;
 using BroadCastPayloadVariant = std::variant<
@@ -50,7 +80,21 @@ using BroadCastPayloadVariant = std::variant<
     std::unique_ptr<BroadcastMoveDto, void(*)(BroadcastMoveDto*)>,
     std::unique_ptr<MapInitDto, void(*)(MapInitDto*)>,
     std::unique_ptr<ProgressNotifyDto, void(*)(ProgressNotifyDto*)>,
-    std::unique_ptr<AssignResponseDto, void(*)(AssignResponseDto*)>
+    std::unique_ptr<AssignResponseDto, void(*)(AssignResponseDto*)>,
+    std::unique_ptr<GenerateDto, void(*)(GenerateDto*)>,
+    std::unique_ptr<BroadcastPlayerMoveDto, void(*)(BroadcastPlayerMoveDto*)>,
+    std::unique_ptr<RespawnDto, void(*)(RespawnDto*)>,
+    std::unique_ptr<HitDto, void(*)(HitDto*)>,
+    std::unique_ptr<DeathDto, void(*)(DeathDto*)>,
+    std::unique_ptr<GetWeaponNotifyDto, void(*)(GetWeaponNotifyDto*)>,
+    std::unique_ptr<DropWeaponNotifyDto, void(*)(DropWeaponNotifyDto*)>,
+    std::unique_ptr<SwapWeaponNotifyDto, void(*)(SwapWeaponNotifyDto*)>,
+    std::unique_ptr<ReloadNotifyDto, void(*)(ReloadNotifyDto*)>,
+    std::unique_ptr<GenerateObjectDto, void(*)(GenerateObjectDto*)>,
+    std::unique_ptr<ShotNotifyDto, void(*)(ShotNotifyDto*)>,
+    std::unique_ptr<PhaseChangeNotifyDto, void(*)(PhaseChangeNotifyDto*)>,
+    std::unique_ptr<GameEndNotifyDto, void(*)(GameEndNotifyDto*)>,
+    std::unique_ptr<RoundEndNotifyDto, void(*)(RoundEndNotifyDto*)>
 >;
 
 
@@ -71,9 +115,6 @@ struct BroadCastEvent {
 
     std::vector<ENetPeer*> target;
 
-    uint8_t* Serialize() {
-
-    }
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload)
         :type(type), payload(std::move(payload)){}
     BroadCastEvent(SocketEventType type, BroadCastPayloadVariant payload, const std::vector<ENetPeer*>& target)
@@ -96,6 +137,8 @@ struct RenderPacket {
 
 ///게임 세션 구조체(게임 단위)
 class GameSession {
+private:
+
 #ifdef _WIN64
     std::vector<Renderer> renderers = {};
     std::queue<int> usableRenderersIndex = {};
@@ -110,6 +153,8 @@ class GameSession {
 
     std::mutex renderBufferMutex;
 #endif
+    LayerMask _playerMask;
+    LayerMask _groundMask;
     public:
     std::string sessionId;
 
@@ -132,11 +177,16 @@ class GameSession {
 
     std::vector<std::pair<std::string,int>> objectNameToIdCahce;
 
+
+
+
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
     bool isStopped = false; /// 스레드가 제대로 종료되었는지 확인
 
-    long long int tick;
+    int abandonedTicks = 0;   /// 접속자 0 지속 감시
+
+    long long int tick = 0;
 
     ~GameSession();
     GameSession();
@@ -153,11 +203,20 @@ class GameSession {
 
     void SetCharacter(const CharacterSetDto &dto) const;
 
+    void IHitValidator(HitThisDto *hitThisDto, Player *shooter, Player *target, Weapon *weapon);
+
+    void CheckAllPlayerDisconnected();
+
     std::shared_ptr<Player> RegistUser(const std::string &userKey, ENetPeer *peer) const;
 
     void ProcessEvent(GameEventPtr event);
 
     void BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event);
+    void BroadcastMovements();
+    void BroadcastObjectMovements();
+
+    GameObject SpawnSyncObject(uint32_t prefabId, const Vector3 &pos);
+
     void Start();
     void Stop();
     void Init(const std::string &sessionId, const GameSetupBoddari &initInfo);

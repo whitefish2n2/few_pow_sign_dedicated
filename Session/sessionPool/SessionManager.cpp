@@ -46,6 +46,7 @@ uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
 
         sessions[sessionKey] = newSession;
     }
+    newSession->sessionConnectKey = sessionKey;
     newSession->Init(std::to_string(sessionKey),std::move(initInfo));
     newSession->RunAsync();
 
@@ -74,5 +75,16 @@ void SessionManager::cleanupSessions() {
         session.second->cleanUp();//delete
     }
     sessions.clear();
+}
+
+void SessionManager::reapStoppedSessions() {
+    std::unique_lock lock(_sessionsLock);
+    for (auto it = sessions.begin(); it != sessions.end(); ) {
+        auto& s = it->second;
+        if (s && !s->running) {
+            s->Stop();               // 루프는 이미 탈출 → join 즉시 반환
+            it = sessions.erase(it);
+        } else ++it;
+    }
 }
 

@@ -65,7 +65,7 @@ PhysicsSystemConstructor *MapManager::GetPhysicsMapConstructor(MapInfo type)
 }
 void SetupCommonProperties(const GameObject &obj, const std::string& name, const std::string& tagStr, const Layer layer, const Vector3& pos, const Quaternion &rot) {
     obj->name = name;
-    obj->tag = TagManager::GetObjectTagFromString(tagStr);
+    obj->tag = TagManager::RegisterTag(tagStr);
     obj->layer = layer;
     obj->transform.SetPosition(pos);
     obj->transform.SetRotation(rot);
@@ -173,7 +173,7 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
                 std::string key = StringUtils::Trim(line.substr(0, delimPos));
                 std::string val = StringUtils::Trim(line.substr(delimPos + 1));
                 if (key == "Name") currentObj.name = val;
-                else if (key == "Tag") currentObj.tag = TagManager::GetObjectTagFromString(val);
+                else if (key == "Tag") currentObj.tag = TagManager::RegisterTag(val);
                 else if (key == "LayerName") currentObj.layer = layerManager.toLayer(val);
                 else if (key == "LayerIndex") currentObj.layer = Layer(std::stoi(val));
                 else if (key == "Position") currentObj.transform.SetPosition(Vector3::ParseVector3(val));

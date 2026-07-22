@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
 
+#include "../Constants.h"
 #include "../MonitorUtil.h"
 #include "../Session/GameSession.h"
 
@@ -88,5 +89,5 @@ void HttpRestClient::start_http_server(){
             return false;
         }
     });
-    svr.listen("0.0.0.0", 8888);
+    svr.listen("0.0.0.0", Consts::httpPort);
 };

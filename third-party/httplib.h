@@ -9954,7 +9954,7 @@ inline Client::Client(const std::string &scheme_host_port,
                                              client_key_path);
     }
   } else {
-    // NOTE: Update TEST(UniversalClientImplTest, Ipv6LiteralAddress)
+    // NOTE: FixedUpdate TEST(UniversalClientImplTest, Ipv6LiteralAddress)
     // if port param below changes.
     cli_ = detail::make_unique<ClientImpl>(scheme_host_port, 80,
                                            client_cert_path, client_key_path);

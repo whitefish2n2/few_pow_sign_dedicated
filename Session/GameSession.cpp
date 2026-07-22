@@ -28,8 +28,31 @@
 #include <type_traits>
 
 #include "../ObjectPool.h"
+#include "../PrefabSystem/PrefabManager.h"
 #include "../Socket/dto/MapInitDto.h"
-class CapsuleCollider;
+#include "../Socket/dto/GenerateDto.h"
+#include "../Socket/dto/BroadcastMoveDto.h"
+#include "../Socket/dto/BroadcastPlayerMoveDto.h"
+#include "../Socket/dto/RespawnDto.h"
+#include "../Socket/dto/HitDto.h"
+#include "../Socket/dto/HitThisDto.h"
+#include "../Socket/dto/DeathDto.h"
+#include "../Socket/dto/GetWeaponNotifyDto.h"
+#include "../Socket/dto/ReloadNotifyDto.h"
+#include "../Socket/dto/SwapWeaponNotifyDto.h"
+#include "../Socket/dto/ReloadNotifyDto.h"
+#include "../Socket/dto/DropWeaponNotifyDto.h"
+#include "../Socket/dto/PhaseChangeNotifyDto.h"
+#include "../Socket/dto/GameEndNotifyDto.h"
+#include "../Socket/dto/ShotNotifyDto.h"
+#include "../Socket/dto/GenerateObjectDto.h"
+#include "Component/Implementation/Interactable.h"
+#include "Component/Implementation/WeaponInventory.h"
+#include "../Socket/dto/SwapWeaponDto.h"
+#include "Component/Implementation/SynchronizedObject.h"
+#include "Game/data/WeaponRegistry.h"
+#include "Component/Implementation/GamePlayManager.h"
+#include "../Socket/dto/RoundEndNotifyDto.h"
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
@@ -67,12 +90,15 @@ void GameSession::ProcessEventQueue() {
                     using AssignDtoPtr = std::unique_ptr<AssignRequestDto, void(*)(AssignRequestDto*)>;
                     auto* v = std::get_if<AssignDtoPtr>(&e->payload);
                     if (v == nullptr) break;
+                    LOG_DEBUG("assign dto ptr로 변환 성공");
 
                     AssignRequestDto* dto = v->get();
 
                     for (auto& val : *players | std::views::values) {
                         if (val.assignKey == dto->Key) {
+                            LOG_DEBUG("assign respnose dto 생성 시작");
                             val.peer = e->peer;
+                            val.peerConnectId = e->peer->connectID;
                             e->peer->data = &val;
                             val.status.networkStatus = connected;
 
@@ -131,7 +157,6 @@ void GameSession::ProcessEventQueue() {
 
                     MoveDto* dto = v->get(); // 생포인터 추출
 
-                    auto secretKey = dto->UserSecretKey;
 
                     auto inputVector = dto->InputVector;
                     auto pitch = dto->inputPitch;
@@ -182,6 +207,225 @@ void GameSession::ProcessEventQueue() {
                     }
                     break;
                 }
+                case SocketEventType::Interact: {
+                    using InteractDtoPtr = std::unique_ptr<InteractDto, void(*)(InteractDto*)>;
+                    auto* v = std::get_if<InteractDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+
+                    // 클라 미러: 눈위치(cam.localPosition=0,1.74,0) + 조준방향으로 5f 레이캐스트
+                    PlayerMoveSnapshot snap = player->playerComponent->GetMoveSnapshot();
+                    Vector3 eye = snap.position + player->playerComponent->aimOrigin;
+                    float pitchRad = snap.rotation.x * (3.14159265f / 180.0f);
+                    float yawRad   = snap.rotation.y * (3.14159265f / 180.0f);
+                    Vector3 dir(std::sin(yawRad) * std::cos(pitchRad),
+                                -std::sin(pitchRad),
+                                std::cos(yawRad) * std::cos(pitchRad));
+
+                    GameObject self = player->playerComponent->gameObject;
+                    RaycastHit hit;
+                    if (!physicsSystem->Raycast(Ray(eye, dir), 5.0f, LayerMask(0xFFFFFFFF), hit,
+                                                [&self](Collider* c) { return !(c->gameObject == self); })) break;
+                    if (hit.collider == nullptr || !hit.collider->gameObject) break;
+
+                    auto interactable = hit.collider->gameObject->GetComponent<Interactable>();
+                    if (interactable.isNull()) break;
+                    interactable->Interact(player);
+                    break;
+                }
+                case SocketEventType::DropWeapon: {
+                    using DropDtoPtr = std::unique_ptr<DropWeaponDto, void(*)(DropWeaponDto*)>;
+                    auto* v = std::get_if<DropDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+                    auto inventory = player->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+
+                    ComponentHandle<Weapon> dropped = inventory->DropHolding();
+                    Weapon* w = dropped.operator->();
+                    if (w == nullptr) break;   // 빈손 → 무응답
+
+                    PlayerMoveSnapshot snap = player->playerComponent->GetMoveSnapshot();
+                    const WeaponInfo* wInfo = w->GetInfo();
+                    Vector3 hp = (wInfo != nullptr) ? wInfo->handlePosition : Vector3::Zero();
+                    float pitchRad = snap.rotation.x * (3.14159265f / 180.0f);
+                    float yawRad   = snap.rotation.y * (3.14159265f / 180.0f);
+                    float cp = std::cos(pitchRad), sp = std::sin(pitchRad);
+                    float cy = std::cos(yawRad),   sy = std::sin(yawRad);
+                    Vector3 pitched(hp.x, hp.y * cp - hp.z * sp, hp.y * sp + hp.z * cp);   // Rx(pitch)
+                    Vector3 off(pitched.x * cy + pitched.z * sy,                            // Ry(yaw)
+                                pitched.y,
+                                -pitched.x * sy + pitched.z * cy);
+                    Vector3 dropPos = snap.position + player->playerComponent->aimOrigin + off;
+                    Vector3 fwd(sy, 0.0f, cy);
+                    w->DropToWorld(dropPos, fwd, snap.rotation, player->publicKey,
+                                   static_cast<uint8_t>(inventory->holdingSlot < 0 ? 0xFF : inventory->holdingSlot));
+
+                    break;
+                }
+                case SocketEventType::SwapWeapon: {
+                    using SwapDtoPtr = std::unique_ptr<SwapWeaponDto, void(*)(SwapWeaponDto*)>;
+                    auto* v = std::get_if<SwapDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+                    auto inventory = player->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+
+                    if (!inventory->SwapDir((*v)->dir != 0)) break;   // 그 방향 무기 없음 → 무응답
+
+                    SwapWeaponNotifyDto* raw = ObjectPool<SwapWeaponNotifyDto>::GetInstance().Acquire();
+                    raw->playerKey   = player->publicKey;
+                    raw->holdingSlot = static_cast<uint8_t>(inventory->holdingSlot);
+                    auto dto = std::unique_ptr<SwapWeaponNotifyDto, void(*)(SwapWeaponNotifyDto*)>(
+                        raw, [](SwapWeaponNotifyDto* p) { ObjectPool<SwapWeaponNotifyDto>::GetInstance().Release(p); });
+
+                    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+                    rawEvent->type = SocketEventType::SwapWeaponNotify;
+                    rawEvent->payload = std::move(dto);
+                    rawEvent->target.clear();
+                    std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+                        p->payload = nullptr;
+                        ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+                    });
+                    this->BroadcastEvent(event);
+                    break;
+                }
+                case SocketEventType::Reload: {
+                    using ReloadDtoPtr = std::unique_ptr<ReloadDto, void(*)(ReloadDto*)>;
+                    auto* v = std::get_if<ReloadDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+                    auto inventory = player->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+
+                    if (!inventory->Reload()) break;   // 빈손/무한탄약/풀탄창 → 무응답
+                    Weapon* held = inventory->GetHolding().operator->();
+                    if (held == nullptr) break;
+
+                    ReloadNotifyDto* raw = ObjectPool<ReloadNotifyDto>::GetInstance().Acquire();
+                    raw->playerKey   = player->publicKey;
+                    raw->slot        = static_cast<uint8_t>(inventory->holdingSlot);
+                    raw->currentAmmo = static_cast<uint16_t>(held->currentAmmo);
+                    auto dto = std::unique_ptr<ReloadNotifyDto, void(*)(ReloadNotifyDto*)>(
+                        raw, [](ReloadNotifyDto* p) { ObjectPool<ReloadNotifyDto>::GetInstance().Release(p); });
+
+                    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+                    rawEvent->type = SocketEventType::ReloadNotify;
+                    rawEvent->payload = std::move(dto);
+                    rawEvent->target.clear();
+                    std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+                        p->payload = nullptr;
+                        ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+                    });
+                    this->BroadcastEvent(event);
+                    break;
+                }
+
+                case SocketEventType::Jump: {
+                    using JumpDtoPtr = std::unique_ptr<JumpDto, void(*)(JumpDto*)>;
+                    auto* v = std::get_if<JumpDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+
+                    player->playerComponent->Jump();
+                    break;
+                }
+
+                case SocketEventType::Shot: {
+                    using ShotDtoPtr = std::unique_ptr<ShotDto, void(*)(ShotDto*)>;
+                    auto* v = std::get_if<ShotDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+
+                    auto player = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (player == nullptr || player->playerComponent.isNull()) break;
+                    auto inventory = player->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+
+                    Weapon* w = inventory->GetHolding().operator->();
+                    if (w == nullptr) break;
+                    if (!w->TryShoot()) break;
+
+                    PlayerMoveSnapshot snap = player->playerComponent->GetMoveSnapshot();
+                    Vector3 eye = snap.position + player->playerComponent->aimOrigin;
+                    float pitchRad = snap.rotation.x * (3.14159265f / 180.0f);
+                    float yawRad   = snap.rotation.y * (3.14159265f / 180.0f);
+                    Vector3 dir(std::sin(yawRad) * std::cos(pitchRad),
+                                -std::sin(pitchRad),
+                                std::cos(yawRad) * std::cos(pitchRad));
+
+                    ShotNotifyDto* raw = ObjectPool<ShotNotifyDto>::GetInstance().Acquire();
+                    raw->playerKey = player->publicKey;
+                    raw->origin    = eye;
+                    raw->dir       = dir;
+                    auto dto = std::unique_ptr<ShotNotifyDto, void(*)(ShotNotifyDto*)>(
+                        raw, [](ShotNotifyDto* p) { ObjectPool<ShotNotifyDto>::GetInstance().Release(p); });
+
+                    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+                    rawEvent->type = SocketEventType::ShotNotify;
+                    rawEvent->payload = std::move(dto);
+                    rawEvent->target.clear();
+                    std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+                        p->payload = nullptr;
+                        ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+                    });
+                    this->BroadcastEvent(event);
+                    break;
+                }
+                case SocketEventType::HitThis: {
+                    constexpr float maxDistance = 1.0f;
+
+                    using HitThisDtoPtr = std::unique_ptr<HitThisDto, void(*)(HitThisDto*)>;
+                    auto* v = std::get_if<HitThisDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+                    HitThisDto* dto = v->get();
+
+                    auto shooter = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (shooter == nullptr || shooter->playerComponent.isNull()) break;
+
+                    auto targetIt = players->find(dto->targetPublicKey);
+                    if (targetIt == players->end()) break;
+                    Player& target = targetIt->second;
+                    if (target.playerComponent.isNull()) break;
+
+
+                    Vector3 shooterEye = shooter->playerComponent->gameObject->transform.GetPosition() + shooter->playerComponent->aimOrigin;
+                    if (shooterEye.Distance(dto->origin) > maxDistance) break;
+
+                    auto inventory = shooter->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+                    Weapon* w = inventory->GetHolding().operator->();
+                    if (w == nullptr) break;
+                    if (!w->TryShoot()) break;
+
+                    ShotNotifyDto* raw = ObjectPool<ShotNotifyDto>::GetInstance().Acquire();
+                    raw->playerKey = shooter->publicKey;
+                    raw->origin    = dto->origin;
+                    raw->dir       = dto->dir;
+                    auto shotDto = std::unique_ptr<ShotNotifyDto, void(*)(ShotNotifyDto*)>(
+                        raw, [](ShotNotifyDto* p) { ObjectPool<ShotNotifyDto>::GetInstance().Release(p); });
+
+                    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+                    rawEvent->type = SocketEventType::ShotNotify;
+                    rawEvent->payload = std::move(shotDto);
+                    rawEvent->target.clear();
+                    std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+                        p->payload = nullptr;
+                        ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+                    });
+
+                    IHitValidator(dto, shooter, &target, w);
+                    break;
+                }
                 case SocketEventType::Ping: {
                     //pong
                     break;
@@ -203,6 +447,9 @@ void GameSession::Tick() {
     ProcessEventQueue();
     UpdateComponents();
     FlushGameObject();
+    BroadcastMovements();
+    BroadcastObjectMovements();
+    CheckAllPlayerDisconnected();
 #ifdef _WIN64
     UpdateRenderBuffer();
 #endif
@@ -218,16 +465,129 @@ void GameSession::SetCharacter(const CharacterSetDto& dto) const {
     for (auto v : dto.elements) {
         for (auto& p : *players | std::views::values) {
             if (p.userId == v.userId) {
-                p.SetCharacter(v.characterId);
+                p.SetCharacter(static_cast<uint8_t>(std::stoi(v.characterId)));
                 break;
             }
         }
     }
+}
 
+struct HitRewinder {
+    GameObject targetObject;
+    Vector3 originalPosition;
+    bool restored = false;
+
+    HitRewinder(GameSession* session, Player* rewindTarget) {
+
+        if (rewindTarget == nullptr || rewindTarget->playerComponent.isNull()) return;
+        PlayerComponent* pc = rewindTarget->playerComponent.operator->();
+        if (pc->historySize <= 0) return;
+        if (pc->validHistorySamples <= 0) return;   // 유효기록 자체가 없으면 리와인드 자체를 포기(=현재위치로 검증)
+        int maxSteps = (std::min)(pc->historySize, pc->validHistorySamples);
+        float rewindSeconds = SessionUtil::GetRewindOffsetSeconds(rewindTarget);
+        auto targetTime = std::chrono::steady_clock::now()
+            - std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<float>(rewindSeconds));
+
+        int idx = pc->lastHistoryIndex;
+        int steps = 0;
+        while (steps < maxSteps && pc->history[idx].timestamp > targetTime) {
+            idx = (idx - 1 + pc->historySize) % pc->historySize;
+            ++steps;
+        }
+        // targetTime보다 오래된(같거나 이전) 첫 슬롯에서 멈춤. maxSteps를 다 돌아도 못 찾으면(=버퍼 안에 그만큼 오래된 기록이 없음) 유효 기록 중 가장 오래된 값으로 자연스럽게 폴백됨.
+
+        targetObject = pc->gameObject;
+        originalPosition = targetObject->transform.GetPosition();
+        targetObject->transform.SetPosition(pc->history[idx].position);
+        restored = true;
+    }
+
+
+    ~HitRewinder() {
+        if (restored) targetObject->transform.SetPosition(originalPosition);
+    }
+};
+
+
+///dto 기반으로 맞았는지 안 맞았는지 rewind해서 확인하고 맞으면 맞았다고 값 처리 및 전파까지 하는 함수
+void GameSession::IHitValidator(HitThisDto* hitThisDto, Player* shooter, Player* target, Weapon* weapon) {
+    HitRewinder rewinder(this, target);// rewind ( 이 객체 소멸시 rewind 이전으로 롤백)
+    LayerMask layer_mask = LayerMask(_groundMask | _playerMask);
+    RaycastHit hit;
+    Ray ray = Ray(hitThisDto->origin, hitThisDto->dir);
+    auto hasResult = physicsSystem->Raycast(ray, 300, layer_mask, hit, [=](Collider* c){
+            if (c->gameObject->tag != TagManager::GetObjectTagFromString("Player")) return true;
+            return c->gameObject == target->playerComponent->gameObject;
+        }
+    );
+    if (hasResult == false) return;
+
+    if (hit.collider->gameObject == target->playerComponent->gameObject) {
+        auto dmg = target->playerComponent->CalcDamage(hit.collider, weapon);
+        bool died = target->playerComponent->TakeDamage(dmg);
+        uint8_t hitPart = (hit.collider->GetShapeType() == ColliderType::Sphere) ? 1 : 0;
+
+        HitDto* raw = ObjectPool<HitDto>::GetInstance().Acquire();
+        raw->victimKey    = target->publicKey;
+        raw->attackerKey  = shooter->publicKey;
+        raw->hitPart      = hitPart;
+        raw->remainingHp  = static_cast<uint16_t>(target->playerComponent->GetCurrentHp());
+        raw->hitPosition  = hit.point;
+        auto hitDto = std::unique_ptr<HitDto, void(*)(HitDto*)>(
+            raw, [](HitDto* p) { ObjectPool<HitDto>::GetInstance().Release(p); });
+
+        BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+        rawEvent->type = SocketEventType::HitNotify;
+        rawEvent->payload = std::move(hitDto);
+        rawEvent->target.clear();
+        std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+            p->payload = nullptr;
+            ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+        });
+        this->BroadcastEvent(event);
+
+        if (died) {
+            target->playerComponent->Death();
+            shooter->status.kill++;
+            target->status.death++;
+
+            DeathDto* deathRaw = ObjectPool<DeathDto>::GetInstance().Acquire();
+            deathRaw->victimKey = target->publicKey;
+            deathRaw->killerKey = shooter->publicKey;
+            auto deathDto = std::unique_ptr<DeathDto, void(*)(DeathDto*)>(
+                deathRaw, [](DeathDto* p) { ObjectPool<DeathDto>::GetInstance().Release(p); });
+
+            BroadCastEvent* deathEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+            deathEvent->type = SocketEventType::Death;
+            deathEvent->payload = std::move(deathDto);
+            deathEvent->target.clear();
+            std::shared_ptr<BroadCastEvent> devent(deathEvent, [](BroadCastEvent* p) {
+                p->payload = nullptr;
+                ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+            });
+            this->BroadcastEvent(devent);
+
+            ComponentHandle<GamePlayManager> gpm = componentManager->FindFirstComponent<GamePlayManager>();
+            if (!gpm.isNull()) gpm->CheckOneTeamRemain();
+        }
+    }
+}
+
+void GameSession::CheckAllPlayerDisconnected() {
+    bool anyConnected = false, anyDisconnected = false;
+    for (auto& p : *players | std::views::values) {
+        if (p.status.networkStatus == connected)    anyConnected = true;
+        if (p.status.networkStatus == disconnected) anyDisconnected = true;
+    }
+    if (anyConnected || !anyDisconnected) abandonedTicks = 0;   // 로딩 대기(not_connected만)는 카운트 안 함
+    else if (++abandonedTicks > 30 * 30) {                      // 30tps × 30초
+        LOG_INFO("session abandoned, self-stopping: " + sessionId);
+        running = false;   // 자기 스레드라 join 불가 → 루프 자연 종료, 수확은 리퍼가
+    }
 }
 constexpr std::chrono::nanoseconds TIME_STEP(33333334);
 void GameSession::Start() {
-    LOG_INFO("session is running on port " + std::to_string(Consts::port));
+    LOG_INFO("new session is running");
     Log("으아아악돌아가요");
     // Run server loop
 
@@ -241,15 +601,12 @@ void GameSession::Start() {
 
         auto elapsed = now - previousTime;
         previousTime = now;
-
-        time.DeltaTime = std::chrono::duration<float>(elapsed).count();
-
         if (elapsed > std::chrono::milliseconds(250)) {
             elapsed = std::chrono::milliseconds(250);
         }
         lag += elapsed;
         while (lag >= TIME_STEP) {
-            time.FixedDeltaTime = std::chrono::duration<float>(TIME_STEP).count();
+            time.DeltaTime = std::chrono::duration<float>(TIME_STEP).count();
             Tick();
             lag -= TIME_STEP;
         }
@@ -276,7 +633,6 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
     this->players = std::make_shared<std::map<uint64_t, Player>>();
     this->sessionId = std::move(sessionId);
     this->initInfo = initInfo;
-    uint64_t privateKey;
     uint8_t publicKey=0;
     auto res = physicsSystem->Init(MapInfo(initInfo.mapId), this) ;
     if (!res){/*todo: 매칭 취소 로직*/ return; }
@@ -289,14 +645,17 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
         static std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<uint64_t> dist(1, (std::numeric_limits<uint64_t>::max)());
 
-        do {
-            privateKey = dist(rng);
-        } while (SessionUtil::ContainsPrivateKey(*players, privateKey));
         playerStatus newStatus = playerStatus();
-        Player newPlayer = Player(p.id, p.name,p.key, privateKey, publicKey++, newStatus);
-        (*players)[privateKey] = newPlayer;
+        newStatus.team = p.team;
+        newStatus.characterId = static_cast<uint8_t>(std::stoi(p.characterId));
+        Player newPlayer = Player(p.id, p.name,p.key,publicKey, newStatus);
+        (*players)[publicKey] = newPlayer;
+        publicKey++;
         std::cout<<"Enqueue Succeced"<<std::endl;
     }
+
+    _playerMask = physicsSystem->layerManager.GetMask("Default");
+    _groundMask = physicsSystem->layerManager.GetMask("Ground");
 }
 
 bool GameSession::reset() {
@@ -354,7 +713,9 @@ void GameSession::UpdateRenderBuffer() {
         if (safeTransform) {
             Matrix4 myMat = safeTransform->GetWorldMatrix().Transpose();
             DirectX::XMMATRIX baseTransform = DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(myMat.m.data()));
-            DirectX::XMMATRIX mat = DirectX::XMMatrixMultiply(DirectX::XMMatrixTranslation(renderer.localOffset.x, renderer.localOffset.y, renderer.localOffset.z),baseTransform);
+            DirectX::XMMATRIX mat = DirectX::XMMatrixScaling(renderer.localScale.x, renderer.localScale.y, renderer.localScale.z)
+            * DirectX::XMMatrixTranslation(renderer.localOffset.x, renderer.localOffset.y, renderer.localOffset.z)
+            * baseTransform;
             DirectX::XMStoreFloat4x4(&packet.worldMatrix, mat);
         }
 
@@ -385,6 +746,7 @@ std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENet
     {
         if (v.assignKey == userKey) {
             v.peer = peer;
+            v.peerConnectId = peer->connectID;
             peer->data = &v;
 
             return std::make_shared<Player>(v);
@@ -398,17 +760,13 @@ void GameSession::ProcessEvent(GameEventPtr event)
     std::lock_guard<std::mutex> lock(queueMutex);
 
     eventQueue.push(std::move(event));
-
-    queueCV.notify_one();
 }
 
 
 void GameSession::BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event) {
     if (!players || players->empty()) return;
 
-    enet_uint32 packetFlags = (event->type == SocketEventType::Move)
-                                ? ENET_PACKET_FLAG_UNSEQUENCED
-                                : ENET_PACKET_FLAG_RELIABLE;
+    enet_uint32 packetFlags = GetPacketFlags(event->type);
 
     std::vector<uint8_t> buffer;
 
@@ -426,12 +784,155 @@ void GameSession::BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event) {
 
     bool broadcastToAll = event->target.empty();
 
-    for (const auto& [privateKey, player] : *players) {
+    for (const auto &player: *players | std::views::values) {
         if (player.peer != nullptr) { // 연결 상태 체크는 ENet 스레드에서 최종 확인
             if (broadcastToAll || std::find(event->target.begin(), event->target.end(), player.peer) != event->target.end()) {
-                EnetClient::GetInstance()->EnqueueSend(player.peer, buffer, packetFlags);
+                EnetClient::GetInstance()->EnqueueSend(player.peer, player.peerConnectId, buffer, packetFlags);
             }
         }
     }
 }
+
+void GameSession::BroadcastMovements() {
+    if (!players || players->empty()) return;
+
+    BroadcastPlayerMoveDto* rawDto = ObjectPool<BroadcastPlayerMoveDto>::GetInstance().Acquire();
+    rawDto->players.clear();
+
+    auto* pool = componentManager->GetOrCreatePool<PlayerComponent>();
+    for (auto& pc : *pool) {
+        if (!pc.isActive || pc.willDead) continue;
+        auto snap = pc.GetMoveSnapshot();
+
+        PlayerMoveEntry entry;
+        entry.publicKey = pc.publicKey;
+        entry.position = snap.position;
+        entry.rotation = snap.rotation;
+        entry.velocity = snap.velocity;
+        rawDto->players.push_back(entry);
+    }
+
+    if (rawDto->players.empty()) {
+        ObjectPool<BroadcastPlayerMoveDto>::GetInstance().Release(rawDto);
+        return;
+    }
+
+    auto moveDto = std::unique_ptr<BroadcastPlayerMoveDto, void(*)(BroadcastPlayerMoveDto*)>(
+        rawDto,
+        static_cast<void(*)(BroadcastPlayerMoveDto*)>([](BroadcastPlayerMoveDto* p) {
+            ObjectPool<BroadcastPlayerMoveDto>::GetInstance().Release(p);
+        })
+    );
+
+    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+    rawEvent->type = SocketEventType::PlayerMove;
+    rawEvent->payload = std::move(moveDto);
+    rawEvent->target.clear(); // 비움 = 전체 방송(본인 포함, 권위 좌표라 reconciliation용)
+
+    std::shared_ptr<BroadCastEvent> event(
+        rawEvent,
+        [](BroadCastEvent* p) {
+            p->payload = nullptr; // variant 딜리터 트리거 → DTO 풀 반납
+            ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+        }
+    );
+
+    this->BroadcastEvent(event);
+}
+
+void GameSession::BroadcastObjectMovements() {
+    if (!players || players->empty()) return;
+
+    constexpr uint8_t OBJECT_RESEND_TICKS = 5;
+
+    BroadcastMoveDto* rawDto = ObjectPool<BroadcastMoveDto>::GetInstance().Acquire();
+    rawDto->objects.clear();
+
+    auto* pool = componentManager->GetOrCreatePool<SynchronizedObject>();
+    for (auto& so : *pool) {
+        if (!so.isActive || !so.gameObject) continue;
+
+        const Vector3& pos = so.gameObject->transform.GetPosition();
+        Vector3 rot = so.gameObject->transform.GetRotation().ToEuler();
+
+        if (pos != so.lastSentPos || rot != so.lastSentRot) so.resendTicks = OBJECT_RESEND_TICKS;
+        if (so.resendTicks == 0) continue;
+        so.resendTicks--;
+
+        so.lastSentPos = pos;
+        so.lastSentRot = rot;
+
+        ObjectMoveEntry entry;
+        entry.targetId = static_cast<uint32_t>(so.gameObject.targetId);
+        entry.position = pos;
+        entry.rotation = rot;
+        rawDto->objects.push_back(entry);
+    }
+
+    if (rawDto->objects.empty()) {
+        ObjectPool<BroadcastMoveDto>::GetInstance().Release(rawDto);
+        return;
+    }
+
+    auto moveDto = std::unique_ptr<BroadcastMoveDto, void(*)(BroadcastMoveDto*)>(
+        rawDto,
+        static_cast<void(*)(BroadcastMoveDto*)>([](BroadcastMoveDto* p) {
+            ObjectPool<BroadcastMoveDto>::GetInstance().Release(p);
+        })
+    );
+
+    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+    rawEvent->type = SocketEventType::ObjectMove;
+    rawEvent->payload = std::move(moveDto);
+    rawEvent->target.clear();
+
+    std::shared_ptr<BroadCastEvent> event(
+        rawEvent,
+        [](BroadCastEvent* p) {
+            p->payload = nullptr;
+            ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+        }
+    );
+
+    this->BroadcastEvent(event);
+}
+
+GameObject GameSession::SpawnSyncObject(uint32_t prefabId, const Vector3& pos) {
+    GameObject obj = PrefabManager::Instantiate(prefabId, this);
+    if (!obj) return obj;   // 매핑 없는 prefabId → 방송 없이 종료
+
+    obj->transform.SetPosition(pos);
+
+    auto sync = obj->GetComponent<SynchronizedObject>();
+    if (!sync.isNull()) sync->resendTicks = 5;   // 초기 플러시 → 이동 파이프라인 탑승
+
+    GenerateObjectDto* rawDto = ObjectPool<GenerateObjectDto>::GetInstance().Acquire();
+    rawDto->targetId = static_cast<uint32_t>(obj.targetId);
+    rawDto->prefabId = static_cast<uint8_t>(prefabId);
+    rawDto->position = pos;
+
+    auto genDto = std::unique_ptr<GenerateObjectDto, void(*)(GenerateObjectDto*)>(
+        rawDto,
+        static_cast<void(*)(GenerateObjectDto*)>([](GenerateObjectDto* p) {
+            ObjectPool<GenerateObjectDto>::GetInstance().Release(p);
+        })
+    );
+
+    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+    rawEvent->type = SocketEventType::GenerateObject;
+    rawEvent->payload = std::move(genDto);
+    rawEvent->target.clear();
+
+    std::shared_ptr<BroadCastEvent> event(
+        rawEvent,
+        [](BroadCastEvent* p) {
+            p->payload = nullptr;
+            ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+        }
+    );
+
+    this->BroadcastEvent(event);
+    return obj;
+}
+
 

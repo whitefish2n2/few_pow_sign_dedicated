@@ -19,6 +19,9 @@
 #include "ServerStatics.h"
 #include "PrefabSystem/PrefabManager.h"
 #include "Session/Game/MapManager.h"
+#include "Session/Game/data/CharacterRegistry.h"
+#include "Session/Game/data/WeaponRegistry.h"
+#include "Socket/EnetClient.h"
 using std::thread;
 
 #ifdef _WIN64
@@ -29,16 +32,22 @@ std::wstring serverUuid;
 
 void CreateDebugScreen() {
 #ifdef _WIN64
+    bool expected = false;
+    if (!DirectXCore::isViewerAlive.compare_exchange_strong(expected, true)) {
+        std::cout << "debug viewer already running (or still closing)\n";
+        return;
+    }
     std::thread debugViewerThread([]() {
+        DirectXCore::isRunningViewer.store(true);
         auto hwnd = CreateDebugWindow(GetModuleHandle(nullptr), 1920, 1080);
         if (DirectXCore::InitD3D(hwnd, 1920, 1080)) {
             DirectXCore::RunDirectXLoop();
         }
+        DirectXCore::isViewerAlive.store(false);   // Cleanup까지 끝난 뒤에만 재진입 허용
     });
     debugViewerThread.detach();
 #endif
 }
-
 void onExit(int signal) {
     if (isRunning.load()) {
         isRunning.store(false);
@@ -85,7 +94,6 @@ int main() {
     #ifdef _WIN64
     SetUnhandledExceptionFilter(CrashHandler);
     std::signal(SIGTERM, onExit);
-    CreateDebugScreen();
     #endif
     try {
         isRunning.store(false);
@@ -97,12 +105,17 @@ int main() {
         std::string prefabDirectory = "./Prefabs";
         PrefabManager::Init(prefabDirectory);
 
+        //캐릭터 로드
+        CharacterRegistry::Init("./Assets/CharacterData.json");
+
+        //무기 로드
+        WeaponRegistry::Init("./Assets/WeaponData.json");
+
         std::signal(SIGINT, onExit);   // Ctrl+C
         std::signal(SIGTERM, onExit);
         const std::string ip = GetLocalIP();
         std::vector<std::thread> threads;
 
-        std::string url;//key for connect to spring server, write url like this : 123.123.123.123:8080
         char* key = nullptr;
         size_t len = 0;
         _dupenv_s(&key,&len,"HolyMolyIsGodDamnSecretKey");
@@ -111,34 +124,47 @@ int main() {
             return 1;
         }
         std::cout << "key"<<key<< std::endl;
-        std::cout << "enter match server base address(like this: 123.123.123.123:1421)";
-        url = "localhost:25565";
+        std::string matchServerUrl;
+        std::cout << "enter match server base address(like this: 123.123.123.123:25565): ";
+        matchServerUrl = "localhost:25565";
         std::string val= GenerateUuid();
         serverUuid.assign(val.begin(),val.end());
 
 
-        DedicatedServerNotifier::getInstance().init(url);
+        DedicatedServerNotifier::getInstance().init(matchServerUrl);
         std::vector<std::shared_ptr<GameSession>> sessions;
         for (const auto& [k, v] : SessionManager::getInstance().sessions) {
             sessions.push_back(v);
         }
         DedicatedServerNotifier::getInstance().notifyDedicatedServerUp(
-            key,
+        key,
             ip,
-            "http://localhost:8888",//todo 서버별 url url을 url해요
+            "http://" + ip + ":" + std::to_string(Consts::httpPort),//이 서버 http url
+            std::to_string(Consts::udpPort),//이 서버 udp 포트
             sessions
         );
         isRunning = true;
         std::thread consoleThread(inputListener);
         std::thread statusThread(statusUpdater);
         std::thread httpClientThread(&HttpRestClient::start_http_server, HttpRestClient::getInstance());
-        std::cout << "1"<< std::endl;
+        std::thread enetThread(&EnetClient::RunClient, EnetClient::GetInstance(), Consts::udpPort);
+        std::thread reaperThread([]() {   // 유령 세션 리퍼
+            while (true) {
+                std::this_thread::sleep_for(std::chrono::seconds(10));
+                SessionManager::getInstance().reapStoppedSessions();
+            }
+        });
+
         /*Initialize Flow*/
 
         MapRegister::Init("Assets/MapInfo.json");
         MapManager::GetInstance()->Init();
 
         CollisionSolver::Initialize();
+#ifdef _WIN64
+        CreateDebugScreen();
+#endif
+
         /*Initialize Flow end*/
         for (auto& t : threads) {
             t.join();

@@ -9,7 +9,6 @@
 class Time {
 public:
     float DeltaTime = 0.0f;
-    float FixedDeltaTime = 0.0f;
 };
 
 

@@ -41,7 +41,6 @@ add_executable(fpsProjectServer
         Session/FhishiX/AABB.h
         Session/FhishiX/FhishiX.h
         Session/Game/KDTree.cpp
-        Socket/dto/BroadcastMoveDto.cpp
         Socket/dto/BroadcastMoveDto.h
         Session/Game/GameLogic/Gun.h
         Session/Game/GameLogic/InteractableObject.h
@@ -152,6 +151,38 @@ add_executable(fpsProjectServer
         Socket/dto/LoadingProgressDto.h
         Socket/dto/AssignResponseDto.cpp
         Socket/dto/AssignResponseDto.h
+        Socket/dto/GenerateDto.h
+        Socket/dto/BroadcastPlayerMoveDto.h
+        Session/Game/data/CharacterRegistry.h
+        Session/Game/data/CharacterRegistry.cpp
+        Socket/dto/RespawnDto.cpp
+        Socket/dto/RespawnDto.h
+        Socket/dto/HitDto.h
+        Socket/dto/DeathDto.h
+        Session/Game/LifeState.h
+        Session/Game/data/WeaponRegistry.cpp
+        Session/Game/data/WeaponRegistry.h
+        Session/Component/Implementation/WeaponInventory.cpp
+        Session/Component/Implementation/WeaponInventory.h
+        Socket/dto/DropWeaponDto.h
+        Socket/dto/SwapWeaponDto.h
+        Socket/dto/ReloadDto.h
+        Socket/dto/GetWeaponNotifyDto.h
+        Socket/dto/DropWeaponNotifyDto.h
+        Socket/dto/SwapWeaponNotifyDto.h
+        Socket/dto/ReloadNotifyDto.h
+        Session/Action.h
+        Session/Component/Implementation/Interactable.cpp
+        Session/Component/Implementation/Interactable.h
+        Socket/dto/InteractDto.h
+        Socket/dto/GenerateObjectDto.h
+        Socket/dto/JumpDto.h
+        Socket/dto/ShotDto.h
+        Socket/dto/ShotNotifyDto.h
+        Socket/dto/HitThisDto.h
+        Socket/dto/HitThisDto.cpp
+        Socket/dto/PhaseChangeNotifyDto.h
+        Socket/dto/GameEndNotifyDto.h
 )
 target_precompile_headers(fpsProjectServer PUBLIC pch.h)
 add_custom_command(TARGET fpsProjectServer POST_BUILD
