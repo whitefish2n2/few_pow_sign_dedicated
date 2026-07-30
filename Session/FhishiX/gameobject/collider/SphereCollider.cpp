@@ -23,7 +23,8 @@ AABB SphereCollider::GetAABB() const {
 
     // 1. 크기(Scale)나 회전(Rotation)이 변경된 경우
     // 구체 자체는 회전해도 크기가 같지만, 로컬 center가 (0,0,0)이 아닐 경우 위치가 변하므로 회전도 체크합니다.
-    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer) {
+    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer
+        || transformPosVersion != currentPosVer) {
 
         transformRotVersion = currentRotVer;
         transformScaleVersion = currentScaleVer;

@@ -38,8 +38,9 @@ AABB BoxCollider::GetAABB() const {
     uint32_t currentRotVer = tr.GetRotVersion();
     uint32_t currentScaleVer = tr.GetScaleVersion();
 
-    // 1. 크기나 회전이 바뀐 경우 (AABB 재계산)
-    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer) {
+    // 1. 크기나 회전, 위치가 바뀐 경우 (AABB 재계산)
+    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer
+        || transformPosVersion != currentPosVer) {
 
         transformRotVersion = currentRotVer;
         transformScaleVersion = currentScaleVer;

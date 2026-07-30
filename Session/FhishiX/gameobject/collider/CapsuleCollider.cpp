@@ -39,7 +39,8 @@ AABB CapsuleCollider::GetAABB() const {
     uint32_t currentRotVer = tr.GetRotVersion();
     uint32_t currentScaleVer = tr.GetScaleVersion();
 
-    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer) {
+    if (transformScaleVersion != currentScaleVer || transformRotVersion != currentRotVer
+        || transformPosVersion != currentPosVer) {
         transformRotVersion = currentRotVer;
         transformScaleVersion = currentScaleVer;
         transformPosVersion = currentPosVer;
