@@ -515,15 +515,18 @@ struct HitRewinder {
 
 ///dto 기반으로 맞았는지 안 맞았는지 rewind해서 확인하고 맞으면 맞았다고 값 처리 및 전파까지 하는 함수
 void GameSession::IHitValidator(HitThisDto* hitThisDto, Player* shooter, Player* target, Weapon* weapon) {
-    HitRewinder rewinder(this, target);// rewind ( 이 객체 소멸시 rewind 이전으로 롤백)
     LayerMask layer_mask = LayerMask(_groundMask | _playerMask);
     RaycastHit hit;
     Ray ray = Ray(hitThisDto->origin, hitThisDto->dir);
-    auto hasResult = physicsSystem->Raycast(ray, 300, layer_mask, hit, [=](Collider* c){
-            if (c->gameObject->tag != TagManager::GetObjectTagFromString("Player")) return true;
-            return c->gameObject == target->playerComponent->gameObject;
-        }
-    );
+    bool hasResult;
+    {
+        HitRewinder rewinder(this, target);
+        hasResult = physicsSystem->Raycast(ray, 300, layer_mask, hit, [=](Collider* c){
+                if (c->gameObject->tag != TagManager::GetObjectTagFromString("Player")) return true;
+                return c->gameObject == target->playerComponent->gameObject;
+            }
+        );
+    }
     if (hasResult == false) return;
 
     if (hit.collider->gameObject == target->playerComponent->gameObject) {

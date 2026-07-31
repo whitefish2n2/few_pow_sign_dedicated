@@ -50,7 +50,7 @@ void PhysicsManager::PhysicsUpdate() {
             }
 
             auto& actor =  gameSession->physicsSystem->activeActors[v.entityId];
-            if (!actor.isActive()) {
+            if (!actor.isActive() || actor.rb.generationId != v.generationId) {
                 actor.rb = v.MakeHandle();
                 actor.colliders = v.gameObject->GetComponents<Collider>();
             }

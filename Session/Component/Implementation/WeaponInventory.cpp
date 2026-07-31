@@ -5,6 +5,7 @@
 #include "../Definition/ComponentFactory.h"
 #include "../../Game/data/WeaponRegistry.h"
 #include "../../Game/data/WeaponType.h"
+#include "PlayerComponent.h"
 namespace {
     int SlotOfWeapon(ComponentHandle<Weapon> h) {
         Weapon* w = h.operator->();
@@ -82,7 +83,9 @@ void WeaponInventory::DropAll(uint8_t dropperKey) {
     static std::mt19937 rng(std::random_device{}());
     static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
 
-    Vector3 pos = gameObject->transform.GetPosition();
+    auto pc = gameObject->GetComponent<PlayerComponent>();
+    Vector3 aimOrigin = pc.isNull() ? Vector3(0.0f, 1.74f, 0.0f) : pc->aimOrigin;
+    Vector3 pos = gameObject->transform.GetPosition() + aimOrigin;
     for (int i = 0; i < SLOT_COUNT; ++i) {
         Weapon* w = slots[i].operator->();
         if (w != nullptr) {
