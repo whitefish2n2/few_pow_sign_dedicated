@@ -53,6 +53,7 @@
 #include "Game/data/WeaponRegistry.h"
 #include "Component/Implementation/GamePlayManager.h"
 #include "../Socket/dto/RoundEndNotifyDto.h"
+#include "FhishiX/gameobject/rigidBody/Rigidbody.h"
 
 GameSession::GameSession() {
     objectManager = std::make_unique<GameObjectManager>();
@@ -384,6 +385,9 @@ void GameSession::ProcessEventQueue() {
                 case SocketEventType::HitThis: {
                     constexpr float maxDistance = 1.0f;
 
+                    ComponentHandle<GamePlayManager> gpmCheck = componentManager->FindFirstComponent<GamePlayManager>();
+                    if (gpmCheck.isNull() || gpmCheck->currentPhase != InGamePhase::Fighting) break;
+
                     using HitThisDtoPtr = std::unique_ptr<HitThisDto, void(*)(HitThisDto*)>;
                     auto* v = std::get_if<HitThisDtoPtr>(&e->payload);
                     if (v == nullptr) break;
@@ -569,6 +573,17 @@ void GameSession::IHitValidator(HitThisDto* hitThisDto, Player* shooter, Player*
 
             ComponentHandle<GamePlayManager> gpm = componentManager->FindFirstComponent<GamePlayManager>();
             if (!gpm.isNull()) gpm->CheckOneTeamRemain();
+        }
+    }
+    // 플레이어(타겟) 아닌 오브젝트(벽 등)를 맞았을 때만 넉백 — 위 if에서 플레이어는 이미 다 처리되고 여기로 안 옴,
+    // 그래도 재구조화 대비 방어적으로 한 번 더 태그 체크(플레이어 리지드바디는 절대 안 건드림)
+    else if (hit.collider->gameObject->tag != TagManager::GetObjectTagFromString("Player")) {
+        ComponentHandle<Rigidbody> rb = hit.collider->gameObject->GetComponent<Rigidbody>();
+        if (!rb.isNull()) {
+            constexpr float KNOCKBACK_FORCE_MULTIPLIER = 8.0f;
+            const WeaponInfo* info = weapon->GetInfo();
+            float force = info ? info->bodyDamage * KNOCKBACK_FORCE_MULTIPLIER : 50.0f;
+            rb->AddImpulseAtPoint(hit.point, hitThisDto->dir * force);
         }
     }
 }
