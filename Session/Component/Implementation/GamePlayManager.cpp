@@ -65,7 +65,7 @@ void GamePlayManager::UpdateInitialize() {
         EnterLoadingPhase();
 
     } else if (phaseTimer >= 30.0f) {
-        AbortGame();
+        //AbortGame();
     }
 }
 
@@ -80,11 +80,11 @@ void GamePlayManager::UpdateLoading() {
     if (allLoaded) {
         OnAllPlayersLoaded();
     } else if (phaseTimer >= 60.0f) { // 60초 로딩 타임아웃
-        AbortGame();
+        //AbortGame();
     }
 }
 void GamePlayManager::OnAllPlayersLoaded() {
-    std::cout << "[Game] 전원 로딩 100% 완료! 물리 객체 소환 및 동기화 시작." << std::endl;
+    //std::cout << "[Game] 전원 로딩 100% 완료! 물리 객체 소환 및 동기화 시작." << std::endl;
 
     ComponentHandle<PlayerGenerateManager> playerGen = this->gameSession->componentManager->FindFirstComponent<PlayerGenerateManager>();
 
@@ -187,11 +187,11 @@ void GamePlayManager::UpdateCleaning() {
 }
 
 void GamePlayManager::EnterLoadingPhase() {
-    std::cout << "[Game] Loading Phase Started!." << std::endl;
+    //std::cout << "[Game] Loading Phase Started!." << std::endl;
 }
 
 void GamePlayManager::AbortGame() {
-    std::cout<<"[Game} Aborted Game!" << std::endl;
+    //std::cout<<"[Game} Aborted Game!" << std::endl;
     //todo: 게임 닷지 메시지 발송
 }
 
@@ -234,7 +234,7 @@ void GamePlayManager::RespawnAllPlayers() {
 }
 
 void GamePlayManager::EnterPreparePhase() {
-    std::cout << "[Game] Prepare Phase Started!." << std::endl;
+    //std::cout << "[Game] Prepare Phase Started!." << std::endl;
 
     PhaseChangeNotifyDto* rawDto = ObjectPool<PhaseChangeNotifyDto>::GetInstance().Acquire();
     rawDto->phase    = static_cast<uint8_t>(InGamePhase::Prepare);
@@ -256,7 +256,7 @@ void GamePlayManager::EnterPreparePhase() {
 
 void GamePlayManager::EnterFightingPhase() {
 
-    std::cout << "[Game] Fighting Phase Started!" << std::endl;
+    //std::cout << "[Game] Fighting Phase Started!" << std::endl;
 
     PhaseChangeNotifyDto* rawDto = ObjectPool<PhaseChangeNotifyDto>::GetInstance().Acquire();
     rawDto->phase    = static_cast<uint8_t>(InGamePhase::Fighting);
@@ -277,7 +277,7 @@ void GamePlayManager::EnterFightingPhase() {
 }
 
 void GamePlayManager::EnterClosingPhase(uint8_t winningTeam) {
-    std::cout << "[Game] Closing Phase Started! Winning Team: " << static_cast<int>(winningTeam) << std::endl;
+    //std::cout << "[Game] Closing Phase Started! Winning Team: " << static_cast<int>(winningTeam) << std::endl;
 
     // 호출 지점: UpdateFighting()의 승패조건(TODO) 확정 시 ChangePhase(InGamePhase::Closing) 와 함께 호출
     GameEndNotifyDto* rawDto = ObjectPool<GameEndNotifyDto>::GetInstance().Acquire();

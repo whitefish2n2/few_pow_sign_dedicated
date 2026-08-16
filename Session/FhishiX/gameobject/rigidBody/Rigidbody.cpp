@@ -130,8 +130,11 @@ void Rigidbody::Integrate() {
     if (constraints & 64) angularVelocity.z = 0.0f;
 
     ///미세 떨림 방지
+    // 각속도 임계값은 rad/s 기준이라 기존 0.01(=약 초당 5.7도)이 너무 커서, 넘어지는 후반부처럼
+    // 토크가 작아져 자연스럽게 느려지는 정상적인 회전까지 매 틱 강제로 0으로 스냅시켜버렸음
+    // (다 넘어가기 전에 각속도가 갑자기 사라지는 버그의 원인) — 진짜 미세한 잔떨림만 잡히게 낮춤.
     if (linearVelocity.MagnitudeSq() < 0.01f) linearVelocity = Vector3(0, 0, 0);
-    if (angularVelocity.MagnitudeSq() < 0.01f) angularVelocity = Vector3(0, 0, 0);
+    if (angularVelocity.MagnitudeSq() < 0.0001f) angularVelocity = Vector3(0, 0, 0);
 
     // ----------------------------------------------------
     // 3. 누적된 힘(Force) 초기화

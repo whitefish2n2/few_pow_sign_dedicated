@@ -39,7 +39,7 @@ public:
 template<typename T, typename Parent> requires std::derived_from<Parent, ComponentArgument>
 void Component<T, Parent>::
 MoveToManager(ComponentManager *manager, ComponentHandleBase *handleOut) {
-    std::cout << "MoveToManager" << std::endl;
+    //std::cout << "MoveToManager" << std::endl;
     auto handle = manager->InsertOrphanageComponent<T>(static_cast<T*>(this));
     if (handleOut) {
         *handleOut = handle;

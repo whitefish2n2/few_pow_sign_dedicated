@@ -28,9 +28,9 @@ class ComponentHandleBase {
         this->entityId = entity_id;
         this->generationId = generation_key;
     }
-    bool isNull() const {
-        return typeId == -1 || entityId == -1;
-    }
+    ///identity(할당 여부)뿐 아니라 대상 컴포넌트가 지금 실제로 살아있는지(세대 일치)까지 검사합니다.
+    ///정의는 ComponentManager.h에 있음(componentManager의 완전한 타입이 필요해서 아웃오브라인).
+    bool isNull() const;
     bool operator==(const ComponentHandleBase& other) const {
         return entityId == other.entityId && typeId == other.typeId&& generationId == other.generationId;;
     }

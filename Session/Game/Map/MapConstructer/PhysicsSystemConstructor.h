@@ -17,13 +17,13 @@ class PhysicsSystemConstructor {
 
     ///target에 Constructor들을 GameObject및 Component로 변환하여 target의 GameObjectManager와 ComponentManager에 저장합니다. 성공 여부를 반환합니다.
     [[nodiscard]] bool Construct(GameSession* target) {
-        std::cout<<"construct start!!!"<< std::endl;
-        std::cout << "Target Address: " << target << std::endl;
+        //std::cout<<"construct start!!!"<< std::endl;
+        //std::cout << "Target Address: " << target << std::endl;
         target->physicsSystem->layerManager = layerManager;
         try {
             for (const auto& o: objects) {
                 o.Construct(target);
-                std::cout<<o.name<<" object 생성"<< std::endl;
+                //std::cout<<o.name<<" object 생성"<< std::endl;
             }
             return true;
         }

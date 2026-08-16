@@ -22,13 +22,13 @@ void HttpRestClient::start_http_server(){
     svr.Post("/makesession", [this](const httplib::Request& req, httplib::Response& res)->bool {
         try {
             std::cout << "Session creat request detected" << std::endl;
-            std::cout << req.body << std::endl;
+            //std::cout << req.body << std::endl;
 
             auto rawBody = req.body;
             json body = json::parse(rawBody);
             GameSetupBoddari initInfo;
             nlohmann::from_json(body, initInfo);
-            std::cout << "initInfo Parse Succeced" << std::endl;
+            //std::cout << "initInfo Parse Succeced" << std::endl;
             auto sessionKey = SessionManager::getInstance().makeNewSession(initInfo);
             res.status = 201;
             res.set_content(std::to_string(sessionKey), "application/json");

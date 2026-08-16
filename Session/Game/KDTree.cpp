@@ -54,20 +54,22 @@ void KDTree::GetOverlaps(const AABB& queryAABB, std::vector<ComponentHandle<Coll
     // 검색 결과에서 동일한 핸들을 하나로 합칩니다.
     // ====================================================================
     if (outOverlaps.size() > 1) {
-        // ComponentHandle에 있는 고유 ID(entityId)를 기준으로 정렬
+        // entityId는 컴포넌트 타입별로 독립된 풀이라, 서로 다른 타입인데 번호만 우연히 같을 수 있음
+        // (예: BoxCollider entityId=2, MeshCollider entityId=2). typeId까지 같이 봐야 진짜 동일 객체.
         std::sort(outOverlaps.begin(), outOverlaps.end(), [](const auto& a, const auto& b) {
+            if (a.typeId != b.typeId) return a.typeId < b.typeId;
             return a.entityId < b.entityId;
         });
 
         // 연속된 중복 항목을 뒤로 밀고 버림 (Swap and Pop의 응용)
         outOverlaps.erase(std::unique(outOverlaps.begin(), outOverlaps.end(), [](const auto& a, const auto& b) {
-            return a.entityId == b.entityId;
+            return a.typeId == b.typeId && a.entityId == b.entityId;
         }), outOverlaps.end());
     }
 }
 
 void KDTree::Insert(ComponentHandle<Collider> collider) {
-    if (collider == ComponentHandle<Collider>::NULLPTR()) return;
+    if (collider.isNull()) return;
     if (nodes.empty()) return; // 배열이 비어있으면 루트가 없는 것
     objectCount++;
 

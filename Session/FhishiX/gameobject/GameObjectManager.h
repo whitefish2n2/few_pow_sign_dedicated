@@ -137,6 +137,11 @@ class GameObjectManager {
         return GameObject::NullPTR(); // 없으면 빈 핸들 반환
     }
 
+    ///현재 세션의 오브젝트 수(플러시 여부와 무관하게 확정+대기 합산). 계측용.
+    size_t GetObjectCount() const {
+        return objects.size() + pendingAdds.size();
+    }
+
     void SetObjectName(const GameObject &handle, const std::string& name) {
         if (!handle.IsNull()) {
             handle->name = name;

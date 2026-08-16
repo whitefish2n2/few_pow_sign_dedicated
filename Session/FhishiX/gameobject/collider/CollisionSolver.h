@@ -61,7 +61,8 @@ public:
     static bool CheckCollision(Collider* a, Collider* b, Contact& outContact);
 
     // 충돌 해결 (밀어내기 및 슬라이딩 연산)
-    static void ResolveCollision(const Contact &contact);
+    // 반환값 = 이번 호출에서 실제로 보정한 크기(위치보정+임펄스 크기 합) — 멀티패스 조기종료 판단용
+    static float ResolveCollision(const Contact &contact);
 
     // 레이캐스팅 - 가장 먼저 맞은 콜라이더를 반환합니다.
     static bool Raycast(const Ray& ray, Collider* collider, float maxDistance, RaycastHit& outHit);

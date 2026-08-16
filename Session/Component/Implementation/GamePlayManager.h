@@ -13,7 +13,7 @@
 
 class GamePlayManager final : public Component<GamePlayManager>{
     public:
-    static constexpr int WIN_SCORE = 10;
+    static constexpr int WIN_SCORE = 2; // 2점 선승
 
     InGamePhase currentPhase = InGamePhase::Initialize;
     float phaseTimer = 0.0f;

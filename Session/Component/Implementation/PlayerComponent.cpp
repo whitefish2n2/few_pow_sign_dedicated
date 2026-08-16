@@ -27,7 +27,7 @@ void PlayerComponent::Move(const Vector2 playerInputVector, const float pitch, c
 }
 
 void PlayerComponent::Jump() {
-    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) return;
+    if (rb.isNull()) return;
     if (currentHp <= 0) return;
 
     Vector3 pos = gameObject->transform.GetPosition();
@@ -52,7 +52,7 @@ PlayerMoveSnapshot PlayerComponent::GetMoveSnapshot() {
     PlayerMoveSnapshot snap;
     snap.position = gameObject->transform.GetPosition();
     snap.rotation = Vector3(aimPitch, aimYaw, 0.0f);
-    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) {
+    if (rb.isNull()) {
         snap.velocity = Vector3::Zero();
     } else {
         snap.velocity = rb.operator->()->linearVelocity;
@@ -68,8 +68,8 @@ void PlayerComponent::Start() {
     history.resize(historySize);
 
     rb = this->gameObject->GetComponent<Rigidbody>();
-    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) {
-        std::cout<<"Player's RigidBody Is Null"<< std::endl;
+    if (rb.isNull()) {
+        //std::cout<<"Player's RigidBody Is Null"<< std::endl;
         gameSession->objectManager->DeleteGameObject(gameObject);
     }
     _groundMask = gameSession->physicsSystem->layerManager.GetMask("Ground");
@@ -77,7 +77,7 @@ void PlayerComponent::Start() {
 
 void PlayerComponent::FixedUpdate() {
     auto transform  = this->gameObject->transform;
-    if (rb == ComponentHandle<Rigidbody>::NULLPTR()) return;
+    if (rb.isNull()) return;
     auto rbPtr = rb.operator->();
 
     if (currentHp <= 0) {

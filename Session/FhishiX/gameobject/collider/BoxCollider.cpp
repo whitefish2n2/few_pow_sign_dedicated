@@ -134,7 +134,7 @@ Renderer BoxCollider::GetRenderer() {
     }
 
     r.owner = this->gameObject;
-    std::cout << "owner setting: " << this->gameObject->name << std::endl;
+    //std::cout << "owner setting: " << this->gameObject->name << std::endl;
 
     r.mesh = MeshManager::GetInstance()->GetUnitBox();
 

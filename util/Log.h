@@ -96,8 +96,8 @@ private:
 };
 
 // ── 매크로 ──────────────────────────────────────────────
-#define LOG_DEBUG(msg) Logger::Get().Log(LogLevel::DEBUG, msg, __FILE__, __LINE__)
-#define LOG_INFO(msg)  Logger::Get().Log(LogLevel::INFO,  msg, __FILE__, __LINE__)
-#define LOG_WARN(msg)  Logger::Get().Log(LogLevel::WARN,  msg, __FILE__, __LINE__)
-#define LOG_ERROR(msg) Logger::Get().Log(LogLevel::ERR,   msg, __FILE__, __LINE__)
+#define LOG_DEBUG(msg) //Logger::Get().Log(LogLevel::DEBUG, msg, __FILE__, __LINE__)
+#define LOG_INFO(msg)  //Logger::Get().Log(LogLevel::INFO,  msg, __FILE__, __LINE__)
+#define LOG_WARN(msg)  //Logger::Get().Log(LogLevel::WARN,  msg, __FILE__, __LINE__)
+#define LOG_ERROR(msg) //Logger::Get().Log(LogLevel::ERR,   msg, __FILE__, __LINE__)
 #endif //FPSPROJECTSERVER_LOG_H

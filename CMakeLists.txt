@@ -182,6 +182,8 @@ add_executable(fpsProjectServer
         Socket/dto/ShotNotifyDto.h
         Socket/dto/HitThisDto.h
         Socket/dto/HitThisDto.cpp
+        Socket/dto/HitStructureDto.h
+        Socket/dto/HitStructureDto.cpp
         Socket/dto/PhaseChangeNotifyDto.h
         Socket/dto/GameEndNotifyDto.h
 )

@@ -21,6 +21,7 @@
 #include "dto/ReloadDto.h"
 #include "dto/ShotDto.h"
 #include "dto/HitThisDto.h"
+#include "dto/HitStructureDto.h"
 
 
 void ReturnError(ENetPeer* peer) {
@@ -156,6 +157,10 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
                 RegisterPacket<HitThisDto>(SocketEventType::HitThis, sessionKey, peer, payload, payloadLength,&timestamp);
                 break;
             }
+            case static_cast<int>(SocketEventType::HitStructure): {
+                RegisterPacket<HitStructureDto>(SocketEventType::HitStructure, sessionKey, peer, payload, payloadLength,&timestamp);
+                break;
+            }
 
 
             default: {
@@ -173,7 +178,7 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
 void EnetClient::HandleClientEvent(ENetEvent& event) {
     switch (event.type) {
         case ENET_EVENT_TYPE_CONNECT:
-            std::cout << "Client connected: " << event.peer->address.host << std::endl;
+            //std::cout << "Client connected: " << event.peer->address.host << std::endl;
             break;
 
         case ENET_EVENT_TYPE_RECEIVE:
@@ -182,7 +187,7 @@ void EnetClient::HandleClientEvent(ENetEvent& event) {
             break;
 
         case ENET_EVENT_TYPE_DISCONNECT: {
-            std::cout << "Client disconnected: " << event.peer->address.host << std::endl;
+            //std::cout << "Client disconnected: " << event.peer->address.host << std::endl;
             if (auto* player = static_cast<Player*>(event.peer->data)) {
                 if (player->peer == event.peer) {   // 재접속으로 이미 새 피어에 재바인딩됐으면 보존
                     player->peer = nullptr;         // 세션 방송 즉시 차단
@@ -214,7 +219,7 @@ void EnetClient::RunClient(int port) {
     address.host = ENET_HOST_ANY;
     address.port = port;
 
-    server = enet_host_create(&address, 256, 2, 0, 0);
+    server = enet_host_create(&address, 4095, 2, 0, 0);   // ENET_PROTOCOL_MAXIMUM_PEER_ID(0xFFF) - 이 한 프로세스가 받을 수 있는 절대 상한
     if (server == nullptr) {
         std::cerr << "Failed to create ENet server!" << std::endl;
         return;

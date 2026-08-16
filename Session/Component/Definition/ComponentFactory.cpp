@@ -8,7 +8,7 @@
 ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const GameObject &parent,
                                              const std::string &arg, ComponentManager *componentManager) {
 
-    std::cout << "  [Create] 1. 진입 (TypeName: " << typeName << ")" << std::endl;
+    //std::cout << "  [Create] 1. 진입 (TypeName: " << typeName << ")" << std::endl;
 
     try {
         auto it = creators.find(typeName);
@@ -19,8 +19,8 @@ ComponentHandleBase ComponentFactory::Create(const std::string &typeName, const 
             comp->ParseFromString(arg);
             comp->gameSession = parent->gameSession;
             comp->SetOwner(parent);
-            Log("GAMESESSION이 있을까요 없을까요???:::  ");
-            Log(((comp->gameSession) == nullptr? "응없어요" : "와있어요" ));
+           // Log("GAMESESSION이 있을까요 없을까요???:::  ");
+            //Log(((comp->gameSession) == nullptr? "응없어요" : "와있어요" ));
             ComponentHandleBase base(comp.get()->typeId,comp->generationId,  comp.get()->entityId,componentManager);
             componentManager->RegisterOrphan(comp, &base);
             parent->AttachComponentBase(base);

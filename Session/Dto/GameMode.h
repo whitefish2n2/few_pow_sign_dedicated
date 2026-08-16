@@ -11,6 +11,7 @@ enum GameMode{
         DeathMatch,
         OneVsOne,
         Solo,
-        Custom
+        Custom,
+        FiveVsFive
 };
 #endif //GAMEMODE_H

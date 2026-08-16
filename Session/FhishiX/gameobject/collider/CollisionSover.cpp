@@ -80,7 +80,7 @@ bool CollisionSolver::CheckCollision(Collider *a, Collider *b, Contact &outConta
     // 순서가 맞다면 그대로 호출
     return dispatchTable[typeA][typeB](a, b, outContact);
 }
-void CollisionSolver::ResolveCollision(const Contact &contact) {
+float CollisionSolver::ResolveCollision(const Contact &contact) {
     Rigidbody* rbA = contact.rbA;
     Rigidbody* rbB = contact.rbB;
 
@@ -94,7 +94,7 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
     float invMassB = (rbB && !rbB->isKinematic) ? (1.0f / rbB->mass) : 0.0f;
 
     float totalInvMass = invMassA + invMassB;
-    if (totalInvMass <= 0.0f) return;
+    if (totalInvMass <= 0.0f) return 0.0f;
 
     const ColliderMaterial& matA = contact.colA->material;
     const ColliderMaterial& matB = contact.colB->material;
@@ -118,7 +118,13 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
 
     // 3. 위치 보정 (Position Resolution) - 파고든 만큼 질량비로 밀어냄
     const float SLOP = 0.01f;
-    float effectivePenetration = (std::max)(contact.penetration - SLOP, 0.0f);
+    // 짓눌림처럼 여러 접촉이 동시에 겹치면 penetration이 순간적으로 커질 수 있는데, CCD(스윕 테스트)가
+    // 없는 이 엔진에서 한 번에 너무 크게 밀면 그 이동거리가 바닥 같은 얇은 지오메트리를 뚫고 지나가버림.
+    // 한 번의 보정량에 상한을 걸어서(Box2D의 max linear correction과 동일한 이유) 큰 침투는 여러
+    // 패스/틱에 걸쳐 나눠서 밀려나가게 함 — 짓눌린 물체가 순간이동하듯 뚫고 사라지는 문제의 원인으로 추정.
+    constexpr float MAX_LINEAR_CORRECTION = 0.2f;
+    float effectivePenetration = std::clamp(contact.penetration - SLOP, 0.0f, MAX_LINEAR_CORRECTION);
+    float totalCorrection = effectivePenetration;   // 멀티패스 조기종료 판단용 누적치
 
     float separation = effectivePenetration / totalInvMass;
     Vector3 moveVector = contact.normal * separation;
@@ -181,6 +187,7 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
         j /= (totalInvMass + angularTermN);
 
         Vector3 normalImpulse = contact.normal * j;
+        totalCorrection += std::abs(j);
 
         if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + normalImpulse * invMassA);
         if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - normalImpulse * invMassB);
@@ -225,9 +232,16 @@ void CollisionSolver::ResolveCollision(const Contact &contact) {
 
         if (rbA && invMassA > 0) rbA->SetVelocity(rbA->linearVelocity + frictionImpulse * invMassA);
         if (rbB && invMassB > 0) rbB->SetVelocity(rbB->linearVelocity - frictionImpulse * invMassB);
-        if (spinA) rbA->angularVelocity += ApplyInvInertia(rbA, rotA, Vector3::Cross(rA, frictionImpulse));
-        if (spinB) rbB->angularVelocity -= ApplyInvInertia(rbB, rotB, Vector3::Cross(rB, frictionImpulse));
+
+        // 구름 마찰 감쇠 — frictionImpulse는 "이 접점의 접선속도(선속도+회전기여분 합산)를 0으로" 만드는 크기라,
+        // 그대로 각속도에 전부 되먹이면 이 점을 축으로 정상적으로 도는 중(피벗/텀블링)인 것까지 매 틱 제동을 걺.
+        // 선속도(실제 미끄러짐)는 그대로 완전히 죽이되, 각속도 쪽은 약하게만 감쇠해서 회전은 계속 진행되게 함.
+        constexpr float ROLLING_FRICTION_SCALE = 0.1f;
+        if (spinA) rbA->angularVelocity += ApplyInvInertia(rbA, rotA, Vector3::Cross(rA, frictionImpulse)) * ROLLING_FRICTION_SCALE;
+        if (spinB) rbB->angularVelocity -= ApplyInvInertia(rbB, rotB, Vector3::Cross(rB, frictionImpulse)) * ROLLING_FRICTION_SCALE;
     }
+
+    return totalCorrection;
 }
 bool CollisionSolver::Raycast(const Ray& ray, Collider* collider, float maxDistance, RaycastHit& outHit) {
     if (!collider) return false;
@@ -1008,8 +1022,12 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
             Vector3 normal = Vector3::Zero();
 
             if (dist > EPSILON) {
-                // 일반 접촉: 캡슐이 있는 쪽으로 밀어냄 (앞/뒤 강제 없음 = 양면)
-                normal = (closestSeg - closestTri) / dist;
+                // 고스트 엣지 방지: 최근접점 방향(closestSeg-closestTri) 대신 삼각형 면법선을 캡슐 쪽으로 보정해서 사용.
+                // 이음새에서 승자 삼각형이 바뀔 때마다 최근접점 방향도 같이 튀면서 옆으로 토크가 걸려
+                // 텀블링을 유발했던 것으로 추정(BoxVsMesh에 이미 적용된 것과 동일한 조치).
+                Vector3 capCenter = (capTop + capBottom) * 0.5f;
+                float side = Vector3::Dot(capCenter - v0, triNormal);
+                normal = (side >= 0.0f) ? triNormal : (triNormal * -1.0f);
                 penetration = cRadius - dist;
             } else {
                 // 깊은 관통: 캡슐 중심이 있는 쪽으로 밀어냄 (양면)
@@ -1322,41 +1340,100 @@ bool CollisionSolver::BoxVsBox(Collider *a, Collider *b, Contact &outContact) {
         float dotY = std::abs(Vector3::Dot(incY, dir));
         float dotZ = std::abs(Vector3::Dot(incZ, dir));
 
-        Vector3 faceNormalAxis, faceU, faceV;
-        float faceNormalExt, faceUExt, faceVExt;
-        if (dotX >= dotY && dotX >= dotZ) {
-            faceNormalAxis = incX; faceNormalExt = incExt.x;
-            faceU = incY; faceUExt = incExt.y;
-            faceV = incZ; faceVExt = incExt.z;
-        } else if (dotY >= dotX && dotY >= dotZ) {
-            faceNormalAxis = incY; faceNormalExt = incExt.y;
-            faceU = incX; faceUExt = incExt.x;
-            faceV = incZ; faceVExt = incExt.z;
-        } else {
-            faceNormalAxis = incZ; faceNormalExt = incExt.z;
-            faceU = incX; faceUExt = incExt.x;
-            faceV = incY; faceVExt = incExt.y;
-        }
-        if (Vector3::Dot(faceNormalAxis, dir) < 0.0f) faceNormalAxis = faceNormalAxis * -1.0f;
+        // 두 면이 실제로 거의 평행(플러시)할 때만 4점 매니폴드로 승격 — BoxVsMesh에 이미 있는 동일한 안전장치.
+        // SAT 승리축이 면법선이어도 실제로는 모서리/꼭짓점만 닿은 기울어진 접촉일 수 있어서,
+        // 그런 경우까지 4점으로 승격하면 가짜 접점이 생겨 넘어지는 중인 박스를 인위적으로 멈춰 세움.
+        // 0.95(약 18도)는 너무 느슨해서 아직 다 안 넘어간 상태에서도 승격돼버렸음 — 0.999(약 2.5도)로 강화.
+        if ((std::max)({dotX, dotY, dotZ}) > 0.9999f) {
+            Vector3 faceNormalAxis, faceU, faceV;
+            float faceNormalExt, faceUExt, faceVExt;
+            if (dotX >= dotY && dotX >= dotZ) {
+                faceNormalAxis = incX; faceNormalExt = incExt.x;
+                faceU = incY; faceUExt = incExt.y;
+                faceV = incZ; faceVExt = incExt.z;
+            } else if (dotY >= dotX && dotY >= dotZ) {
+                faceNormalAxis = incY; faceNormalExt = incExt.y;
+                faceU = incX; faceUExt = incExt.x;
+                faceV = incZ; faceVExt = incExt.z;
+            } else {
+                faceNormalAxis = incZ; faceNormalExt = incExt.z;
+                faceU = incX; faceUExt = incExt.x;
+                faceV = incY; faceVExt = incExt.y;
+            }
+            if (Vector3::Dot(faceNormalAxis, dir) < 0.0f) faceNormalAxis = faceNormalAxis * -1.0f;
 
-        Vector3 faceCenter = incPos + faceNormalAxis * faceNormalExt;
-        Vector3 corners[4] = {
-            faceCenter + faceU * faceUExt + faceV * faceVExt,
-            faceCenter + faceU * faceUExt - faceV * faceVExt,
-            faceCenter - faceU * faceUExt + faceV * faceVExt,
-            faceCenter - faceU * faceUExt - faceV * faceVExt,
+            Vector3 faceCenter = incPos + faceNormalAxis * faceNormalExt;
+            Vector3 corners[4] = {
+                faceCenter + faceU * faceUExt + faceV * faceVExt,
+                faceCenter + faceU * faceUExt - faceV * faceVExt,
+                faceCenter - faceU * faceUExt + faceV * faceVExt,
+                faceCenter - faceU * faceUExt - faceV * faceVExt,
+            };
+
+            // 각 꼭짓점을 레퍼런스 박스 로컬 좌표로 투영 후, 레퍼런스 박스 범위 안으로 클램프
+            // (정식 Sutherland-Hodgman 클리핑의 근사 — 대부분의 평면 적층 케이스에서 충분히 안정적)
+            for (int i = 0; i < 4; ++i) {
+                Vector3 rel = corners[i] - refPos;
+                float u = std::clamp(Vector3::Dot(rel, refX), -refExt.x, refExt.x);
+                float v = std::clamp(Vector3::Dot(rel, refY), -refExt.y, refExt.y);
+                float w = std::clamp(Vector3::Dot(rel, refZ), -refExt.z, refExt.z);
+                outContact.points[i] = refPos + refX * u + refY * v + refZ * w;
+            }
+            outContact.pointCount = 4;
+        }
+    }
+    // bestAxisIndex >= 6 = 외적축(모서리-모서리 접촉) 승리 — 두 모서리가 근접 평행하면 겹치는 구간이
+    // 점 하나가 아니라 선분이므로, 그 구간의 양 끝점을 2점 매니폴드로 사용(완전히 스큐인 경우는
+    // 겹침이 사실상 0이라 자연스럽게 단일점과 동일해짐).
+    else if (bestAxisIndex >= 6) {
+        int edgeIdx = bestAxisIndex - 6;
+        int ai = edgeIdx / 3;   // A의 모서리 방향 축 인덱스(0=aX,1=aY,2=aZ)
+        int bi = edgeIdx % 3;   // B의 모서리 방향 축 인덱스
+
+        Vector3 aAxesArr[3] = { aX, aY, aZ };
+        float aExtArr[3] = { extA.x, extA.y, extA.z };
+        Vector3 bAxesArr[3] = { bX, bY, bZ };
+        float bExtArr[3] = { extB.x, extB.y, extB.z };
+
+        // 두 모서리가 실제로 거의 평행/반평행할 때만 "겹치는 구간(선분)"이 기하학적으로 의미 있음.
+        // 각도가 있는 진짜 스큐(skew) 교차는 최근접점이 하나뿐인데, 이 체크 없이 투영-겹침만으로
+        // 2점을 만들면 실존하지 않는 가짜 접점이 생겨서 큰 위치보정이 걸릴 수 있음
+        // (박스+박스+바닥 메쉬가 동시에 얽힐 때 순간적으로 튕겨나가 뚫리는 원인으로 추정).
+        float edgeAlignment = std::abs(Vector3::Dot(aAxesArr[ai], bAxesArr[bi]));
+        if (edgeAlignment > 0.9f) {
+        auto GetBoxEdge = [](const Vector3& pos, const Vector3 axes[3], const float ext[3], int edgeAxis,
+                              const Vector3& towardOther, Vector3& p0, Vector3& p1) {
+            Vector3 base = pos;
+            for (int k = 0; k < 3; ++k) {
+                if (k == edgeAxis) continue;
+                float sign = (Vector3::Dot(axes[k], towardOther) >= 0.0f) ? 1.0f : -1.0f;
+                base = base + axes[k] * (ext[k] * sign);
+            }
+            p0 = base + axes[edgeAxis] * ext[edgeAxis];
+            p1 = base - axes[edgeAxis] * ext[edgeAxis];
         };
 
-        // 각 꼭짓점을 레퍼런스 박스 로컬 좌표로 투영 후, 레퍼런스 박스 범위 안으로 클램프
-        // (정식 Sutherland-Hodgman 클리핑의 근사 — 대부분의 평면 적층 케이스에서 충분히 안정적)
-        for (int i = 0; i < 4; ++i) {
-            Vector3 rel = corners[i] - refPos;
-            float u = std::clamp(Vector3::Dot(rel, refX), -refExt.x, refExt.x);
-            float v = std::clamp(Vector3::Dot(rel, refY), -refExt.y, refExt.y);
-            float w = std::clamp(Vector3::Dot(rel, refZ), -refExt.z, refExt.z);
-            outContact.points[i] = refPos + refX * u + refY * v + refZ * w;
+        Vector3 aP0, aP1, bP0, bP1;
+        GetBoxEdge(posA, aAxesArr, aExtArr, ai, (posB - posA), aP0, aP1);
+        GetBoxEdge(posB, bAxesArr, bExtArr, bi, (posA - posB), bP0, bP1);
+
+        // A의 모서리 방향으로 두 모서리를 투영해서 겹치는 구간을 구함(근접 평행 가정 — 완전 스큐면 겹침 0)
+        Vector3 edgeDir = aP1 - aP0;
+        float edgeLen = edgeDir.Magnitude();
+        if (edgeLen > EPSILON) {
+            edgeDir = edgeDir / edgeLen;
+            float bProj0 = Vector3::Dot(bP0 - aP0, edgeDir);
+            float bProj1 = Vector3::Dot(bP1 - aP0, edgeDir);
+            float overlapMin = (std::max)(0.0f, (std::min)(bProj0, bProj1));
+            float overlapMax = (std::min)(edgeLen, (std::max)(bProj0, bProj1));
+
+            if (overlapMax - overlapMin > 0.001f) {
+                outContact.points[0] = aP0 + edgeDir * overlapMin;
+                outContact.points[1] = aP0 + edgeDir * overlapMax;
+                outContact.pointCount = 2;
+            }
         }
-        outContact.pointCount = 4;
+        }   // edgeAlignment > 0.9f
     }
 
     return true;
@@ -1394,7 +1471,6 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
     bool hasCollision = false;
     float maxPenetration = -1.0f;
     Vector3 bestWorldNormal = Vector3::Zero();
-    Vector3 bestPoint = Vector3::Zero();
     Vector3 bestPlanePoint = Vector3::Zero();   // 승리한 삼각형 위의 한 점 (평면 투영용)
 
     // 삼각형 단위로 순회
@@ -1475,34 +1551,43 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
         if (isIntersecting && faceNormalPen >= 0.0f && faceNormalPen > maxPenetration) {
             maxPenetration = faceNormalPen;
             bestWorldNormal = boxRot * faceLocalNormal;
-            bestPoint = ClosestPtPointTriangle(boxPos, w0, w1, w2);   // 최심 삼각형 위 박스중심 최근접점
             bestPlanePoint = w0;
             hasCollision = true;
         }
     }
 
     if (hasCollision) {
+        Vector3 boxX = boxRot * Vector3(1, 0, 0);
+        Vector3 boxY = boxRot * Vector3(0, 1, 0);
+        Vector3 boxZ = boxRot * Vector3(0, 0, 1);
+        Vector3 dir = bestWorldNormal * -1.0f;   // 박스 입장에서 "바닥을 향한" 방향
+
+        // 박스 중심이 아니라, 그 방향으로 가장 튀어나온 박스의 실제 꼭짓점(서포트 포인트)을 접촉점으로 사용.
+        // (예전엔 ClosestPtPointTriangle(boxPos,...)로 "박스 중심"에서 제일 가까운 삼각형 위 점을 썼는데,
+        //  박스가 기울어져 있으면 실제 닿은 모서리와 다른 위치가 나와서 지렛대 팔(r)이 틀어짐 —
+        //  넘어지는 중인 박스가 잘못된 토크를 받아 다 넘어가지 못하고 멈추는 원인으로 추정)
+        Vector3 supportPoint = boxPos
+            + boxX * (extents.x * (Vector3::Dot(boxX, dir) >= 0.0f ? 1.0f : -1.0f))
+            + boxY * (extents.y * (Vector3::Dot(boxY, dir) >= 0.0f ? 1.0f : -1.0f))
+            + boxZ * (extents.z * (Vector3::Dot(boxZ, dir) >= 0.0f ? 1.0f : -1.0f));
+
         outContact.colA = a;
         outContact.colB = b;
         outContact.rbA = GetSafeRigidbody(a);
         outContact.rbB = GetSafeRigidbody(b);
         outContact.penetration = maxPenetration;
         outContact.normal = bestWorldNormal;
-        outContact.contactPoint = bestPoint;
+        outContact.contactPoint = supportPoint;
         outContact.pointCount = 0;   // 기본은 단일접점(모서리/뾰족한 부분이 박힌 경우)
-
-        Vector3 boxX = boxRot * Vector3(1, 0, 0);
-        Vector3 boxY = boxRot * Vector3(0, 1, 0);
-        Vector3 boxZ = boxRot * Vector3(0, 0, 1);
-        Vector3 dir = bestWorldNormal * -1.0f;   // 박스 입장에서 "바닥을 향한" 방향
 
         float dotX = std::abs(Vector3::Dot(boxX, dir));
         float dotY = std::abs(Vector3::Dot(boxY, dir));
         float dotZ = std::abs(Vector3::Dot(boxZ, dir));
 
         // 박스의 어느 면이 접촉 평면과 거의 평행(플러시)할 때만 4점 매니폴드로 승격 —
-        // 모서리 착지/기울어진 상태는 단일점이 기하학적으로 정답
-        if ((std::max)({dotX, dotY, dotZ}) > 0.95f) {
+        // 모서리 착지/기울어진 상태는 단일점이 기하학적으로 정답.
+        // 0.95(약 18도)는 너무 느슨해서 아직 다 안 넘어간 상태에서도 승격돼버렸음 — 0.999(약 2.5도)로 강화.
+        if ((std::max)({dotX, dotY, dotZ}) > 0.9999f) {
 
             Vector3 faceNormalAxis, faceU, faceV;
             float faceNormalExt, faceUExt, faceVExt;

@@ -1,5 +1,8 @@
 #include "GameSession.h"
 
+#ifdef _WIN64
+#include <windows.h>
+#endif
 #include <iostream>
 #include <enet/enet.h>
 #include <thread>
@@ -36,6 +39,7 @@
 #include "../Socket/dto/RespawnDto.h"
 #include "../Socket/dto/HitDto.h"
 #include "../Socket/dto/HitThisDto.h"
+#include "../Socket/dto/HitStructureDto.h"
 #include "../Socket/dto/DeathDto.h"
 #include "../Socket/dto/GetWeaponNotifyDto.h"
 #include "../Socket/dto/ReloadNotifyDto.h"
@@ -430,6 +434,56 @@ void GameSession::ProcessEventQueue() {
                     IHitValidator(dto, shooter, &target, w);
                     break;
                 }
+                case SocketEventType::HitStructure: {
+                    // 플레이어가 아닌 오브젝트(벽 등) 명중 클레임 — 랙보상 리와인드 불필요(구조물은 안 움직이므로), 레이어로만 필터링해 재판정
+                    ComponentHandle<GamePlayManager> gpmCheck = componentManager->FindFirstComponent<GamePlayManager>();
+                    if (gpmCheck.isNull() || gpmCheck->currentPhase != InGamePhase::Fighting) break;
+
+                    using HitStructureDtoPtr = std::unique_ptr<HitStructureDto, void(*)(HitStructureDto*)>;
+                    auto* v = std::get_if<HitStructureDtoPtr>(&e->payload);
+                    if (v == nullptr) break;
+                    HitStructureDto* dto = v->get();
+
+                    auto shooter = SessionUtil::GetPlayerFromPeer(e->peer);
+                    if (shooter == nullptr || shooter->playerComponent.isNull()) break;
+
+                    constexpr float maxDistance = 1.0f;
+                    Vector3 shooterEye = shooter->playerComponent->gameObject->transform.GetPosition() + shooter->playerComponent->aimOrigin;
+                    if (shooterEye.Distance(dto->origin) > maxDistance) break;
+
+                    auto inventory = shooter->playerComponent->gameObject->GetComponent<WeaponInventory>();
+                    if (inventory.isNull()) break;
+                    Weapon* w = inventory->GetHolding().operator->();
+                    if (w == nullptr) break;
+                    if (!w->TryShoot()) break;
+
+                    ShotNotifyDto* raw = ObjectPool<ShotNotifyDto>::GetInstance().Acquire();
+                    raw->playerKey = shooter->publicKey;
+                    raw->origin    = dto->origin;
+                    raw->dir       = dto->dir;
+                    auto shotDto = std::unique_ptr<ShotNotifyDto, void(*)(ShotNotifyDto*)>(
+                        raw, [](ShotNotifyDto* p) { ObjectPool<ShotNotifyDto>::GetInstance().Release(p); });
+
+                    BroadCastEvent* rawEvent = ObjectPool<BroadCastEvent>::GetInstance().Acquire();
+                    rawEvent->type = SocketEventType::ShotNotify;
+                    rawEvent->payload = std::move(shotDto);
+                    rawEvent->target.clear();
+                    std::shared_ptr<BroadCastEvent> event(rawEvent, [](BroadCastEvent* p) {
+                        p->payload = nullptr;
+                        ObjectPool<BroadCastEvent>::GetInstance().Release(p);
+                    });
+                    this->BroadcastEvent(event);
+
+                    // Ground 레이어(구조물이 배치되는 레이어)로만 제한 — 플레이어(Default 레이어)는 애초에 후보에 안 들어옴
+                    RaycastHit hit;
+                    Ray ray(dto->origin, dto->dir);
+                    bool hasResult = physicsSystem->Raycast(ray, 300, _groundMask, hit, nullptr);
+                    if (!hasResult) break;
+                    if (hit.collider->gameObject.GetId() != dto->targetObjectId) break;   // 클라 주장과 서버 판정 불일치 → 무시(안티치트)
+
+                    ApplyKnockback(hit.collider, hit.point, dto->dir, w);
+                    break;
+                }
                 case SocketEventType::Ping: {
                     //pong
                     break;
@@ -448,12 +502,31 @@ void GameSession::ProcessEventQueue() {
 }
 void GameSession::Tick() {
     tick++;
+
+    auto sectionStart = std::chrono::steady_clock::now();
+    auto markSection = [&sectionStart](std::atomic<long long>& target) {
+        auto now = std::chrono::steady_clock::now();
+        target.store(std::chrono::duration_cast<std::chrono::microseconds>(now - sectionStart).count(), std::memory_order_relaxed);
+        sectionStart = now;
+    };
+
     ProcessEventQueue();
+    markSection(lastEventQueueMicros);
+
     UpdateComponents();
+    markSection(lastUpdateComponentsMicros);
+
     FlushGameObject();
+    markSection(lastFlushGameObjectMicros);
+
     BroadcastMovements();
+    markSection(lastBroadcastMovementsMicros);
+
     BroadcastObjectMovements();
+    markSection(lastBroadcastObjectMovementsMicros);
+
     CheckAllPlayerDisconnected();
+    markSection(lastCheckDisconnectedMicros);
 #ifdef _WIN64
     UpdateRenderBuffer();
 #endif
@@ -481,14 +554,15 @@ struct HitRewinder {
     Vector3 originalPosition;
     bool restored = false;
 
-    HitRewinder(GameSession* session, Player* rewindTarget) {
+    HitRewinder(GameSession* session, Player* shooter, Player* rewindTarget) {
 
         if (rewindTarget == nullptr || rewindTarget->playerComponent.isNull()) return;
         PlayerComponent* pc = rewindTarget->playerComponent.operator->();
         if (pc->historySize <= 0) return;
         if (pc->validHistorySamples <= 0) return;   // 유효기록 자체가 없으면 리와인드 자체를 포기(=현재위치로 검증)
         int maxSteps = (std::min)(pc->historySize, pc->validHistorySamples);
-        float rewindSeconds = SessionUtil::GetRewindOffsetSeconds(rewindTarget);
+        // 랙보상은 "쏜 사람이 쏘던 순간 자기 화면에서 본 위치"로 되감는 것 — shooter의 핑 기준이어야 함(맞는 사람 핑 아님)
+        float rewindSeconds = SessionUtil::GetRewindOffsetSeconds(shooter);
         auto targetTime = std::chrono::steady_clock::now()
             - std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<float>(rewindSeconds));
 
@@ -520,7 +594,7 @@ void GameSession::IHitValidator(HitThisDto* hitThisDto, Player* shooter, Player*
     Ray ray = Ray(hitThisDto->origin, hitThisDto->dir);
     bool hasResult;
     {
-        HitRewinder rewinder(this, target);
+        HitRewinder rewinder(this, shooter, target);
         hasResult = physicsSystem->Raycast(ray, 300, layer_mask, hit, [=](Collider* c){
                 if (c->gameObject->tag != TagManager::GetObjectTagFromString("Player")) return true;
                 return c->gameObject == target->playerComponent->gameObject;
@@ -578,17 +652,21 @@ void GameSession::IHitValidator(HitThisDto* hitThisDto, Player* shooter, Player*
             if (!gpm.isNull()) gpm->CheckOneTeamRemain();
         }
     }
-    // 플레이어(타겟) 아닌 오브젝트(벽 등)를 맞았을 때만 넉백 — 위 if에서 플레이어는 이미 다 처리되고 여기로 안 옴,
+    // 플레이어(타겟)를 조준했지만 실제로는 중간의 구조물(벽 등)에 막힌 경우 — 위 if에서 플레이어는 이미 다 처리되고 여기로 안 옴,
     // 그래도 재구조화 대비 방어적으로 한 번 더 태그 체크(플레이어 리지드바디는 절대 안 건드림)
     else if (hit.collider->gameObject->tag != TagManager::GetObjectTagFromString("Player")) {
-        ComponentHandle<Rigidbody> rb = hit.collider->gameObject->GetComponent<Rigidbody>();
-        if (!rb.isNull()) {
-            constexpr float KNOCKBACK_FORCE_MULTIPLIER = 8.0f;
-            const WeaponInfo* info = weapon->GetInfo();
-            float force = info ? info->bodyDamage * KNOCKBACK_FORCE_MULTIPLIER : 50.0f;
-            rb->AddImpulseAtPoint(hit.point, hitThisDto->dir * force);
-        }
+        ApplyKnockback(hit.collider, hit.point, hitThisDto->dir, weapon);
     }
+}
+
+void GameSession::ApplyKnockback(Collider* hitCollider, const Vector3& hitPoint, const Vector3& dir, Weapon* weapon) {
+    ComponentHandle<Rigidbody> rb = hitCollider->gameObject->GetComponent<Rigidbody>();
+    if (rb.isNull()) return;
+
+    constexpr float KNOCKBACK_FORCE_MULTIPLIER = 0.5f;
+    const WeaponInfo* info = weapon->GetInfo();
+    float force = info ? info->bodyDamage * KNOCKBACK_FORCE_MULTIPLIER : 50.0f;
+    rb->AddImpulseAtPoint(hitPoint, dir * force);
 }
 
 void GameSession::CheckAllPlayerDisconnected() {
@@ -606,13 +684,14 @@ void GameSession::CheckAllPlayerDisconnected() {
 constexpr std::chrono::nanoseconds TIME_STEP(33333334);
 void GameSession::Start() {
     LOG_INFO("new session is running");
-    Log("으아아악돌아가요");
+    //Log("으아아악돌아가요");
     // Run server loop
 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> distrib(0, 255);
     std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point tpsWindowStart = previousTime;
     std::chrono::nanoseconds lag(0);
     while (isRunning.load() and running) {
         auto now = std::chrono::steady_clock::now();
@@ -625,8 +704,19 @@ void GameSession::Start() {
         lag += elapsed;
         while (lag >= TIME_STEP) {
             time.DeltaTime = std::chrono::duration<float>(TIME_STEP).count();
+
+            auto tickStart = std::chrono::steady_clock::now();
             Tick();
+            auto tickDurationUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - tickStart).count();
+            lastTickMicros.store(tickDurationUs, std::memory_order_relaxed);
+            tpsTickCounter.fetch_add(1, std::memory_order_relaxed);
+
             lag -= TIME_STEP;
+        }
+        lagMillis.store(std::chrono::duration_cast<std::chrono::milliseconds>(lag).count(), std::memory_order_relaxed);
+        if (now - tpsWindowStart >= std::chrono::seconds(1)) {
+            currentTps.store(tpsTickCounter.exchange(0, std::memory_order_relaxed), std::memory_order_relaxed);
+            tpsWindowStart = now;
         }
         auto remainingTime = TIME_STEP - lag;
         if (remainingTime > std::chrono::milliseconds(2)) {
@@ -647,6 +737,47 @@ void GameSession::Stop() {
     isStopped = true;
 }
 
+double GameSession::GetThreadCpuPercent() {
+#ifdef _WIN64
+    if (!gameThread.joinable()) return -1.0;   // 이미 join된(종료된) 스레드는 native_handle 무효
+
+    FILETIME createTime, exitTime, kernelTime, userTime;
+    if (!GetThreadTimes(gameThread.native_handle(), &createTime, &exitTime, &kernelTime, &userTime)) return -1.0;
+
+    ULARGE_INTEGER k{}, u{}, c{};
+    k.LowPart = kernelTime.dwLowDateTime; k.HighPart = kernelTime.dwHighDateTime;
+    u.LowPart = userTime.dwLowDateTime;   u.HighPart = userTime.dwHighDateTime;
+    c.LowPart = createTime.dwLowDateTime; c.HighPart = createTime.dwHighDateTime;
+
+    FILETIME nowFt;
+    GetSystemTimeAsFileTime(&nowFt);
+    ULARGE_INTEGER nowU{};
+    nowU.LowPart = nowFt.dwLowDateTime; nowU.HighPart = nowFt.dwHighDateTime;
+
+    unsigned long long cpuTimeNow  = k.QuadPart + u.QuadPart;   // 스레드 생성 이후 누적 CPU(커널+유저) 시간, 100ns 단위
+    unsigned long long wallTimeNow = nowU.QuadPart - c.QuadPart; // 스레드 생성 이후 누적 벽시계 시간, 100ns 단위
+
+    double percent;
+    if (!_hasCpuSnapshot) {
+        // 최초 호출: 스냅샷이 없으니 누적 평균으로 대체
+        percent = (wallTimeNow == 0) ? 0.0 : static_cast<double>(cpuTimeNow) / static_cast<double>(wallTimeNow) * 100.0;
+    } else {
+        // 직전 호출 이후 구간만 델타로 계산 - 작업관리자의 "최근 사용률"과 동일한 개념
+        unsigned long long cpuDelta  = cpuTimeNow  - _prevCpuTime100ns;
+        unsigned long long wallDelta = wallTimeNow - _prevWallTime100ns;
+        percent = (wallDelta == 0) ? 0.0 : static_cast<double>(cpuDelta) / static_cast<double>(wallDelta) * 100.0;
+    }
+
+    _prevCpuTime100ns = cpuTimeNow;
+    _prevWallTime100ns = wallTimeNow;
+    _hasCpuSnapshot = true;
+
+    return percent;
+#else
+    return -1.0;
+#endif
+}
+
 void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& initInfo) {
     this->players = std::make_shared<std::map<uint64_t, Player>>();
     this->sessionId = std::move(sessionId);
@@ -655,10 +786,10 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
     auto res = physicsSystem->Init(MapInfo(initInfo.mapId), this) ;
     if (!res){/*todo: 매칭 취소 로직*/ return; }
     std::cout<<"게임 ID "<<sessionId<<"에서 맵 생성중. 맵 아이디:"<<initInfo.mapId<< std::endl;
-    std::cout<<"New Session Enqueue Players:"<< std::endl;
+    //std::cout<<"New Session Enqueue Players:"<< std::endl;
     for (auto p : initInfo.players)
     {
-        std::cout<<p.id<<std::endl;
+        //std::cout<<p.id<<std::endl;
 
         static std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<uint64_t> dist(1, (std::numeric_limits<uint64_t>::max)());
@@ -669,7 +800,7 @@ void GameSession::Init(const std::string& sessionId, const GameSetupBoddari& ini
         Player newPlayer = Player(p.id, p.name,p.key,publicKey, newStatus);
         (*players)[publicKey] = newPlayer;
         publicKey++;
-        std::cout<<"Enqueue Succeced"<<std::endl;
+        //std::cout<<"Enqueue Succeced"<<std::endl;
     }
 
     _playerMask = physicsSystem->layerManager.GetMask("Default");
@@ -688,7 +819,7 @@ void GameSession::cleanUp() {
 #include "./FhishiX/Renderer.h"
 
 int GameSession::InsertRenderer(const Renderer &renderer) {
-    std::cout <<"OWNER: "<<renderer.owner->gameSession<<" and handle:  "<<renderer.owner.handleSession<< "InsertRenderer Started: " << renderer.owner->name << std::endl;
+    //std::cout <<"OWNER: "<<renderer.owner->gameSession<<" and handle:  "<<renderer.owner.handleSession<< "InsertRenderer Started: " << renderer.owner->name << std::endl;
     if (!usableRenderersIndex.empty()) {
         std::cout<<"RenderIndex resycle"<<std::endl;
         int idx = usableRenderersIndex.front();

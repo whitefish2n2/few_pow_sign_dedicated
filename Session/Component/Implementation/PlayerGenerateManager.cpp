@@ -6,6 +6,7 @@
 
 #include "../../../PrefabSystem/PrefabManager.h"
 #include "../Definition/ComponentFactory.h"
+#include "../../FhishiX/gameobject/GameObjectManager.h"
 
 #include "./PlayerComponent.h"
 #include "../../Game/data/CharacterRegistry.h"
@@ -43,6 +44,10 @@ void PlayerGenerateManager::SummonPlayer() {
         p.playerComponent->publicKey = p.publicKey;
         p.SetCharacter(p.status.characterId);
     }
+
+    gameSession->objectCountAtStart.store(
+        static_cast<int>(gameSession->objectManager->GetObjectCount()),
+        std::memory_order_relaxed);
 }
 
 Vector3 PlayerGenerateManager::GetNextSpawnPosition(int team) {

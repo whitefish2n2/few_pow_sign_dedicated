@@ -42,6 +42,7 @@ GameMode parseGameMode(const std::string& mode) {
     if (mode == "OneVsOne")   return GameMode::OneVsOne;
     if (mode == "Custom")     return GameMode::Custom;
     if (mode == "Solo")       return GameMode::Solo;
+    if (mode == "FiveVsFive") return GameMode::FiveVsFive;
     throw std::invalid_argument("Unknown game mode: " + mode);
 }
 void from_json(const nlohmann::json& j, DedicatedNewPlayerDto& p) {

@@ -4,8 +4,14 @@
 
 #ifndef FPSPROJECTSERVER_COMPONENTMANAGER_H
 #define FPSPROJECTSERVER_COMPONENTMANAGER_H
+#include <atomic>
+#include <chrono>
 #include <iostream>
 #include <memory>
+#include <string>
+#include <typeinfo>
+#include <utility>
+#include <vector>
 #include "ComponentHandle.h"
 #include "../../../util/Log.h"
 /*
@@ -46,8 +52,12 @@ class BasePool {
 public:
     ComponentManager* componentManager;
     int poolPriority = 0;///FixedUpdate 실행 우선순위
+    std::atomic<long long> lastUpdateAllMicros{0}; ///statComponent 계측용 - 이 풀의 최근 UpdateAll() 1회 소요시간(us)
     virtual ~BasePool() = default;
     BasePool() = default;
+
+    ///디버그/계측용 타입 이름(statComponent 명령어에서 사용)
+    virtual const char* GetDebugName() const = 0;
 
     virtual void UpdateAll() = 0;
     ///엔티티 ID로 하여금 요소를 지우는 함수.
@@ -74,6 +84,7 @@ protected:
     ComponentEntityId nextId = 1;
 public:
     DrivenPool(ComponentManager* manager){this->componentManager = manager;};
+    const char* GetDebugName() const override { return typeid(T).name(); }
     auto begin() { return dataArray.begin(); }
     auto end() { return dataArray.end(); }
     auto cbegin() const { return dataArray.cbegin(); }
@@ -237,7 +248,24 @@ public:
         }
         for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->Flush();        // promote + Awake (전체)
         for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->StartPending(); // Start (전체, 앞에 다 끝난 뒤)
-        for (size_t i = 0; i < updateOrder.size(); ++i) updateOrder[i]->UpdateAll(); // UPDATE
+        for (size_t i = 0; i < updateOrder.size(); ++i) {
+            auto t0 = std::chrono::steady_clock::now();
+            updateOrder[i]->UpdateAll(); // UPDATE
+            updateOrder[i]->lastUpdateAllMicros.store(
+                std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count(),
+                std::memory_order_relaxed);
+        }
+    }
+
+    ///statComponent 명령어용 - {타입이름, 최근 UpdateAll() 소요시간(us)} 목록
+    std::vector<std::pair<std::string, long long>> GetUpdateBreakdown() const {
+        std::vector<std::pair<std::string, long long>> result;
+        result.reserve(pools.size());
+        for (auto& pool : pools) {
+            if (!pool) continue;
+            result.emplace_back(pool->GetDebugName(), pool->lastUpdateAllMicros.load(std::memory_order_relaxed));
+        }
+        return result;
     }
 
     void FlushComponents() {
@@ -277,25 +305,25 @@ public:
     template<typename T, typename... Args>
     requires std::constructible_from<T, Args...>
     ComponentHandle<T> CreateComponentAtPool(Args&&... args) {
-        std::cout<<"CreateComponentAtPool"<<std::endl;
+        //std::cout<<"CreateComponentAtPool"<<std::endl;
         return GetOrCreatePool<T>()->CreateComponent(std::forward<Args>(args)...);
     }
     ///밖에서 생성된 컴포넌트(여기서 CreateComponentAtPool을 거치지 않고 생성된, 대표적으로 문자열->컴포넌트 파싱으로 생성된 컴포넌트)를 해당 ECS 인스턴스에 편입합니다.
     ///Component::MoveToManager()에서만 호출합니다.(T는 무조건 ComponentArgument여야 합니다.)
     template<typename T>
 ComponentHandle<T> InsertOrphanageComponent(T* comp) {
-        std::cout << "[InsertOrphan] 1. 진입" << std::endl;
+        //std::cout << "[InsertOrphan] 1. 진입" << std::endl;
         static_assert(std::is_base_of<ComponentArgument, T>::value, "T must inherit from ComponentArgument");
 
-        std::cout << "[InsertOrphan] 2. CreateComponentAtPool 호출" << std::endl;
+        //std::cout << "[InsertOrphan] 2. CreateComponentAtPool 호출" << std::endl;
         ComponentHandle<T> newHandle = CreateComponentAtPool<T>();
 
-        std::cout << "[InsertOrphan] 3. 핸들 생성 성공, PoolObj 가져오기" << std::endl;
+        //std::cout << "[InsertOrphan] 3. 핸들 생성 성공, PoolObj 가져오기" << std::endl;
         T* poolObj = GetComponentFromPool(&newHandle);
         ComponentEntityId newId = poolObj->entityId;
         ComponentGenerationId newGen = poolObj->generationId;
 
-        std::cout << "[InsertOrphan] 4. Move 대입 연산자 실행 시도" << std::endl;
+        //std::cout << "[InsertOrphan] 4. Move 대입 연산자 실행 시도" << std::endl;
         if (comp) {
             *poolObj = std::move(*comp);
         }
@@ -311,13 +339,13 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
                 LOG_ERROR("ComponentManager: 아니 분명이 ptr 챙겨줬는데 왜터짐");
             }
         }
-        std::cout << "[InsertOrphan] 5. 완료 및 반환" << std::endl;
+        //std::cout << "[InsertOrphan] 5. 완료 및 반환" << std::endl;
         return newHandle;
     }
     ///outHandle에 생성된 객체의 ComponentHandleBase 핸들이 반환됩니다. orphan 객체는 호출 후 해제되니 접근할 수 없습니다.
     void RegisterOrphan(const std::unique_ptr<ComponentArgument> &orphan, ComponentHandleBase* outHandle) {
         if (!orphan) return;
-        std::cout << "RegisterOrphan" << std::endl;
+        //std::cout << "RegisterOrphan" << std::endl;
         orphan->MoveToManager(this, outHandle);
     }
     ///해당 타입의 특정 엔티티 id를 가진 객체의 ComponentArgument*(Raw PTR) 객체를 반환합니다.
@@ -328,6 +356,13 @@ ComponentHandle<T> InsertOrphanageComponent(T* comp) {
         return it->GetArgument(entity_id, generation);
     }
 };
+
+//ComponentHandleBase 순환 참조 해결(componentManager의 완전한 타입이 필요해서 여기서 정의)
+inline bool ComponentHandleBase::isNull() const {
+    if (typeId == static_cast<size_t>(-1) || entityId == static_cast<ComponentEntityId>(-1)) return true;
+    if (componentManager == nullptr) return true;
+    return componentManager->GetRawPtr(typeId, generationId, entityId) == nullptr;
+}
 
 //ComponentHandle 순환 참조 해결
 template<typename T>

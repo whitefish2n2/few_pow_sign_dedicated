@@ -143,8 +143,8 @@ void MeshCollider::ParseFromString(const std::string& arg) {
     this->triangles.clear();
     this->trianglesIndices.clear();
 
-    std::cout << "\n--- [MeshCollider 파싱 시작: " << this->gameObject->name << "] ---\n";
-    std::cout << "받은 전체 문자열 길이: " << arg.length() << " bytes\n";
+    //std::cout << "\n--- [MeshCollider 파싱 시작: " << this->gameObject->name << "] ---\n";
+    //std::cout << "받은 전체 문자열 길이: " << arg.length() << " bytes\n";
 
     while (std::getline(ss, line)) {
         if (line.empty()) continue;
@@ -157,7 +157,7 @@ void MeshCollider::ParseFromString(const std::string& arg) {
                 countToRead--;
                 if (countToRead == 0) mode = 0; // 다 읽었으면 모드 해제
             } catch (...) {
-                std::cout << "💥 정점 파싱 에러 발생 라인: " << line << "\n";
+                std::cout << " 정점 파싱 에러 발생 라인: " << line << "\n";
             }
             continue; // 처리가 끝났으니 다음 줄로
         }
@@ -195,13 +195,13 @@ void MeshCollider::ParseFromString(const std::string& arg) {
             countToRead = std::stoi(val);
             this->vertices.reserve(countToRead);
             mode = 1;
-            std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n";
+            //std::cout << ">> 정점 모드 진입 (읽을 개수: " << countToRead << ")\n";
         }
         else if (key == "TriangleCount") {
             countToRead = std::stoi(val);
             this->triangles.reserve(countToRead);
             mode = 2;
-            std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n";
+            //std::cout << ">> 삼각형 모드 진입 (읽을 개수: " << countToRead << ")\n";
         }
         else if (key == "StaticFriction") {
             this->material.staticFriction = std::stof(val);
@@ -220,9 +220,9 @@ void MeshCollider::ParseFromString(const std::string& arg) {
         }
     }
 
-    std::cout << "최종 파싱 완료 -> 정점: " << this->vertices.size()
-              << "개, 인덱스: " << this->trianglesIndices.size() << "개\n";
-    std::cout << "--------------------------------------\n\n";
+   /*std::cout << "최종 파싱 완료 -> 정점: " << this->vertices.size()
+              << "개, 인덱스: " << this->trianglesIndices.size() << "개\n";*/
+    //std::cout << "--------------------------------------\n\n";
 }
 
     #ifdef _WIN64
@@ -238,7 +238,7 @@ Renderer MeshCollider::GetRenderer() {
 
 
     r.owner = this->gameObject;
-    std::cout << "MeshCollider GetRenderer Call: " << this->gameObject->name << std::endl;
+    //std::cout << "MeshCollider GetRenderer Call: " << this->gameObject->name << std::endl;
 
 
     r.mesh = MeshManager::GetInstance()->GetMesh(this->gameObject->name);

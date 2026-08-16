@@ -16,7 +16,7 @@ class ComponentConstructor {
     std::string Argument;
     ///컴포넌트를 생성하여 인수로 전달된 오브젝트에 Attach합니다.
     void ConstructAndAttachTo(const GameObject &gameObject) const {
-        std::cout<<"AddComponentFromString"<< std::endl;
+        //std::cout<<"AddComponentFromString"<< std::endl;
         gameObject->AddComponentFromString(ComponentName,Argument);
     };
 };
