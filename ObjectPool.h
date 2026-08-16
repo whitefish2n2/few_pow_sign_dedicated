@@ -16,7 +16,7 @@ private:
 
 public:
     static ObjectPool<T>& GetInstance() {
-        static ObjectPool<T> instance;
+        static thread_local ObjectPool<T> instance;
         return instance;
     }
 
