@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <cstdint>
 #include <memory>
@@ -187,6 +188,13 @@ private:
     bool running = true;
     std::thread gameThread; /// 현재 진행중인 세션 스레드
     bool isStopped = false; /// 스레드가 제대로 종료되었는지 확인
+
+    // 틱 페이싱 상태 (Start() 로컬변수 -> 멤버로 이동)
+    std::chrono::steady_clock::time_point previousTickTime = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point tpsWindowStart = previousTickTime;
+    std::chrono::nanoseconds lag{0};
+
+    void TryTick();
 
     int abandonedTicks = 0;   /// 접속자 0 지속 감시
 

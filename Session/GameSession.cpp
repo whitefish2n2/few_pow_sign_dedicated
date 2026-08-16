@@ -682,48 +682,45 @@ void GameSession::CheckAllPlayerDisconnected() {
     }
 }
 constexpr std::chrono::nanoseconds TIME_STEP(33333334);
+
+void GameSession::TryTick() {
+    if (!(isRunning.load() and running)) return;
+
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = now - previousTickTime;
+    previousTickTime = now;
+    if (elapsed > std::chrono::milliseconds(250)) {
+        elapsed = std::chrono::milliseconds(250);
+    }
+    lag += elapsed;
+    while (lag >= TIME_STEP) {
+        time.DeltaTime = std::chrono::duration<float>(TIME_STEP).count();
+
+        auto tickStart = std::chrono::steady_clock::now();
+        Tick();
+        auto tickDurationUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - tickStart).count();
+        lastTickMicros.store(tickDurationUs, std::memory_order_relaxed);
+        tpsTickCounter.fetch_add(1, std::memory_order_relaxed);
+
+        lag -= TIME_STEP;
+    }
+    lagMillis.store(std::chrono::duration_cast<std::chrono::milliseconds>(lag).count(), std::memory_order_relaxed);
+    if (now - tpsWindowStart >= std::chrono::seconds(1)) {
+        currentTps.store(tpsTickCounter.exchange(0, std::memory_order_relaxed), std::memory_order_relaxed);
+        tpsWindowStart = now;
+    }
+}
+
 void GameSession::Start() {
     LOG_INFO("new session is running");
-    //Log("으아아악돌아가요");
-    // Run server loop
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<unsigned int> distrib(0, 255);
-    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point tpsWindowStart = previousTime;
-    std::chrono::nanoseconds lag(0);
     while (isRunning.load() and running) {
-        auto now = std::chrono::steady_clock::now();
+        TryTick();
 
-        auto elapsed = now - previousTime;
-        previousTime = now;
-        if (elapsed > std::chrono::milliseconds(250)) {
-            elapsed = std::chrono::milliseconds(250);
-        }
-        lag += elapsed;
-        while (lag >= TIME_STEP) {
-            time.DeltaTime = std::chrono::duration<float>(TIME_STEP).count();
-
-            auto tickStart = std::chrono::steady_clock::now();
-            Tick();
-            auto tickDurationUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - tickStart).count();
-            lastTickMicros.store(tickDurationUs, std::memory_order_relaxed);
-            tpsTickCounter.fetch_add(1, std::memory_order_relaxed);
-
-            lag -= TIME_STEP;
-        }
-        lagMillis.store(std::chrono::duration_cast<std::chrono::milliseconds>(lag).count(), std::memory_order_relaxed);
-        if (now - tpsWindowStart >= std::chrono::seconds(1)) {
-            currentTps.store(tpsTickCounter.exchange(0, std::memory_order_relaxed), std::memory_order_relaxed);
-            tpsWindowStart = now;
-        }
         auto remainingTime = TIME_STEP - lag;
         if (remainingTime > std::chrono::milliseconds(2)) {
-            // 시간이 2ms 이상 남았을 때만 Sleep
             std::this_thread::sleep_for(remainingTime - std::chrono::milliseconds(1));
         } else {
-            // 시간이 별로 없으면 Sleep 대신 양보만 하여 즉시 반응 준비
             std::this_thread::yield();
         }
     }

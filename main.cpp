@@ -19,6 +19,7 @@
 #include "util/util.h"
 #include "./Session/GameSession.h"
 #include "./Session/sessionPool/SessionManager.h"
+#include "./Session/sessionPool/SessionWorkerPool.h"
 #include "http-listener/httpRestClient.h"
 #include <enet/enet.h>
 
@@ -420,6 +421,7 @@ int main() {
             sessions
         );
         isRunning = true;
+        SessionWorkerPool::getInstance().Start();
         std::thread consoleThread(inputListener);
         std::thread statusThread(statusUpdater);
         std::thread statLoggerThread(statAutoLogger);

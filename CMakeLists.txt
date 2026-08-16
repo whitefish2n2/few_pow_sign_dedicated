@@ -27,6 +27,7 @@ add_executable(fpsProjectServer
         http-listener/httpRestClient.cpp
         Session/netcode/SessionNetworkDto.cpp
         Session/sessionPool/SessionManager.cpp
+        Session/sessionPool/SessionWorkerPool.cpp
         Session/netcode/CreateSessionNetworkDto.cpp
         Socket/EnetClient.cpp
         Socket/dto/AssignDto.cpp

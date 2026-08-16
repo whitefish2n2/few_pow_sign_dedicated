@@ -9,6 +9,8 @@
 #include <shared_mutex>
 #include <utility>
 
+#include "SessionWorkerPool.h"
+
 
 std::vector<std::weak_ptr<GameSession>> SessionManager::getSessionListWeak() {
     std::shared_lock lock(_sessionsLock);
@@ -48,7 +50,7 @@ uint16_t SessionManager::makeNewSession(GameSetupBoddari initInfo){
     }
     newSession->sessionConnectKey = sessionKey;
     newSession->Init(std::to_string(sessionKey),std::move(initInfo));
-    newSession->RunAsync();
+    SessionWorkerPool::getInstance().AssignSession(newSession);
 
     return sessionKey;
 }
@@ -82,6 +84,7 @@ void SessionManager::reapStoppedSessions() {
     for (auto it = sessions.begin(); it != sessions.end(); ) {
         auto& s = it->second;
         if (s && !s->running) {
+            SessionWorkerPool::getInstance().RemoveSession(s);
             s->Stop();               // 루프는 이미 탈출 → join 즉시 반환
             it = sessions.erase(it);
         } else ++it;
