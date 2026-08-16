@@ -72,6 +72,7 @@ void onExit(int signal) {
 
 struct StatSnapshot {
     double processCpu = 0.0;
+    long long processMemoryMb = 0;
     size_t sessionCount = 0;
     int connectedPlayers = 0;
     int liveSessionCount = 0;
@@ -95,6 +96,7 @@ StatSnapshot ComputeStatSnapshot() {
     auto sessions = SessionManager::getInstance().getSessionListWeak();
     snap.sessionCount = sessions.size();
     snap.processCpu = GetProcessCpuUsage();
+    snap.processMemoryMb = GetProcessMemoryUsageMB();
 
     long long sumTps = 0, sumTickUs = 0, sumLagMs = 0, sumBroadphaseUs = 0, sumPairsChecked = 0, sumPairsHit = 0;
     long long sumEventQueueUs = 0, sumUpdateComponentsUs = 0, sumFlushGameObjectUs = 0;
@@ -193,6 +195,7 @@ void statAutoLogger() {
         std::ostringstream row;
         row << nowMs << ','
             << snap.processCpu << ','
+            << snap.processMemoryMb << ','
             << snap.sessionCount << ','
             << snap.connectedPlayers << ','
             << snap.liveSessionCount << ','
@@ -252,6 +255,7 @@ void inputListener() {
 
             std::cout << "===== Process ====="
                       << " CPU:" << snap.processCpu << "%"
+                      << " MemoryMB:" << snap.processMemoryMb
                       << " Sessions:" << snap.sessionCount
                       << " ConnectedPlayers:" << snap.connectedPlayers
                       << std::endl;
@@ -302,7 +306,7 @@ void inputListener() {
 
                 std::ofstream file("stat_log.csv", std::ios::app);
                 if (needsHeader) {
-                    file << "timestampMs,processCpu,sessions,connectedPlayers,liveSessions,"
+                    file << "timestampMs,processCpu,processMemoryMb,sessions,connectedPlayers,liveSessions,"
                          << "avgTps,avgTickUs,avgLagMs,avgThreadCpu,avgBroadphaseUs,avgPairsChecked,avgPairsHit,avgObjectsAtStart,"
                          << "avgEventQueueUs,avgUpdateComponentsUs,avgFlushGameObjectUs,avgBroadcastMovementsUs,avgBroadcastObjectMovementsUs,avgCheckDisconnectedUs,"
                          << "avgPhysicsIntegrateUs,avgStaticOverlapUs,avgStaticPairsFound,avgNarrowPhaseUs,"

@@ -630,18 +630,8 @@ bool CollisionSolver::RaycastCapsule(const Ray& ray, CapsuleCollider* cap, float
     return false;
 }
 bool CollisionSolver::RaycastMesh(const Ray& ray, MeshCollider* mesh, float maxDistance, RaycastHit& outHit) {
-    const auto& verts = mesh->GetVertices();
+    const auto& worldVerts = mesh->GetWorldVertices();
     const auto& indices = mesh->GetTriangles();
-
-    Vector3 mPos = mesh->gameObject->transform.GetPosition();
-    Vector3 mScale = mesh->gameObject->transform.GetScale();
-    Quaternion mRot = mesh->gameObject->transform.GetRotation();
-
-    // 람다 함수 (월드 좌표 변환)
-    auto LocalToWorld = [&](const Vector3& localV) -> Vector3 {
-        Vector3 scaled = { localV.x * mScale.x, localV.y * mScale.y, localV.z * mScale.z };
-        return (mRot * scaled) + mPos;
-    };
 
     bool hit = false;
     float closestT = maxDistance;
@@ -651,9 +641,9 @@ bool CollisionSolver::RaycastMesh(const Ray& ray, MeshCollider* mesh, float maxD
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
 
-        Vector3 v0 = LocalToWorld(verts[indices[i]]);
-        Vector3 v1 = LocalToWorld(verts[indices[i+1]]);
-        Vector3 v2 = LocalToWorld(verts[indices[i+2]]);
+        const Vector3& v0 = worldVerts[indices[i]];
+        const Vector3& v1 = worldVerts[indices[i+1]];
+        const Vector3& v2 = worldVerts[indices[i+2]];
 
         Vector3 edge1 = v1 - v0;
         Vector3 edge2 = v2 - v0;
@@ -760,18 +750,8 @@ bool CollisionSolver::OverlapSphere(const Vector3& center, float radius, Collide
         case ColliderType::Mesh: {
             auto* mesh = static_cast<MeshCollider*>(collider);
 
-            const auto& verts = mesh->GetVertices();
+            const auto& worldVerts = mesh->GetWorldVertices();
             const auto& indices = mesh->GetTriangles();
-
-            Vector3 mPos = mesh->gameObject->transform.GetPosition();
-            Vector3 mScale = mesh->gameObject->transform.GetScale();
-            Quaternion mRot = mesh->gameObject->transform.GetRotation();
-
-            // 정점을 월드 좌표로 변환하는 람다
-            auto LocalToWorld = [&](const Vector3& localV) -> Vector3 {
-                Vector3 scaled = { localV.x * mScale.x, localV.y * mScale.y, localV.z * mScale.z };
-                return (mRot * scaled) + mPos;
-            };
 
             float radiusSq = radius * radius;
 
@@ -779,9 +759,9 @@ bool CollisionSolver::OverlapSphere(const Vector3& center, float radius, Collide
             for (size_t i = 0; i < indices.size(); i += 3) {
                 if (i + 2 >= indices.size()) break;
 
-                Vector3 v0 = LocalToWorld(verts[indices[i]]);
-                Vector3 v1 = LocalToWorld(verts[indices[i+1]]);
-                Vector3 v2 = LocalToWorld(verts[indices[i+2]]);
+                const Vector3& v0 = worldVerts[indices[i]];
+                const Vector3& v1 = worldVerts[indices[i+1]];
+                const Vector3& v2 = worldVerts[indices[i+2]];
 
                 // 구의 중심과 삼각형 면 사이의 가장 가까운 점 찾기
                 Vector3 closestPt = ClosestPtPointTriangle(center, v0, v1, v2);
@@ -906,17 +886,8 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
     Vector3 spherePos = sphere->gameObject->transform.GetPosition() + (sphere->gameObject->transform.GetRotation() * Vector3(sphere->center.x * scaleA.x, sphere->center.y * scaleA.y, sphere->center.z * scaleA.z));
     AABB sphereAABB = sphere->GetAABB();
 
-    const auto& verts = mesh->GetVertices();
+    const auto& worldVerts = mesh->GetWorldVertices();
     const auto& indices = mesh->GetTriangles();
-
-    Vector3 mPos = mesh->gameObject->transform.GetPosition();
-    Vector3 mScale = mesh->gameObject->transform.GetScale();
-    Quaternion mRot = mesh->gameObject->transform.GetRotation();
-
-    auto LocalToWorld = [&](const Vector3& localV) -> Vector3 {
-        Vector3 scaled = { localV.x * mScale.x, localV.y * mScale.y, localV.z * mScale.z };
-        return (mRot * scaled) + mPos;
-    };
 
     bool hasCollision = false;
     float maxPenetration = -1.0f;
@@ -926,9 +897,9 @@ bool CollisionSolver::SphereVsMesh(Collider *a, Collider *b, Contact &outContact
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
 
-        Vector3 v0 = LocalToWorld(verts[indices[i]]);
-        Vector3 v1 = LocalToWorld(verts[indices[i+1]]);
-        Vector3 v2 = LocalToWorld(verts[indices[i+2]]);
+        const Vector3& v0 = worldVerts[indices[i]];
+        const Vector3& v1 = worldVerts[indices[i+1]];
+        const Vector3& v2 = worldVerts[indices[i+2]];
 
         Vector3 triMin = { (std::min)({v0.x, v1.x, v2.x}), (std::min)({v0.y, v1.y, v2.y}), (std::min)({v0.z, v1.z, v2.z}) };
         Vector3 triMax = { (std::max)({v0.x, v1.x, v2.x}), (std::max)({v0.y, v1.y, v2.y}), (std::max)({v0.z, v1.z, v2.z}) };
@@ -977,17 +948,8 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
     GetCapsuleSegment(cap, capTop, capBottom);
     AABB capAABB = cap->GetAABB();
 
-    const auto& verts = mesh->GetVertices();
+    const auto& worldVerts = mesh->GetWorldVertices();
     const auto& indices = mesh->GetTriangles();
-
-    Vector3 mPos = mesh->gameObject->transform.GetPosition();
-    Vector3 mScale = mesh->gameObject->transform.GetScale();
-    Quaternion mRot = mesh->gameObject->transform.GetRotation();
-
-    auto LocalToWorld = [&](const Vector3& localV) -> Vector3 {
-        Vector3 scaled = { localV.x * mScale.x, localV.y * mScale.y, localV.z * mScale.z };
-        return (mRot * scaled) + mPos;
-    };
 
     bool hasCollision = false;
     float maxPenetration = -1.0f;
@@ -997,9 +959,9 @@ bool CollisionSolver::CapsuleVsMesh(Collider *a, Collider *b, Contact &outContac
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
 
-        Vector3 v0 = LocalToWorld(verts[indices[i]]);
-        Vector3 v1 = LocalToWorld(verts[indices[i+1]]);
-        Vector3 v2 = LocalToWorld(verts[indices[i+2]]);
+        const Vector3& v0 = worldVerts[indices[i]];
+        const Vector3& v1 = worldVerts[indices[i+1]];
+        const Vector3& v2 = worldVerts[indices[i+2]];
 
         Vector3 triMin = { (std::min)({v0.x, v1.x, v2.x}), (std::min)({v0.y, v1.y, v2.y}), (std::min)({v0.z, v1.z, v2.z}) };
         Vector3 triMax = { (std::max)({v0.x, v1.x, v2.x}), (std::max)({v0.y, v1.y, v2.y}), (std::max)({v0.z, v1.z, v2.z}) };
@@ -1450,23 +1412,12 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
     Vector3 extents = {box->size.x * scaleB.x * 0.5f, box->size.y * scaleB.y * 0.5f, box->size.z * scaleB.z * 0.5f};
     AABB boxAABB = box->GetAABB(); // Mid-phase 체크용
 
-    const auto& verts = mesh->GetVertices();
+    const auto& worldVerts = mesh->GetWorldVertices();
     const auto& indices = mesh->GetTriangles();
-
-    Vector3 mPos = mesh->gameObject->transform.GetPosition();
-    Vector3 mScale = mesh->gameObject->transform.GetScale();
-    Quaternion mRot = mesh->gameObject->transform.GetRotation();
 
     // 박스의 역회전 쿼터니언 (켤레 복소수)
     Quaternion invBoxRot = boxRot;
     invBoxRot.x = -invBoxRot.x; invBoxRot.y = -invBoxRot.y; invBoxRot.z = -invBoxRot.z;
-
-    // 메쉬의 로컬 정점을 월드로 바꾼 뒤, 곧바로 박스의 로컬 공간으로 밀어넣는 미친 최적화 함수
-    auto MeshToBoxLocal = [&](const Vector3& meshLocalV) -> Vector3 {
-        Vector3 scaled = { meshLocalV.x * mScale.x, meshLocalV.y * mScale.y, meshLocalV.z * mScale.z };
-        Vector3 worldV = (mRot * scaled) + mPos;
-        return invBoxRot * (worldV - boxPos);
-    };
 
     bool hasCollision = false;
     float maxPenetration = -1.0f;
@@ -1477,13 +1428,10 @@ bool CollisionSolver::BoxVsMesh(Collider *a, Collider *b, Contact &outContact) {
     for (size_t i = 0; i < indices.size(); i += 3) {
         if (i + 2 >= indices.size()) break;
 
-        // =======================================================
-        // 1. [Mid-phase] 월드 공간에서 AABB 러프 체크 (안 겹치면 즉시 스킵)
-        // =======================================================
-        // (이 부분은 정밀도를 위해 메쉬 월드 좌표가 필요하므로 가볍게 구합니다)
-        Vector3 w0 = (mRot * Vector3(verts[indices[i]].x * mScale.x, verts[indices[i]].y * mScale.y, verts[indices[i]].z * mScale.z)) + mPos;
-        Vector3 w1 = (mRot * Vector3(verts[indices[i+1]].x * mScale.x, verts[indices[i+1]].y * mScale.y, verts[indices[i+1]].z * mScale.z)) + mPos;
-        Vector3 w2 = (mRot * Vector3(verts[indices[i+2]].x * mScale.x, verts[indices[i+2]].y * mScale.y, verts[indices[i+2]].z * mScale.z)) + mPos;
+        // [Mid-phase] 월드 공간에서 AABB 러프 체크 (안 겹치면 즉시 스킵)
+        const Vector3& w0 = worldVerts[indices[i]];
+        const Vector3& w1 = worldVerts[indices[i+1]];
+        const Vector3& w2 = worldVerts[indices[i+2]];
 
         Vector3 triMin = { (std::min)({w0.x, w1.x, w2.x}), (std::min)({w0.y, w1.y, w2.y}), (std::min)({w0.z, w1.z, w2.z}) };
         Vector3 triMax = { (std::max)({w0.x, w1.x, w2.x}), (std::max)({w0.y, w1.y, w2.y}), (std::max)({w0.z, w1.z, w2.z}) };

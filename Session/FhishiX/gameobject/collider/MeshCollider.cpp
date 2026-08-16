@@ -103,6 +103,29 @@ AABB MeshCollider::GetAABB() const {
     return cachedAABB;
 }
 
+const std::vector<Vector3>& MeshCollider::GetWorldVertices() const {
+    auto& transform = gameObject->transform;
+    if (verticesRotVersion != transform.GetRotVersion() ||
+        verticesScaleVersion != transform.GetScaleVersion() ||
+        verticesPosVersion != transform.GetPosVersion()) {
+
+        verticesRotVersion = transform.GetRotVersion();
+        verticesScaleVersion = transform.GetScaleVersion();
+        verticesPosVersion = transform.GetPosVersion();
+
+        Vector3 pos = transform.GetPosition();
+        Vector3 scale = transform.GetScale();
+        Quaternion rot = transform.GetRotation();
+
+        cachedWorldVertices.resize(vertices.size());
+        for (size_t i = 0; i < vertices.size(); ++i) {
+            Vector3 scaled = { vertices[i].x * scale.x, vertices[i].y * scale.y, vertices[i].z * scale.z };
+            cachedWorldVertices[i] = (rot * scaled) + pos;
+        }
+    }
+    return cachedWorldVertices;
+}
+
 void MeshCollider::CalculateAABB() const {
     const auto& verts = GetVertices();
 

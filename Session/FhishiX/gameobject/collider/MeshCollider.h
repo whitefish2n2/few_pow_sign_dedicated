@@ -20,7 +20,14 @@ protected:
     mutable AABB localAABB;
     // 로컬 AABB가 계산되었는지 확인하는 플래그
     mutable bool isLocalAABBCalculated = false;
+
+    // 정점 월드좌표 캐시 (AABB 캐시와 별개 버전 필드 사용)
+    mutable std::vector<Vector3> cachedWorldVertices;
+    mutable uint32_t verticesRotVersion = static_cast<uint32_t>(-1);
+    mutable uint32_t verticesScaleVersion = static_cast<uint32_t>(-1);
+    mutable uint32_t verticesPosVersion = static_cast<uint32_t>(-1);
 public:
+    const std::vector<Vector3>& GetWorldVertices() const;
     static constexpr bool DO_UPDATE = false;
     std::vector<Triangle> triangles = std::vector<Triangle>();
     mutable std::vector<Vector3> vertices;
