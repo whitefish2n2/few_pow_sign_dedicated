@@ -5,7 +5,6 @@
 
 #include <atomic>
 #include <chrono>
-#include <condition_variable>
 #include <cstdint>
 #include <memory>
 #include <queue>
@@ -14,6 +13,10 @@
 #include <utility>
 #include <variant>
 
+#pragma push_macro("U")
+#undef U
+#include <readerwriterqueue/readerwriterqueue.h>
+#pragma pop_macro("U")
 #include "Time.h"
 #include "../Socket/dto/AssignDto.h"
 #include "../Socket/dto/AssignResponseDto.h"
@@ -173,9 +176,7 @@ private:
 
     Time time;
 
-    std::queue<GameEventPtr> eventQueue;
-    std::mutex queueMutex;
-    std::condition_variable queueCV;
+    moodycamel::ReaderWriterQueue<GameEventPtr> eventQueue;
 
     std::unique_ptr<GameObjectManager> objectManager;
     std::unique_ptr<ComponentManager> componentManager;

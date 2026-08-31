@@ -225,5 +225,7 @@ target_link_libraries(fpsProjectServer PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(fpsProjectServer PRIVATE Rpcrt4)
 find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 target_link_libraries(fpsProjectServer PRIVATE unofficial::concurrentqueue::concurrentqueue)
+find_package(readerwriterqueue CONFIG REQUIRED)
+target_link_libraries(fpsProjectServer PRIVATE readerwriterqueue::readerwriterqueue)
 
 

@@ -73,13 +73,9 @@ GameSession::~GameSession() {
 
 
 void GameSession::ProcessEventQueue() {
-    std::unique_lock<std::mutex> lock(queueMutex);
-    while (!eventQueue.empty()) {
+    GameEventPtr e(nullptr, nullptr);
+    while (eventQueue.try_dequeue(e)) {
         if (!this->running or !isRunning.load()) break;
-
-        GameEventPtr e = std::move(eventQueue.front());
-        eventQueue.pop();
-        lock.unlock(); // 이벤트 처리 동안 unlock
 
         try {
             switch (e->type) {
@@ -488,8 +484,6 @@ void GameSession::ProcessEventQueue() {
         } catch (const std::exception& ex) {
             std::cout << "[Event Process Error] " << ex.what() << std::endl;
         }
-
-        lock.lock(); // 처리 완료되면 다음 이벤트 처리 위해 다시 lock
     }
 }
 void GameSession::Tick() {
@@ -895,9 +889,7 @@ std::shared_ptr<Player> GameSession::RegistUser(const std::string &userKey, ENet
 
 void GameSession::ProcessEvent(GameEventPtr event)
 {
-    std::lock_guard<std::mutex> lock(queueMutex);
-
-    eventQueue.push(std::move(event));
+    eventQueue.enqueue(std::move(event));
 }
 
 
