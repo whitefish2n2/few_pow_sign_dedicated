@@ -75,21 +75,17 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
 }
 
 void EnetClient::EnqueueSend(ENetPeer* peer, enet_uint32 connectId, std::vector<uint8_t> payload, enet_uint32 flags) {
-    std::lock_guard<std::mutex> lock(sendMutex);
-    sendQueue.push({peer, connectId, std::move(payload), flags});
+    sendQueue.enqueue({peer, connectId, std::move(payload), flags});
 }
 
 void EnetClient::ProcessSendQueue() {
-    std::lock_guard<std::mutex> lock(sendMutex);
-    while (!sendQueue.empty()) {
-        auto& task = sendQueue.front();
-
+    SendTask task;
+    while (sendQueue.try_dequeue(task)) {
         if (task.peer && task.peer->state == ENET_PEER_STATE_CONNECTED
             && task.peer->connectID == task.connectId) {   // 세대 불일치 = 재사용된 슬롯 → 드롭
             ENetPacket* packet = enet_packet_create(task.payload.data(), task.payload.size(), task.flags);
             enet_peer_send(task.peer, 0, packet);
             }
-        sendQueue.pop();
     }
 }
 

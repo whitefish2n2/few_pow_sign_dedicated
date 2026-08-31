@@ -197,6 +197,7 @@ std::unique_ptr<PhysicsSystemConstructor> MapManager::LoadMap(MapInfo type)
     newPhysicsConstructor->SetLayerManager(std::move(layerManager));
 
     //std::cout << "[MapManager] PhysicsMap.h Loaded: " << path << std::endl;
+    //
     //std::cout << "[MapManager] Total Objects Parsed: " << newPhysicsConstructor->objects.size() << std::endl; // 잘 파싱되었는지 확인용 (objects 접근 가능할 시)
 
     return newPhysicsConstructor;
