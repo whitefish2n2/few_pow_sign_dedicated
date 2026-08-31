@@ -223,5 +223,7 @@ target_link_libraries(fpsProjectServer PRIVATE cpprestsdk::cpprest cpprestsdk::c
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(fpsProjectServer PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(fpsProjectServer PRIVATE Rpcrt4)
+find_package(unofficial-concurrentqueue CONFIG REQUIRED)
+target_link_libraries(fpsProjectServer PRIVATE unofficial::concurrentqueue::concurrentqueue)
 
 

@@ -6,6 +6,10 @@
 #define ENETCLIENT_H
 #include <mutex>
 #include <enet/enet.h>
+#pragma push_macro("U")
+#undef U
+#include <concurrentqueue/concurrentqueue.h>
+#pragma pop_macro("U")
 
 struct SendTask {
     ENetPeer* peer;
@@ -30,8 +34,7 @@ class EnetClient {
     inline static EnetClient* instance = nullptr;
     inline static std::once_flag flag;
 
-    std::queue<SendTask> sendQueue;
-    std::mutex sendMutex;
+    moodycamel::ConcurrentQueue<SendTask> sendQueue;
     void ProcessSendQueue();
 
 
