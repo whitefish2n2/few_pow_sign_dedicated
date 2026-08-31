@@ -1,6 +1,7 @@
 #include "SessionWorkerPool.h"
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 
 #include "../../ServerStatics.h"
@@ -8,7 +9,7 @@
 void SessionWorkerPool::Start(int workerCount) {
     if (workerCount <= 0) {
         unsigned int hw = std::thread::hardware_concurrency();
-        workerCount = hw > 1 ? static_cast<int>(hw) - 1 : 1;
+        workerCount = hw > 3 ? static_cast<int>(hw) - 3 : 1;
         if (workerCount <= 0) workerCount = 4;
     }
     std::cout << "[SessionWorkerPool] starting " << workerCount << " workers" << std::endl;
@@ -38,7 +39,12 @@ void SessionWorkerPool::RemoveSession(const std::shared_ptr<GameSession>& sessio
 }
 
 void SessionWorkerPool::WorkerLoop(Worker* worker) {
+    constexpr auto PASS_BUDGET = std::chrono::milliseconds(10);
+    constexpr auto MIN_SLEEP = std::chrono::milliseconds(2);
+
     while (isRunning.load()) {
+        auto passStart = std::chrono::steady_clock::now();
+
         std::vector<std::shared_ptr<GameSession>> snapshot;
         {
             std::lock_guard<std::mutex> lock(worker->sessionsLock);
@@ -46,6 +52,11 @@ void SessionWorkerPool::WorkerLoop(Worker* worker) {
         }
         for (auto& session : snapshot) {
             session->TryTick();
+        }
+
+        auto remaining = PASS_BUDGET - (std::chrono::steady_clock::now() - passStart);
+        if (remaining > MIN_SLEEP) {
+            std::this_thread::sleep_for(remaining - std::chrono::milliseconds(1));
         }
     }
 }

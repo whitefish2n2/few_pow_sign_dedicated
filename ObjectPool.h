@@ -20,9 +20,7 @@ public:
         return instance;
     }
 
-    // 풀에서 객체를 가져오거나 없으면 새로 만듦
     T* Acquire() {
-        std::lock_guard<std::mutex> lock(mtx);
         if (pool.empty()) {
             return new T();
         }
@@ -30,10 +28,7 @@ public:
         pool.pop_back();
         return obj;
     }
-
-    // 객체를 다 쓰면 풀로 반환 (소멸시키지 않음!)
     void Release(T* obj) {
-        std::lock_guard<std::mutex> lock(mtx);
         pool.push_back(obj);
     }
 };

@@ -71,14 +71,6 @@ GameSession::~GameSession() {
     Stop();
 }
 
-//스레드로 실행
-void GameSession::RunAsync() {
-    running = true;
-    gameThread = std::thread([this]() {
-        this->Start();
-    });
-    isStopped = false;
-}
 
 void GameSession::ProcessEventQueue() {
     std::unique_lock<std::mutex> lock(queueMutex);
@@ -1080,5 +1072,7 @@ GameObject GameSession::SpawnSyncObject(uint32_t prefabId, const Vector3& pos) {
     this->BroadcastEvent(event);
     return obj;
 }
+
+
 
 

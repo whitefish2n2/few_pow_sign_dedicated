@@ -242,8 +242,6 @@ public:
     ~GameSession();
     GameSession();
 
-    void RunAsync();
-
     void ProcessEventQueue();
 
     void Tick();
