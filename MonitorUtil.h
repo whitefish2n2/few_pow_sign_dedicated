@@ -17,13 +17,13 @@
     #include <unistd.h>
 #endif
 
-// --- 메모리 사용량 (MB) 반환 ---
-inline long long GetProcessMemoryUsageMB() {
+// --- 프로세스 메모리 사용량 (Byte) 반환 ---
+inline long long GetProcessMemoryUsageBytes() {
 #ifdef _WIN32
     PROCESS_MEMORY_COUNTERS_EX pmc;
     if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
         // WorkingSetSize: 현재 프로세스가 RAM에 물리적으로 차지하고 있는 크기 (Byte)
-        return pmc.WorkingSetSize / (1024 * 1024);
+        return pmc.WorkingSetSize;
     }
     return 0;
 
@@ -36,7 +36,7 @@ inline long long GetProcessMemoryUsageMB() {
             std::istringstream iss(line.substr(6));
             long long rssKb;
             iss >> rssKb;
-            return rssKb / 1024; // KB -> MB
+            return rssKb * 1024ULL;
         }
     }
     return 0;
@@ -150,4 +150,62 @@ inline double GetProcessCpuUsage() {
     return 0.0; // 기타 OS 미지원
 #endif
 }
+
+// --- PC 전체 메모리 (Byte) ---
+// 서버 하트비트 DTO는 pcMemory / pcMemoryMax를 byte로 받는다.
+struct SystemMemoryInfo {
+    unsigned long long usedBytes  = 0;
+    unsigned long long totalBytes = 0;
+};
+
+// used와 total을 한 번에 읽는다. 두 번 나눠 읽으면 그 사이에 값이 변해서
+// used > total 같은 상태가 나올 수 있다.
+inline SystemMemoryInfo GetSystemMemoryInfo() {
+    SystemMemoryInfo info;
+
+#ifdef _WIN32
+    MEMORYSTATUSEX ms;
+    ms.dwLength = sizeof(ms);
+    if (GlobalMemoryStatusEx(&ms)) {
+        info.totalBytes = ms.ullTotalPhys;
+        info.usedBytes  = ms.ullTotalPhys - ms.ullAvailPhys;
+    }
+    return info;
+
+#elif defined(__linux__)
+    // /proc/meminfo 값은 전부 kB 단위다.
+    std::ifstream file("/proc/meminfo");
+    std::string line;
+    unsigned long long totalKb = 0, availKb = 0;
+    unsigned long long freeKb = 0, buffersKb = 0, cachedKb = 0;
+    bool hasAvail = false;
+
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string key;
+        unsigned long long value = 0;
+        iss >> key >> value;
+
+        if      (key == "MemTotal:")     totalKb = value;
+        else if (key == "MemAvailable:") { availKb = value; hasAvail = true; }
+        else if (key == "MemFree:")      freeKb = value;
+        else if (key == "Buffers:")      buffersKb = value;
+        else if (key == "Cached:")       cachedKb = value;
+    }
+
+    // MemAvailable은 커널 3.14부터 있다. 없으면 free+buffers+cached로 근사.
+    if (!hasAvail) availKb = freeKb + buffersKb + cachedKb;
+
+    if (totalKb > 0) {
+        info.totalBytes = totalKb * 1024ULL;
+        info.usedBytes  = (totalKb > availKb ? totalKb - availKb : 0ULL) * 1024ULL;
+    }
+    return info;
+#else
+    return info; // 기타 OS 미지원
+#endif
+}
+
+inline unsigned long long GetSystemMemoryUsedBytes()  {return GetSystemMemoryInfo().usedBytes; }
+inline unsigned long long GetSystemMemoryTotalBytes() { return GetSystemMemoryInfo().totalBytes; }
 #endif //FPSPROJECTSERVER_MONITORUTIL_H

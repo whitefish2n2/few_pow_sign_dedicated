@@ -187,6 +187,8 @@ add_executable(fpsProjectServer
         Socket/dto/HitStructureDto.cpp
         Socket/dto/PhaseChangeNotifyDto.h
         Socket/dto/GameEndNotifyDto.h
+        StatSnapshot.h
+        EnetMessage.h
 )
 target_precompile_headers(fpsProjectServer PUBLIC pch.h)
 add_custom_command(TARGET fpsProjectServer POST_BUILD

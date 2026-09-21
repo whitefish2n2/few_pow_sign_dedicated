@@ -4,7 +4,10 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <memory>
+
+#include "../StatSnapshot.h"
 #include "../Session/GameSession.h"
+
 
 class DedicatedServerNotifier {
 public:
@@ -22,9 +25,8 @@ public:
                                  ::shared_ptr<GameSession>> &sessions);
 
     /// 서버의 상태를 spring 서버에 알려요
-    /// @param ip 서버의 ip를 전달해요
-    /// @param sessions 현재 실행중인 세션 배열을 전달해요
-    void updateServerStatus(const std::string& ip, const std::vector<std::shared_ptr<GameSession>>& sessions);
+    /// @param snapshot
+    void updateServerStatus(StatSnapshot snapshot);
     //서버가 꺼졌음을 알려요
     void notifyDedicatedServerOff(const std::string& id);
 

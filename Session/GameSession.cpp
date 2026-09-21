@@ -30,6 +30,7 @@
 #include "../Socket/dto/AssignResponseDto.h"
 #include <type_traits>
 
+#include "../EnetMessage.h"
 #include "../ObjectPool.h"
 #include "../PrefabSystem/PrefabManager.h"
 #include "../Socket/dto/MapInitDto.h"
@@ -898,29 +899,36 @@ void GameSession::BroadcastEvent(const std::shared_ptr<BroadCastEvent>& event) {
 
     enet_uint32 packetFlags = GetPacketFlags(event->type);
 
-    std::vector<uint8_t> buffer;
-
-    std::visit([&buffer](auto&& arg) {
+    EnetMessage msg;
+    ENetPacket* packet = nullptr;
+    std::visit([&](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (!std::is_same_v<T, std::nullptr_t>) {
             if (arg) {
-                buffer.resize(arg->GetDtoBinaryLength());
-                arg->ToBinary(buffer.data());
+                size_t len = arg->GetDtoBinaryLength();
+                if (len == 0) return;
+                packet = enet_packet_create(nullptr, len, packetFlags);
+                arg->ToBinary(packet->data);
             }
         }
     }, event->payload);
 
-    if (buffer.empty()) return;
-
+    if (packet == nullptr) return;
+    msg.packet = packet;
     bool broadcastToAll = event->target.empty();
 
+
     for (const auto &player: *players | std::views::values) {
+
         if (player.peer != nullptr) { // 연결 상태 체크는 ENet 스레드에서 최종 확인
             if (broadcastToAll || std::find(event->target.begin(), event->target.end(), player.peer) != event->target.end()) {
-                EnetClient::GetInstance()->EnqueueSend(player.peer, player.peerConnectId, buffer, packetFlags);
+                if (msg.count >= msg.targets.size()) break;
+                msg.targets[msg.count] = SendTarget{player.peer, player.peerConnectId};
+                msg.count++;
             }
         }
     }
+    EnetClient::GetInstance()->EnqueueSend(msg);
 }
 
 void GameSession::BroadcastMovements() {

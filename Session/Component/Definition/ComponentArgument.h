@@ -23,7 +23,7 @@ protected:
     GameObject gameObject = GameObject::NullPTR();
     ComponentEntityId entityId = -1;
     ComponentGenerationId generationId = -1;
-    size_t typeId;
+    size_t typeId = 0;
     bool isActive = true;
     bool willDead = false;
     bool started = false;

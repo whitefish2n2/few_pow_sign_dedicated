@@ -26,6 +26,7 @@
 #include "Session/SessionDXViewer/DirectXCore.h"
 
 #include "ServerStatics.h"
+#include "StatSnapshot.h"
 #include "PrefabSystem/PrefabManager.h"
 #include "Session/Game/MapManager.h"
 #include "Session/Game/data/CharacterRegistry.h"
@@ -71,25 +72,6 @@ void onExit(int signal) {
     }
 }
 
-struct StatSnapshot {
-    double processCpu = 0.0;
-    long long processMemoryMb = 0;
-    size_t sessionCount = 0;
-    int connectedPlayers = 0;
-    int liveSessionCount = 0;
-
-    long long avgTps = 0, avgTickUs = 0, avgLagMs = 0;
-    double avgThreadCpu = 0.0;
-    long long avgBroadphaseUs = 0, avgPairsChecked = 0, avgPairsHit = 0;
-    long long avgObjectsAtStart = -1;
-    int sessionsWithObjectCount = 0;
-
-    long long avgEventQueueUs = 0, avgUpdateComponentsUs = 0, avgFlushGameObjectUs = 0;
-    long long avgBroadcastMovementsUs = 0, avgBroadcastObjectMovementsUs = 0, avgCheckDisconnectedUs = 0;
-
-    long long avgPhysicsIntegrateUs = 0, avgStaticOverlapUs = 0, avgStaticPairsFound = 0, avgNarrowPhaseUs = 0;
-    long long avgNarrowPhaseStaticUs = 0, avgNarrowPhaseDynamicUs = 0;
-};
 
 ///stat 콘솔 명령어와 statAutoLogger가 공유하는 집계 로직 - 여기 하나만 고치면 둘 다 반영됨
 StatSnapshot ComputeStatSnapshot() {
@@ -97,7 +79,10 @@ StatSnapshot ComputeStatSnapshot() {
     auto sessions = SessionManager::getInstance().getSessionListWeak();
     snap.sessionCount = sessions.size();
     snap.processCpu = GetProcessCpuUsage();
-    snap.processMemoryMb = GetProcessMemoryUsageMB();
+    snap.processMemoryBytes = GetProcessMemoryUsageBytes();
+    snap.pcMemoryBytes = GetSystemMemoryUsedBytes();
+    snap.pcMemoryMaxBytes = GetSystemMemoryTotalBytes();
+
 
     long long sumTps = 0, sumTickUs = 0, sumLagMs = 0, sumBroadphaseUs = 0, sumPairsChecked = 0, sumPairsHit = 0;
     long long sumEventQueueUs = 0, sumUpdateComponentsUs = 0, sumFlushGameObjectUs = 0;
@@ -180,6 +165,7 @@ StatSnapshot ComputeStatSnapshot() {
     return snap;
 }
 
+
 std::mutex statLogMutex;
 std::vector<std::string> statLogBuffer;   // flushStat이 비우고 CSV로 씀
 
@@ -196,7 +182,7 @@ void statAutoLogger() {
         std::ostringstream row;
         row << nowMs << ','
             << snap.processCpu << ','
-            << snap.processMemoryMb << ','
+            << (snap.processMemoryBytes / (1024 * 1024)) << ','
             << snap.sessionCount << ','
             << snap.connectedPlayers << ','
             << snap.liveSessionCount << ','
@@ -223,6 +209,15 @@ void statAutoLogger() {
 
         std::lock_guard<std::mutex> lock(statLogMutex);
         statLogBuffer.push_back(row.str());
+    }
+}
+
+//3초에 한번씩 매칭서버에 status 갱신하는 함수
+void heartBeat() {
+    while (isRunning.load()) {
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        StatSnapshot snap = ComputeStatSnapshot();
+        DedicatedServerNotifier::getInstance().updateServerStatus(snap);
     }
 }
 
@@ -256,7 +251,7 @@ void inputListener() {
 
             std::cout << "===== Process ====="
                       << " CPU:" << snap.processCpu << "%"
-                      << " MemoryMB:" << snap.processMemoryMb
+                      << " MemoryMB:" << snap.processMemoryBytes / (1024*1024)
                       << " Sessions:" << snap.sessionCount
                       << " ConnectedPlayers:" << snap.connectedPlayers
                       << std::endl;
@@ -349,12 +344,6 @@ void inputListener() {
     }
 }
 
-auto updateDelay = 5000;//config 파일을 만들어서 어떻게 잘 받앙봐요
-void statusUpdater() {
-    while (isRunning.load()) {
-        Sleep(updateDelay);
-    }
-}
 #ifdef _WIN64
 LONG WINAPI CrashHandler(EXCEPTION_POINTERS* info)
 {
@@ -423,7 +412,7 @@ int main() {
         isRunning = true;
         SessionWorkerPool::getInstance().Start();
         std::thread consoleThread(inputListener);
-        std::thread statusThread(statusUpdater);
+        std::thread statusThread(heartBeat);
         std::thread statLoggerThread(statAutoLogger);
         statLoggerThread.detach();
         std::thread httpClientThread(&HttpRestClient::start_http_server, HttpRestClient::getInstance());

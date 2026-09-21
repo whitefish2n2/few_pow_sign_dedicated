@@ -66,7 +66,7 @@ void from_json(const nlohmann::json &j, CharacterSetDto &c);
 
 struct ServerStatusDto {
     double cpuUsagePercent;
-    long long memoryUsageMB;
+    long long memoryUsageBytes;
     int currentSessionCount;
     int maxSessionCount; // 서버가 버틸 수 있는 최대 세션 수
 };
@@ -74,7 +74,7 @@ struct ServerStatusDto {
 inline void to_json(nlohmann::json& j, const ServerStatusDto& dto) {
     j = nlohmann::json{
             {"cpuUsagePercent", dto.cpuUsagePercent},
-            {"memoryUsageMB", dto.memoryUsageMB},
+            {"memoryUsageMB", dto.memoryUsageBytes / (1024*1024)},
             {"currentSessionCount", dto.currentSessionCount},
             {"maxSessionCount", dto.maxSessionCount}
     };

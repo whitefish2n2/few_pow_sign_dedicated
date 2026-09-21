@@ -9,14 +9,10 @@
 #pragma push_macro("U")
 #undef U
 #include <concurrentqueue/concurrentqueue.h>
+
+#include "../EnetMessage.h"
 #pragma pop_macro("U")
 
-struct SendTask {
-    ENetPeer* peer;
-    enet_uint32 connectId;
-    std::vector<uint8_t> payload;
-    enet_uint32 flags;
-};
 
 class EnetClient {
     public:
@@ -28,13 +24,13 @@ class EnetClient {
         return instance;
     }
     void RunClient(int port);
-    void EnqueueSend(ENetPeer *peer, enet_uint32 connectId, std::vector<uint8_t> payload, enet_uint32 flags);
+    void EnqueueSend(EnetMessage msg);
 
     private:
     inline static EnetClient* instance = nullptr;
     inline static std::once_flag flag;
 
-    moodycamel::ConcurrentQueue<SendTask> sendQueue;
+    moodycamel::ConcurrentQueue<EnetMessage> sendQueue;
     void ProcessSendQueue();
 
 

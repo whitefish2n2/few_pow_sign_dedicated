@@ -4,6 +4,8 @@
 #include "../util/util.h"
 #include <iostream>
 
+#include "../StatSnapshot.h"
+
 using namespace web;
 using namespace web::http;
 using namespace web::http::client;
@@ -96,32 +98,52 @@ void DedicatedServerNotifier::notifyDedicatedServerUp(const std::string& key, co
     }
 }
 
-void DedicatedServerNotifier::updateServerStatus(const std::string& ip, const std::vector<std::shared_ptr<GameSession>>& sessions) {
+
+void DedicatedServerNotifier::updateServerStatus(StatSnapshot snapshot) {
     if (!clientBase) {
         std::cout << "DedicatedServerNotifier not initialized!" << std::endl;
         return;
     }
+    if (ServerStat::ServerId.empty()) {
+        std::cout << "Heartbeat skipped: server is not registered yet." << std::endl;
+        return;
+    }
 
     nlohmann::json body;
-    body["ip"] = ip;
+    body["serverId"]      = ServerStat::ServerId;
+    body["sessionCount"]  = static_cast<int>(snapshot.sessionCount);
+    body["playerCount"]   = snapshot.connectedPlayers;
+    body["cpu"]           = snapshot.processCpu;
+    body["avgTPS"]        = static_cast<double>(snapshot.avgTps);
+    body["avgTickMs"]     = static_cast<double>(snapshot.avgTickUs) / 1000.0;  // us -> ms
+    // 메모리는 세 개 모두 byte로 보낸다.
+    body["processMemory"] = static_cast<double>(snapshot.processMemoryBytes);
+    body["pcMemory"]      = static_cast<double>(snapshot.pcMemoryBytes);
+    body["pcMemoryMax"]   = static_cast<double>(snapshot.pcMemoryMaxBytes);
 
     try {
         http_request request(methods::POST);
-        request.set_request_uri(U("/dedicated/updatestatus"));
+        request.set_request_uri(U("/dedicated/Heartbeat"));
         request.headers().set_content_type(U("application/json"));
         request.set_body(utility::conversions::to_string_t(body.dump()));
 
+        // 매 틱 호출되므로 wait()로 막지 않는다.
         clientBase->request(request)
-            .then([](const http_response &response) {
-                if (response.status_code() == status_codes::OK) {
-                    std::cout << "Server status updated successfully." << std::endl;
-                } else {
-                    std::cout << "Status update failed. Status: " << response.status_code() << std::endl;
+            .then([](http_response response) {
+                if (response.status_code() != status_codes::OK) {
+                    std::cout << "Heartbeat failed. Status: " << response.status_code() << std::endl;
                 }
-            }).wait();
+            })
+            .then([](pplx::task<void> t) {
+                // 대기하지 않는 태스크는 예외를 여기서 거둬야 한다. 안 그러면 소멸자에서 terminate.
+                try { t.get(); }
+                catch (const std::exception& e) {
+                    std::cout << "Heartbeat exception: " << e.what() << std::endl;
+                }
+            });
     }
     catch (const std::exception& e) {
-        std::cout << "Exception: " << e.what() << std::endl;
+        std::cout << "Heartbeat exception: " << e.what() << std::endl;
     }
 }
 

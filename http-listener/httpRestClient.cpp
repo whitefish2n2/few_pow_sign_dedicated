@@ -73,7 +73,7 @@ void HttpRestClient::start_http_server(){
         try {
             ServerStatusDto status{};
             status.cpuUsagePercent = GetProcessCpuUsage();
-            status.memoryUsageMB = GetProcessMemoryUsageMB();
+            status.memoryUsageBytes = GetProcessMemoryUsageBytes();
             status.currentSessionCount = SessionManager::getInstance().getSessionCount();
             status.maxSessionCount = 100; // 임시:100개 허용
 

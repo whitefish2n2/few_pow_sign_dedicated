@@ -74,18 +74,20 @@ void RegisterPacket(SocketEventType type, uint16_t sessionKey, ENetPeer* peer, u
 
 }
 
-void EnetClient::EnqueueSend(ENetPeer* peer, enet_uint32 connectId, std::vector<uint8_t> payload, enet_uint32 flags) {
-    sendQueue.enqueue({peer, connectId, std::move(payload), flags});
+void EnetClient::EnqueueSend(EnetMessage msg) {
+    sendQueue.enqueue(std::move(msg));
 }
 
+
 void EnetClient::ProcessSendQueue() {
-    SendTask task;
-    while (sendQueue.try_dequeue(task)) {
-        if (task.peer && task.peer->state == ENET_PEER_STATE_CONNECTED
-            && task.peer->connectID == task.connectId) {   // 세대 불일치 = 재사용된 슬롯 → 드롭
-            ENetPacket* packet = enet_packet_create(task.payload.data(), task.payload.size(), task.flags);
-            enet_peer_send(task.peer, 0, packet);
-            }
+    EnetMessage msg;
+    while (sendQueue.try_dequeue(msg)) {
+        for (uint8_t i = 0; i < msg.count; ++i) {
+            auto& t = msg.targets[i];
+            if (t.peer && t.peer->state == ENET_PEER_STATE_CONNECTED && t.peer->connectID == t.connectID)
+                enet_peer_send(t.peer, 0, msg.packet);
+        }
+        if (msg.packet->referenceCount == 0) enet_packet_destroy(msg.packet);
     }
 }
 
@@ -171,19 +173,51 @@ void EnetClient::HandlePacket(ENetPeer* peer, uint8_t* data, size_t length) {
     }
 }
 
+// 피어별 마지막 수신 시각(ENet 스레드 전용이라 락 불필요) - DISCONNECT 시점엔 ENet이 통계를 리셋해서 직접 들고 있어야 함
+static enet_uint32 lastRecvAt[ENET_PROTOCOL_MAXIMUM_PEER_ID + 1] = {};
+
+///1초마다 CONNECTED 피어를 훑어 (리셋 전의) 진짜 무음 구간/RTT를 기록. 끊기기 전 징후 포착용
+static void LogNetStat(ENetHost* host, long long maxIterMicros, size_t sendQueueApprox) {
+    enet_uint32 nowMs = enet_time_get();
+    int connected = 0;
+    enet_uint32 worstSilence = 0;
+    for (size_t i = 0; i < host->peerCount; ++i) {
+        ENetPeer* p = &host->peers[i];
+        if (p->state != ENET_PEER_STATE_CONNECTED) continue;
+        ++connected;
+        enet_uint32 silence = nowMs - p->lastReceiveTime;
+        if (silence > worstSilence) worstSilence = silence;
+    }
+    std::cout << "[NetStat] connected=" << connected << " worstSilentMs=" << worstSilence
+              << " maxLoopMs=" << maxIterMicros / 1000.0 << " sendQ~" << sendQueueApprox << std::endl;
+}
+
 void EnetClient::HandleClientEvent(ENetEvent& event) {
     switch (event.type) {
         case ENET_EVENT_TYPE_CONNECT:
-            //std::cout << "Client connected: " << event.peer->address.host << std::endl;
+            lastRecvAt[event.peer->incomingPeerID] = enet_time_get();
             break;
 
         case ENET_EVENT_TYPE_RECEIVE:
+            lastRecvAt[event.peer->incomingPeerID] = enet_time_get();
             HandlePacket(event.peer, event.packet->data, event.packet->dataLength);
             enet_packet_destroy(event.packet);
             break;
 
         case ENET_EVENT_TYPE_DISCONNECT: {
-            //std::cout << "Client disconnected: " << event.peer->address.host << std::endl;
+            {
+                // ENet이 이 이벤트를 넘기기 전에 enet_peer_reset()을 이미 불러서 rtt/loss/lastReceiveTime은 전부 초기화됨.
+                // 그래서 RECEIVE 때 직접 기록해둔 시각으로 무음 구간 계산: 5000ms 이상이면 타임아웃, 짧으면 클라가 먼저 끊은 것
+                auto* p = event.peer;
+                auto* pl = static_cast<Player*>(p->data);
+                char ip[64] = "?";
+                enet_address_get_host_ip(&p->address, ip, sizeof(ip));
+                std::cout << "[Disconnect] peerID=" << p->incomingPeerID
+                          << " addr=" << ip << ":" << p->address.port
+                          << " publicKey=" << (pl ? std::to_string(pl->publicKey) : "none")
+                          << " silentMs=" << (enet_time_get() - lastRecvAt[p->incomingPeerID])
+                          << " data=" << event.data << std::endl;
+            }
             if (auto* player = static_cast<Player*>(event.peer->data)) {
                 if (player->peer == event.peer) {   // 재접속으로 이미 새 피어에 재바인딩됐으면 보존
                     player->peer = nullptr;         // 세션 방송 즉시 차단
@@ -224,10 +258,21 @@ void EnetClient::RunClient(int port) {
     std::cout << "Server started on port " << address.port << std::endl;
 
     ENetEvent event;
+    auto statWindowStart = std::chrono::steady_clock::now();
+    long long maxIterMicros = 0;   // ProcessSendQueue 호출 사이 최대 간격 = 수신 폭주 시 송신/서비스 굶김 지표
     while (running) {
+        auto iterStart = std::chrono::steady_clock::now();
         ProcessSendQueue();
         while (enet_host_service(server, &event, 1) > 0) {
             HandleClientEvent(event);
+        }
+        auto iterEnd = std::chrono::steady_clock::now();
+        auto iterMicros = std::chrono::duration_cast<std::chrono::microseconds>(iterEnd - iterStart).count();
+        if (iterMicros > maxIterMicros) maxIterMicros = iterMicros;
+        if (iterEnd - statWindowStart >= std::chrono::seconds(1)) {
+            LogNetStat(server, maxIterMicros, sendQueue.size_approx());
+            statWindowStart = iterEnd;
+            maxIterMicros = 0;
         }
     }
     enet_host_destroy(server);
