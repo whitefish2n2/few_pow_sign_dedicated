@@ -44,6 +44,7 @@ std::wstring serverUuid;
 
 void CreateDebugScreen() {
 #ifdef _WIN64
+
     bool expected = false;
     if (!DirectXCore::isViewerAlive.compare_exchange_strong(expected, true)) {
         std::cout << "debug viewer already running (or still closing)\n";
@@ -357,6 +358,16 @@ int main() {
     #ifdef _WIN64
     SetUnhandledExceptionFilter(CrashHandler);
     std::signal(SIGTERM, onExit);
+    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+    {
+        // 효율성 모드(EcoQoS) 스로틀링 끄기 + 백그라운드에서도 timeBeginPeriod 해상도 유지 (Win10 1709+/Win11)
+        PROCESS_POWER_THROTTLING_STATE throttle{};
+        throttle.Version     = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
+        throttle.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED | PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION;
+        throttle.StateMask   = 0;   // 0 = 두 항목 모두 스로틀링/무시 안 함
+        if (!SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, &throttle, sizeof(throttle)))
+            std::cout << "[Power] SetProcessInformation(ProcessPowerThrottling) failed, err=" << GetLastError() << std::endl;
+    }
     #endif
     try {
         isRunning.store(false);
